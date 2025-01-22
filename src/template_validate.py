@@ -177,14 +177,14 @@ for filename in filenames:
         not_validated_files = "data/not_validated_files"
 
         #all_true = True
-        if all_true == False:
+        if all_true is False:
             print(f"{filename} cannot be validated.\nMoved {filename} to the 'not_validated_files' folder.")
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
 
         ########### Write to log.
-        if all_true == False:
+        if all_true is False:
             modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
         else:
