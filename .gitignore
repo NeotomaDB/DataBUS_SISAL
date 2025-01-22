@@ -172,3 +172,4 @@ cython_debug/
 managedb.sh
 .DS_Store
 NODE field explanations.doc
+*.csv#
