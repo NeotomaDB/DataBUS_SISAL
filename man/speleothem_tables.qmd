@@ -1,6 +1,8 @@
 ---
 title: "SISIAL -- Neotoma Crosswalk"
 authors: Simon Goring
+execute: 
+  eval: False
 format:
   pdf:
     toc: true
@@ -31,7 +33,7 @@ The speleothem entity table (named `speleothems`) is linked to the siteid. It he
 ```{r connectionstring, echo=FALSE, warning=FALSE, message=FALSE}
 dotenv::load_dot_env()
 
-con <- DBI::dbConnect(
+conn <- DBI::dbConnect(
   RPostgres::Postgres(),
   dbname = Sys.getenv('DATABASE'),
   host = Sys.getenv('HOST'),
@@ -81,18 +83,22 @@ So here although we might define all these speleothems as being of type "stalact
 * other (add note to notes sheet)
 * unknown
 
-```{sql, speleothemtypes, connection = conn}
+```{sql, speleothemtypes}
 CREATE TABLE IF NOT EXISTS ndb.speleothemtypes(
     speleothemtypeid serial PRIMARY KEY,
     speleothemtype varchar(50),
     speleothemtypenotes text,
-    speleothemtypepublication int REFERENCES ndb.publications(publicationid)
+    speleothemtypepublicationid int REFERENCES ndb.publications(publicationid)
 );
+```
 
+```{sql, speleothemtypes_add_pub}
 INSERT INTO ndb.publications(citation, doi)
 VALUES ('Sisal v3', '10.5194/essd-16-1933-2024')
 ON CONFLICT DO NOTHING;
+```
 
+```{sql, speleothemtypes_add_values}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
@@ -130,27 +136,28 @@ Baker, A., Barnes, W. L. & Smart, P. L. Stalagmite drip discharge and organic ma
 * Vadose Flow
 * Subcutaneous Flow
 
-```{sql, add_drips, connection = conn}
+```{sql, add_drips}
 CREATE TABLE IF NOT EXISTS ndb.speleothemdriptypes(
     speleothemdriptypeid serial PRIMARY KEY,
     speleothemdriptype varchar(50),
     speleothemdriptypenotes text,
-    speleothemdriptypepublication int REFERENCES ndb.publications(publicationid)
+    speleothemdriptypepublicationid int REFERENCES ndb.publications(publicationid)
 );
+```
 
+```{sql, add_drips_add_values}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
-INSERT INTO ndb.speleothemdriptypes(speleothemdriptype, speleothemdriptypenotes, speleothemdriptypepublication)
+INSERT INTO ndb.speleothemdriptypes(speleothemdriptype, speleothemdriptypenotes, speleothemdriptypepublicationid)
 VALUES 
     ('seepage flow', '', (SELECT publicationid FROM pubid)),
     ('seasonal drip', '', (SELECT publicationid FROM pubid)),
-    ('fast flow',, '', (SELECT publicationid FROM pubid)),
+    ('fast flow', '', (SELECT publicationid FROM pubid)),
     ('mixed', '', (SELECT publicationid FROM pubid)),
     ('other', '', (SELECT publicationid FROM pubid)),
     ('unknown', '', (SELECT publicationid FROM pubid))
     ON CONFLICT  DO NOTHING;
-
 ```
 
 #### Vegetation Cover
@@ -187,37 +194,61 @@ We propose to modify this with a set of terms derived from the [FAO Land Cover c
 * Sparse Shrublands: Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.
 * Unclassified: Has not received a map label because of missing inputs.
 
-```{sql, add_vegetation, connection = conn}
+```{sql, add_vegetation}
 CREATE TABLE IF NOT EXISTS ndb.vegetationcovertypes(
     vegetationcovertypeid serial PRIMARY KEY,
     vegetationcovertype varchar (128) UNIQUE,
     vegetationcovernotes text,
     vegetationpublicationid int REFERENCES ndb.publications(publicationid)
 );
+```
 
+```{sql, add_vegetation_fao}
+WITH pubid AS (
+    SELECT publicationid FROM ndb.publications WHERE year = '2005' and citation ILIKE '%Land cover classification%'
+)
 INSERT INTO ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, vegetationpublicationid)
-VALUES ('Barren','At least of area 60% is non-vegetated barren (sand, rock, soil) or permanent snow/ice with less than 10% vegetation.')
-('Permanent Snow and Ice','At least of area 60% is covered by snow and ice for at least 10 months of the year.')
-('Water Bodies','At least 60% of area is covered by permanent water bodies.')
-('Evergreen Needleleaf Forests','Dominated by evergreen conifer trees (>2m). Tree cover >60%.')
-('Evergreen Broadleaf Forests','Dominated by evergreen broadleaf and palmate trees (>2m). Tree cover >60%.')
-('Deciduous Needleleaf Forests','Dominated by deciduous needleleaf (larch) trees (>2m). Tree cover >60%.')
-('Deciduous Broadleaf Forests','Dominated by deciduous broadleaf trees (>2m). Tree cover >60%.')
-('Mixed Broadleaf/Needleleaf Forests','Co-dominated (40-60%) by broadleaf deciduous and evergreen needleleaf tree (>2m) types. Tree cover >60%.')
-('Mixed Broadleaf Evergreen/Deciduous Forests','Co-dominated (40-60%) by broadleaf evergreen and deciduous tree (>2m) types. Tree cover >60%.')
-('Open Forests','Tree cover 30-60% (canopy >2m).')
-('Sparse Forests','Tree cover 10-30% (canopy >2m).')
-('Dense Herbaceous','Dominated by herbaceous annuals (<2m) at least 60% cover.')
-('Sparse Herbaceous','Dominated by herbaceous annuals (<2m) 10-60% cover.')
-('Dense Shrublands','Dominated by woody perennials (1-2m) >60% cover.')
-('Shrubland/Grassland Mosaics','Dominated by woody perennials (1-2m) 10-60% cover with dense herbaceous annual understory.')
-('Sparse Shrublands','Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.')
-('Unclassified','Has not received a map label because of missing inputs.')
+VALUES ('Barren','At least of area 60% is non-vegetated barren (sand, rock, soil) or permanent snow/ice with less than 10% vegetation.', (SELECT publicationid FROM pubid)),
+('Permanent Snow and Ice','At least of area 60% is covered by snow and ice for at least 10 months of the year.', (SELECT publicationid FROM pubid)),
+('Water Bodies','At least 60% of area is covered by permanent water bodies.', (SELECT publicationid FROM pubid)),
+('Evergreen Needleleaf Forests','Dominated by evergreen conifer trees (>2m). Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Evergreen Broadleaf Forests','Dominated by evergreen broadleaf and palmate trees (>2m). Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Deciduous Needleleaf Forests','Dominated by deciduous needleleaf (larch) trees (>2m). Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Deciduous Broadleaf Forests','Dominated by deciduous broadleaf trees (>2m). Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Mixed Broadleaf/Needleleaf Forests','Co-dominated (40-60%) by broadleaf deciduous and evergreen needleleaf tree (>2m) types. Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Mixed Broadleaf Evergreen/Deciduous Forests','Co-dominated (40-60%) by broadleaf evergreen and deciduous tree (>2m) types. Tree cover >60%.', (SELECT publicationid FROM pubid)),
+('Open Forests','Tree cover 30-60% (canopy >2m).', (SELECT publicationid FROM pubid)),
+('Sparse Forests','Tree cover 10-30% (canopy >2m).', (SELECT publicationid FROM pubid)),
+('Dense Herbaceous','Dominated by herbaceous annuals (<2m) at least 60% cover.', (SELECT publicationid FROM pubid)),
+('Sparse Herbaceous','Dominated by herbaceous annuals (<2m) 10-60% cover.', (SELECT publicationid FROM pubid)),
+('Dense Shrublands','Dominated by woody perennials (1-2m) >60% cover.', (SELECT publicationid FROM pubid)),
+('Shrubland/Grassland Mosaics','Dominated by woody perennials (1-2m) 10-60% cover with dense herbaceous annual understory.', (SELECT publicationid FROM pubid)),
+('Sparse Shrublands','Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.', (SELECT publicationid FROM pubid)),
+('Unclassified','Has not received a map label because of missing inputs.', (SELECT publicationid FROM pubid))
 ON CONFLICT DO NOTHING;
+```
 
+```{sql, add_vegetation_sisal}
+WITH pubid AS (
+    SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
+)
+INSERT INTO ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, vegetationpublicationid)
+VALUES ('evergreen','', (SELECT publicationid FROM pubid)),
+('deciduous','', (SELECT publicationid FROM pubid)),
+('shrubland','', (SELECT publicationid FROM pubid)),
+('grassland','', (SELECT publicationid FROM pubid)),
+('sparse','', (SELECT publicationid FROM pubid)),
+('barren','', (SELECT publicationid FROM pubid)),
+('mixed (add note to notes sheet)','', (SELECT publicationid FROM pubid)),
+('other (add note to notes sheet)','', (SELECT publicationid FROM pubid)),
+('unknown','', (SELECT publicationid FROM pubid))
+ON CONFLICT DO NOTHING;
+```
+
+```{sql, add_vegetation_site_link}
 CREATE TABLE IF NOT EXISTS ndb.sitevegetationcover(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
-    vegetationcovertypeid REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
+    vegetationcovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
     vegetationcoverpercent integer,
     vegetationcovernotes text
 );
@@ -266,17 +297,18 @@ The FAO Uses a system with the following classes:
 * Inland water
 
 
-```{sql, add_landuse, connection = conn}
+```{sql, add_landuse}
 CREATE TABLE IF NOT EXISTS ndb.landusetypes(
     landusecovertypeid serial PRIMARY KEY,
     landusecovertype varchar (128) UNIQUE,
     landusecovernotes text,
-    landuseclasspublicationid int REFERENCES ndb.publications(publicationid)
+    landuseclasspublicationid integer REFERENCES ndb.publications(publicationid)
 );
-
+```
+```{sql, add_landuse_sitelink}
 CREATE TABLE IF NOT EXISTS ndb.sitelandusecover(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
-    landusecovertypeid REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
+    landusecovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
     landusecoverpercent integer,
     landusecovernotes text
 );
@@ -287,25 +319,26 @@ CREATE TABLE IF NOT EXISTS ndb.sitelandusecover(
 
 I'm going to use this for speleothems only:
 
-```{sql, add_landcover, connection = conn}
+```{sql, add_landcover_entitylink}
 CREATE TABLE IF NOT EXISTS ndb.entitycovertypes(
     entitycoverid serial PRIMARY KEY,
     entitycovertype varchar(50),
     entitycovernotes text
 );
-
 ```
 
 #### Entity Statuses
 
 Note that the status levels provided in the [spreadsheet](https://docs.google.com/spreadsheets/d/1Koh60iPd_MVL6C6NaV08SGupAzxRwE00EtqgLxd-xSc/edit?usp=sharing) do not match the ones in the database.
 
-```{sql, add_entity_status, connection = conn}
+```{sql, add_entity_status}
 CREATE TABLE IF NOT EXISTS ndb.speleothementitystatuses(
     entitystatusid serial PRIMARY KEY,
     entitystatus text
 );
+```
 
+```{sql, add_entity_status_values}
 INSERT INTO ndb.speleothementitystatuses (entitystatus)
 VALUES ('current'),
        ('current partially modified'),
@@ -321,19 +354,21 @@ VALUES ('current'),
 
 How is depth measured? I'm moving this to a higher level table (without "entity" in front of it) because I think this is important going forward regardless.
 
-```{sql, add_depth_reference, connection = conn}
+```{sql, add_depth_reference}
 CREATE TABLE IF NOT EXISTS ndb.depthreferencesystem(
     depthreferencesystemid serial PRIMARY KEY,
     depthreference text,
     depthreferencenotes text,
-    depthreferencepublicationid integer REFERENCES ndb.publications(publicaitonid)
+    depthreferencepublicationid integer REFERENCES ndb.publications(publicationid)
 );
+```
 
+```{sql, add_depth_reference_values}
 INSERT INTO ndb.depthreferencesystem(depthreference, depthreferencenotes)
 VALUES
     ('from top', 'Measured Depth at section top (depth at bottom is depth + thickness).'),
     ('from base', 'Measured Depth at section top (depth at top is depth - thickness).'),
-    ('midpoint', 'Measured depth at midpoint of the analysis unit (depth at top is depth - 0.5 * thickness).')
+    ('midpoint', 'Measured depth at midpoint of the analysis unit (depth at top is depth - 0.5 * thickness).'),
     ('not applicable', 'Point measurement.'),
     ('unknown', 'Not reported or not submitted at time of data upload.'),
     ('assumed top', 'Not reported but submitted with assumed standard of top-depth reporting.'),
@@ -348,30 +383,35 @@ For individual speleothems within mapped system, the underlying (or overlying) g
 Take a look at this?
 https://www.bgs.ac.uk/technologies/bgs-rock-classification-scheme/
 
-```{sql, add_geology, connection = conn}
+```{sql, add_geology}
 CREATE TABLE IF NOT EXISTS ndb.speleothementitygeology(
     speleothemgeologyid serial PRIMARY KEY,
     speleothemgeology text,
     speleothemgeologynotes text,
     speleothemgeologypublicationid integer REFERENCES ndb.publications(publicationid)
 );
+```
 
-INSERT INTO ndb.speleothementitygeology (speleothemgeology)
+```{sql, add_geology_values}
+WITH pubid AS (
+    SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
+)
+INSERT INTO ndb.speleothementitygeology (speleothemgeology, speleothemgeologypublicationid)
 VALUES 
-    ('limestone'),
-    ('unknown'),
-    ('dolomite'),
-    ('mixed (see notes)'),
-    ('dolomite limestone'),
-    ('marble'),
-    ('marly limestone'),
-    ('other (see notes)'),
-    ('calcarenite');
+    ('limestone', (SELECT publicationid FROM pubid)),
+    ('unknown', (SELECT publicationid FROM pubid)),
+    ('dolomite', (SELECT publicationid FROM pubid)),
+    ('mixed (see notes)', (SELECT publicationid FROM pubid)),
+    ('dolomite limestone', (SELECT publicationid FROM pubid)),
+    ('marble', (SELECT publicationid FROM pubid)),
+    ('marly limestone', (SELECT publicationid FROM pubid)),
+    ('other (see notes)', (SELECT publicationid FROM pubid)),
+    ('calcarenite', (SELECT publicationid FROM pubid));
 ```
 
 ## Speleothem Entity Table
 
-```{sql, add_speleothementity, connection = conn}
+```{sql, add_speleothementity}
 CREATE TABLE IF NOT EXISTS ndb.speleothems(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
     entityid serial PRIMARY KEY,
@@ -382,35 +422,47 @@ CREATE TABLE IF NOT EXISTS ndb.speleothems(
     entrancedistanceunits int REFERENCES ndb.variableunits(variableunitsid)
     speleothemtypeid int REFERENCES ndb.speleothemtypes(speleothemtypeid)
 );
+```
 
+```{sql, add_speleothementity_entityrel}
 CREATE TABLE IF NOT EXISTS ndb.entityrelationship(
     entityid int REFERENCES ndb.speleothems(entityid),
     entitystatusid integer REFERENCES ndb.speleothementitystatuses(entitystatusid),
     referenceentityid int REFERENCES ndb.speleothems(entityid)
 )
 
+```
+
+```{sql, add_speleothementity_entitydrip}
 CREATE TABLE IF NOT EXISTS ndb.entitydripheight(
     entityid int REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     speleothemdriptypeid int REFERENCES ndb.speleothemdriptypes(spelothemdriptypeid),
     entitydripheight real,
-    entitydripheightunit int REFERENCES ndb.variableunits(variableunitid)
+    entitydripheightunit int REFERENCES ndb.variableunits(variableunitsid)
 );
 
+```
+
+```{sql, add_speleothementity_veg}
 CREATE TABLE IF NOT EXISTS ndb.entityvegetationcover(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
-    vegetationcovertypeid REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
+    vegetationcovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
     vegetationcoverpercent integer,
     vegetationcovernotes text
 );
 
+```
+
+```{sql, add_speleothementity_landuse}
 CREATE TABLE IF NOT EXISTS ndb.entitylandusecover(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
-    landusecovertypeid REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
+    landusecovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
     landusecoverpercent integer,
     landusecovernotes text
 );
+```
 
-
+```{sql, add_speleothementity_cover}
 CREATE TABLE IF NOT EXISTS ndb.entitycovers(
     entityid int REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     entitycoverid int REFERENCES ndb.entitycovertypes(entitycoverid),
@@ -423,8 +475,8 @@ CREATE TABLE IF NOT EXISTS ndb.entitycovers(
 
 There are a number of columns in the SISAL database that refer to elements such as fluid inclusions, organics or other elements that may be recorded but are not explicitly a part of the SISAL database. For these we use the table `externalspeleothemdata`. This allows us to define these elements and refer to an external resource using a PID. These would include (for example) references to noble_gas_temperatures, clumped_isotopes or fluid_inclusions. The structure of the `ndb.externaldatabases` table allows us to refer to external resources such as Dryad, PANGEA or CrossRef, if data is included within a publication. The table also supports a many-to-many relationship, so a single entity can be linked to multiple databases for various reasons.
 
-```{sql, add_externaltable, connection = conn}
-CREATE TABLE IF NOT EXISTS externalspeleothemdata(
+```{sql, add_externaltable}
+CREATE TABLE IF NOT EXISTS ndb.externalspeleothemdata(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     externalid text,
     extdatabaseid integer REFERENCES ndb.externaldatabases(extdatabaseid),

@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="speleothem_tables_files/libs/clipboard/clipboard.min.js"></script>
@@ -71,10 +91,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../speleothem_tables.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -104,7 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="sisal-overview" class="level2">
 <h2 class="anchored" data-anchor-id="sisal-overview">SISAL Overview</h2>
-<p>SISAL is a global database of speleothem data <span class="citation" data-cites="ref">[@ref]</span> that uses a standard template for data upload. SISAL is stored as a MySQL database that can be queried and updated by users. Relative to Neotoma, the database shares many common features, for example, it stores data across <code>sites</code>, it measures depths along collection elements, and records chronologies for records. However, there are several differences based on conceptual and analytic differences between the primary data within each database.</p>
+<p>SISAL is a global database of speleothem data <span class="citation" data-cites="essd-16-1933-2024">(<a href="#ref-essd-16-1933-2024" role="doc-biblioref">Kaushal et al. 2024</a>)</span> that uses a standard template for data upload. SISAL is stored as a MySQL database that can be queried and updated by users. Relative to Neotoma, the database shares many common features, for example, both store data across <code>sites</code>, they measure samples using depths along collection elements, and they both record chronologies for records. However, there are several differences based on conceptual and analytic differences between the primary data within each database.</p>
 <div id="fig-sisalneotoma" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A pen and ink drawing showing conceptual differences between SISAL and Neotoma data.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sisalneotoma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -115,12 +136,85 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 </figcaption>
 </figure>
 </div>
+<p>The largest work to align SISAL with Neotoma requires the addition of a new <code>entity</code> table linking <code>sites</code> and <code>collectionunits</code>. In SISAL this <code>entity</code> table includes a large number of secondary fields, including elements of vegetation and land use cover, with fixed vocabularies.</p>
 </section>
 <section id="adding-speleothem-specific-tables" class="level2">
 <h2 class="anchored" data-anchor-id="adding-speleothem-specific-tables">Adding Speleothem Specific Tables</h2>
-<p>The speleothem entity table is linked to the siteid. It helps link all speleothems together at a single site within a cave complex (for example). The entity is the specific speleothem, and each entity may have one or more collection units. So in the case of a speleothem, there is the organizing “Cave”, the “Stalagtite”, and then on that “Stalagtite” there is one or more collecitonunits.</p>
+<p>The speleothem entity table (named <code>speleothems</code>) is linked to the siteid. It helps link all speleothems together at a single site within a cave complex (for example). The entity is the specific speleothem, and each entity may have one or more collection units. So in the case of a speleothem, there is the organizing “Cave”, the “Stalagtite”, and then on that “Stalagtite” there is one or more collectionunits. Because the entity table relies on several fixed vocabularies as foreign key references, we define those first:</p>
 <section id="controlled-vocabularies" class="level3">
 <h3 class="anchored" data-anchor-id="controlled-vocabularies">Controlled Vocabularies</h3>
+<p>For controlled vocabularies we want to provide a “general” solution for term lists, so that we can support the use of multiple potential term lists. This would allow particular sub-disciplines to define terms in a form that makes sense for their group, or uses a standard terminology that reflects the underlying processes within their community. If terms are superceeded within a community, we can support multiple terms for the same record, each tied to a specific publication, allowing us to select the publication of record, and comparing outcomes between classification systems.</p>
+<p>For example, SISALv3 <a href="#fig-sisalneotoma" class="quarto-xref">Figure&nbsp;1</a> uses the following term set for Speleothem Types:</p>
+<ul>
+<li>stalagmite</li>
+<li>stalactite</li>
+<li>flowstone</li>
+<li>composite</li>
+<li>mixed (add note to notes sheet)</li>
+<li>other (add note to notes sheet)</li>
+<li>unknown</li>
+</ul>
+<p>however, as is the case for many sets of terms, there are multiple sets of definitions that could be applied. These may be equivalent, or may differ to a greater or lesser degree. We can represent them in a controlled vocabulary table in the following manner (note that we are representing a subset of the data here):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 17%">
+<col style="width: 24%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>speleothemtypeid (PK)</th>
+<th>speleothemtype</th>
+<th>speleothemtypenotes</th>
+<th>speleothemtypepublication (FK)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>stalactite</td>
+<td>Pointed or mounded structures growing upwards from cave floors.</td>
+<td>Points to <a href="#fig-sisalneotoma" class="quarto-xref">Figure&nbsp;1</a></td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>stalactite</td>
+<td>Pointed pendants growing downwards from cave ceilings.</td>
+<td>Points to <span class="citation" data-cites="j2007speleothems">(<a href="#ref-j2007speleothems" role="doc-biblioref">J. Fairchild et al. 2007</a>)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In our table we can see that <code>stalactite</code> is defined twice, with identifiers <strong>1</strong> and <strong>7</strong> (the numbers are simply pointers and their abolute value is meaningless). A single speleothem entity can be associated with a <code>speleothemtype</code> at the time of data upload or entry based on the submitter’s chosen set of terminology, but if a separate researcher is working on a synthesis project, they will be able to see both the type, and also the source of that naming system:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>speleothemid</th>
+<th>speleothemtypeid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9867</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>9871</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9873</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>So here although we might define all these speleothems as being of type “stalactite”, we know that two of these names are drawn from <a href="#fig-sisalneotoma" class="quarto-xref">Figure&nbsp;1</a>, while one is derived from <span class="citation" data-cites="j2007speleothems">(<a href="#ref-j2007speleothems" role="doc-biblioref">J. Fairchild et al. 2007</a>)</span>. If this is an important distinction for us, then we can separate or filter these records. If we accept that these are equivalent, we can group them, but the critical point is that we know both the name for the object, and the source from which the definition is derived.</p>
 <section id="speleothem-types" class="level4">
 <h4 class="anchored" data-anchor-id="speleothem-types">Speleothem Types</h4>
 <ul>
@@ -132,12 +226,34 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 <li>other (add note to notes sheet)</li>
 <li>unknown</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.speleothemtypes(</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.speleothemtypes(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    speleothemtypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    speleothemtype <span class="dt">varchar</span>(<span class="dv">50</span>),</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    speleothemtypenotes text,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    speleothemtypepublication <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    speleothemtypepublicationid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.publications(citation, doi)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'Sisal v3'</span>, <span class="st">'10.5194/essd-16-1933-2024'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> CONFLICT DO <span class="kw">NOTHING</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pubid <span class="kw">AS</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> ndb.publications <span class="kw">WHERE</span> doi <span class="op">=</span> <span class="st">'10.5194/essd-16-1933-2024'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothemtypes(speleothemtype, speleothemtypenotes, speleothemtypepublicationid)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'stalagmite'</span>, <span class="st">'Pointed or mounded structures growing upwards from cave floors.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'stalactite'</span>, <span class="st">'Pointed pendants growing downwards from cave ceilings.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'flowstone'</span>, <span class="st">'Sheet-like structure growing on cave floors or walls.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'composite'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'mixed'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'other'</span>, <span class="st">'Speleothem type not otherwise described.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>, <span class="st">'Speleothem type is not known.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> CONFLICT DO <span class="kw">NOTHING</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="speleothem-drip-types" class="level4">
 <h4 class="anchored" data-anchor-id="speleothem-drip-types">Speleothem Drip Types</h4>
@@ -154,7 +270,7 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 </section>
 <section id="baker-et-al.-1997" class="level5">
 <h5 class="anchored" data-anchor-id="baker-et-al.-1997">Baker et al.&nbsp;(1997)</h5>
-<p>Baker, A., Barnes, W. L. &amp; Smart, P. L. Stalagmite drip discharge and organic matter fluxes in Lower Cave, Bristol. Hydrological Processes 11, 1541–1555 (1997). See reference here: https://www.nature.com/scitable/knowledge/library/drip-water-hydrology-and-speleothems-26394838/</p>
+<p>Baker, A., Barnes, W. L. &amp; Smart, P. L. Stalagmite drip discharge and organic matter fluxes in Lower Cave, Bristol. Hydrological Processes 11, 1541–1555 (1997). <span class="citation" data-cites="baker1997stalagmite">(<a href="#ref-baker1997stalagmite" role="doc-biblioref">Baker, Barnes, and Smart 1997</a>)</span></p>
 <ul>
 <li>Seepage Flow</li>
 <li>Seasonal Drip</li>
@@ -163,19 +279,28 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 <li>Vadose Flow</li>
 <li>Subcutaneous Flow</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.speleothemdriptypes(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    speleothemdriptype <span class="dt">varchar</span>(<span class="dv">50</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypenotes text,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypepublication <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.entitydripheight(</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypeid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothemdriptypes(spelothemdriptypeid),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    entitydripheight <span class="dt">real</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    entitydripheightunit <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitid)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.speleothemdriptypes(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    speleothemdriptype <span class="dt">varchar</span>(<span class="dv">50</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypenotes text,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypepublicationid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pubid <span class="kw">AS</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> ndb.publications <span class="kw">WHERE</span> doi <span class="op">=</span> <span class="st">'10.5194/essd-16-1933-2024'</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothemdriptypes(speleothemdriptype, speleothemdriptypenotes, speleothemdriptypepublicationid)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'seepage flow'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'seasonal drip'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'fast flow'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'mixed'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'other'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>, <span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> CONFLICT  DO <span class="kw">NOTHING</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="vegetation-cover" class="level4">
@@ -212,26 +337,62 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 <li>Sparse Shrublands: Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.</li>
 <li>Unclassified: Has not received a map label because of missing inputs.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.vegetationcovertypes(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    vegetationcovertype <span class="dt">varchar</span> (<span class="dv">128</span>) <span class="kw">UNIQUE</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    vegetationpublicationid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.sitevegetationcover(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    vegetationcoverpercent <span class="dt">integer</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.entityvegetationcover(</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    vegetationcoverpercent <span class="dt">integer</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.vegetationcovertypes(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    vegetationcovertype <span class="dt">varchar</span> (<span class="dv">128</span>) <span class="kw">UNIQUE</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    vegetationpublicationid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pubid <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> ndb.publications <span class="kw">WHERE</span> <span class="dt">year</span> <span class="op">=</span> <span class="st">'2005'</span> <span class="kw">and</span> citation ILIKE <span class="st">'%Land cover classification%'</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, vegetationpublicationid)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'Barren'</span>,<span class="st">'At least of area 60% is non-vegetated barren (sand, rock, soil) or permanent snow/ice with less than 10% vegetation.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Permanent Snow and Ice'</span>,<span class="st">'At least of area 60% is covered by snow and ice for at least 10 months of the year.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Water Bodies'</span>,<span class="st">'At least 60% of area is covered by permanent water bodies.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Evergreen Needleleaf Forests'</span>,<span class="st">'Dominated by evergreen conifer trees (&gt;2m). Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Evergreen Broadleaf Forests'</span>,<span class="st">'Dominated by evergreen broadleaf and palmate trees (&gt;2m). Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Deciduous Needleleaf Forests'</span>,<span class="st">'Dominated by deciduous needleleaf (larch) trees (&gt;2m). Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Deciduous Broadleaf Forests'</span>,<span class="st">'Dominated by deciduous broadleaf trees (&gt;2m). Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Mixed Broadleaf/Needleleaf Forests'</span>,<span class="st">'Co-dominated (40-60%) by broadleaf deciduous and evergreen needleleaf tree (&gt;2m) types. Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Mixed Broadleaf Evergreen/Deciduous Forests'</span>,<span class="st">'Co-dominated (40-60%) by broadleaf evergreen and deciduous tree (&gt;2m) types. Tree cover &gt;60%.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Open Forests'</span>,<span class="st">'Tree cover 30-60% (canopy &gt;2m).'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sparse Forests'</span>,<span class="st">'Tree cover 10-30% (canopy &gt;2m).'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Dense Herbaceous'</span>,<span class="st">'Dominated by herbaceous annuals (&lt;2m) at least 60% cover.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sparse Herbaceous'</span>,<span class="st">'Dominated by herbaceous annuals (&lt;2m) 10-60% cover.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Dense Shrublands'</span>,<span class="st">'Dominated by woody perennials (1-2m) &gt;60% cover.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Shrubland/Grassland Mosaics'</span>,<span class="st">'Dominated by woody perennials (1-2m) 10-60% cover with dense herbaceous annual understory.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sparse Shrublands'</span>,<span class="st">'Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Unclassified'</span>,<span class="st">'Has not received a map label because of missing inputs.'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid))</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> CONFLICT DO <span class="kw">NOTHING</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pubid <span class="kw">AS</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> ndb.publications <span class="kw">WHERE</span> doi <span class="op">=</span> <span class="st">'10.5194/essd-16-1933-2024'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, vegetationpublicationid)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'evergreen'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>(<span class="st">'deciduous'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>(<span class="st">'shrubland'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>(<span class="st">'grassland'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>(<span class="st">'sparse'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>(<span class="st">'barren'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>(<span class="st">'mixed (add note to notes sheet)'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>(<span class="st">'other (add note to notes sheet)'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>(<span class="st">'unknown'</span>,<span class="st">''</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> CONFLICT DO <span class="kw">NOTHING</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.sitevegetationcover(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    vegetationcoverpercent <span class="dt">integer</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="land-use" class="level4">
 <h4 class="anchored" data-anchor-id="land-use">Land Use</h4>
@@ -275,127 +436,189 @@ Figure&nbsp;1: Differences between <code>site</code> and <code>collection unit</
 <li>Built up area (urban or rural)</li>
 <li>Inland water</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.landusetypes(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    landusecovertype <span class="dt">varchar</span> (<span class="dv">128</span>) <span class="kw">UNIQUE</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    landuseclasspublicationid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.sitelandusecover(</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    landusecoverpercent <span class="dt">integer</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.entitylandusecover(</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    landusecoverpercent <span class="dt">integer</span>,</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.landusetypes(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    landusecovertype <span class="dt">varchar</span> (<span class="dv">128</span>) <span class="kw">UNIQUE</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    landuseclasspublicationid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.sitelandusecover(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    landusecoverpercent <span class="dt">integer</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="land-cover" class="level4">
 <h4 class="anchored" data-anchor-id="land-cover">Land Cover</h4>
 <p>I’m going to use this for speleothems only:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.entitycovertypes(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    entitycoverid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    entitycovertype <span class="dt">varchar</span>(<span class="dv">50</span>),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    entitycovernotes text</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.entitycovers(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    entitycoverid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.entitycovertypes(entitycoverid),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    entitycoverthickness <span class="dt">real</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    entitycoverunits <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitsid)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entitycovertypes(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    entitycoverid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    entitycovertype <span class="dt">varchar</span>(<span class="dv">50</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    entitycovernotes text</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="entity-statuses" class="level4">
 <h4 class="anchored" data-anchor-id="entity-statuses">Entity Statuses</h4>
 <p>Note that the status levels provided in the <a href="https://docs.google.com/spreadsheets/d/1Koh60iPd_MVL6C6NaV08SGupAzxRwE00EtqgLxd-xSc/edit?usp=sharing">spreadsheet</a> do not match the ones in the database.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.speleothementitystatuses(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    entitystatusid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    entitystatus text</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothementitystatuses (entitystatus)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'current'</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'current partially modified'</span>),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'superseded'</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'completely supersedes'</span>),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'completely superseded by'</span>),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'partially supersedes'</span>),</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'partially superseded by'</span>),</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'not applicable'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.speleothementitystatuses(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    entitystatusid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    entitystatus text</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothementitystatuses (entitystatus)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'current'</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'current partially modified'</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'superseded'</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'completely supersedes'</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'completely superseded by'</span>),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'partially supersedes'</span>),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'partially superseded by'</span>),</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'not applicable'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="depth-reference" class="level4">
 <h4 class="anchored" data-anchor-id="depth-reference">Depth Reference</h4>
 <p>How is depth measured? I’m moving this to a higher level table (without “entity” in front of it) because I think this is important going forward regardless.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.depthreferencesystem(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    depthreferencesystemid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    depthreference text,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    depthreferencenotes text</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.depthreferencesystem(depthreference, depthreferencenotes)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'from top'</span>, <span class="st">'Measured Depth at section top (depth at bottom is depth + thickness).'</span>),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'from base'</span>, <span class="st">'Measured Depth at section top (depth at top is depth - thickness).'</span>),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'midpoint'</span>, <span class="st">'Measured depth at midpoint of the analysis unit (depth at top is depth - 0.5 * thickness).'</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'not applicable'</span>, <span class="st">'Point measurement.'</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>, <span class="st">'Not reported or not submitted at time of data upload.'</span>),</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed top'</span>, <span class="st">'Not reported but submitted with assumed standard of top-depth reporting.'</span>),</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed bottom'</span>, <span class="st">'Not reported but submitted with assumed standard of bottom-depth reporting.'</span>),</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed midpoint'</span>, <span class="st">'Not reported but submitted with assumed standard of midpoint-depth reporting.'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.depthreferencesystem(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    depthreferencesystemid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    depthreference text,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    depthreferencenotes text,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    depthreferencepublicationid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.depthreferencesystem(depthreference, depthreferencenotes)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'from top'</span>, <span class="st">'Measured Depth at section top (depth at bottom is depth + thickness).'</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'from base'</span>, <span class="st">'Measured Depth at section top (depth at top is depth - thickness).'</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'midpoint'</span>, <span class="st">'Measured depth at midpoint of the analysis unit (depth at top is depth - 0.5 * thickness).'</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'not applicable'</span>, <span class="st">'Point measurement.'</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>, <span class="st">'Not reported or not submitted at time of data upload.'</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed top'</span>, <span class="st">'Not reported but submitted with assumed standard of top-depth reporting.'</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed bottom'</span>, <span class="st">'Not reported but submitted with assumed standard of bottom-depth reporting.'</span>),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'assumed midpoint'</span>, <span class="st">'Not reported but submitted with assumed standard of midpoint-depth reporting.'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="speleothem-entity-geology" class="level4">
 <h4 class="anchored" data-anchor-id="speleothem-entity-geology">Speleothem Entity Geology</h4>
-<p>For individual speleothems within mapped system, the underlying (or overlying) geology may differ. We want to create a table of acceptable geology parameters:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.speleothementitygeology(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    speleothemgeologyid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    speleothemgeology text,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    speleothemgeologynotes text</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothementitygeology (speleothemgeology)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'limestone'</span>),</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>),</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'dolomite'</span>),</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'mixed (see notes)'</span>),</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'dolomite limestone'</span>),</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'marble'</span>),</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'marly limestone'</span>),</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'other (see notes)'</span>),</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'calcarenite'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For individual speleothems within mapped system, the underlying (or overlying) geology may differ. We want to create a table of acceptable geology parameters.</p>
+<p>Take a look at this? https://www.bgs.ac.uk/technologies/bgs-rock-classification-scheme/</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.speleothementitygeology(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    speleothemgeologyid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    speleothemgeology text,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    speleothemgeologynotes text,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    speleothemgeologypublicationid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.publications(publicationid)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pubid <span class="kw">AS</span> (</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> ndb.publications <span class="kw">WHERE</span> doi <span class="op">=</span> <span class="st">'10.5194/essd-16-1933-2024'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> ndb.speleothementitygeology (speleothemgeology, speleothemgeologypublicationid)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'limestone'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'unknown'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'dolomite'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'mixed (see notes)'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'dolomite limestone'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'marble'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'marly limestone'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'other (see notes)'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid)),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'calcarenite'</span>, (<span class="kw">SELECT</span> publicationid <span class="kw">FROM</span> pubid));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>
 <section id="speleothem-entity-table" class="level2">
 <h2 class="anchored" data-anchor-id="speleothem-entity-table">Speleothem Entity Table</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ndb.speleothems(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    entityid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    entityname text,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    entitystatusid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothementitystatuses(entitystatusid),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">monitoring</span> <span class="dt">boolean</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    relativeageid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.relativeages(relativeageid),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    entrancedistance <span class="dt">real</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    entrancedistanceunits <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitsid)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    speleothemtypeid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothemtypes(speleothemtypeid)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> externalspeleothem(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    externalid text,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    externaldatabase <span class="dt">integer</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    externaldescription text</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>ndb.speleothem.landuse ndb.speleothem.copernicus_lcc ndb.speleothem.covertype ndb.speleothem.coverthickness ndb.externalspeleothem.id ndb.externalspeleothem.id ndb.speleothem.distance ndb.speleothem.speleothemtypeid ndb.speleothem.driptypeid ndb.speleothem.dripheightid ndb.externalspeleothem.id ndb.externalspeleothem.id</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.speleothems(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    siteid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.sites(siteid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    entityid serial <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    entityname text,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">monitoring</span> <span class="dt">boolean</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    rockageid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.relativeages(relativeageid),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    entrancedistance <span class="dt">real</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    entrancedistanceunits <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitsid)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    speleothemtypeid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothemtypes(speleothemtypeid)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entityrelationship(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    entitystatusid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothementitystatuses(entitystatusid),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    referenceentityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entitydripheight(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    speleothemdriptypeid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothemdriptypes(spelothemdriptypeid),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    entitydripheight <span class="dt">real</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    entitydripheightunit <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitsid)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entityvegetationcover(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    vegetationcovertypeid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    vegetationcoverpercent <span class="dt">integer</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    vegetationcovernotes text</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entitylandusecover(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    landusecovertypeid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.vegetationcovertypes(vegetationcovertypeid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    landusecoverpercent <span class="dt">integer</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    landusecovernotes text</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.entitycovers(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    entitycoverid <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.entitycovertypes(entitycoverid),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    entitycoverthickness <span class="dt">real</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    entitycoverunits <span class="dt">int</span> <span class="kw">REFERENCES</span> ndb.variableunits(variableunitsid)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="working-with-truefalse-data" class="level4">
+<h4 class="anchored" data-anchor-id="working-with-truefalse-data">Working with TRUE/FALSE data</h4>
+<p>There are a number of columns in the SISAL database that refer to elements such as fluid inclusions, organics or other elements that may be recorded but are not explicitly a part of the SISAL database. For these we use the table <code>externalspeleothemdata</code>. This allows us to define these elements and refer to an external resource using a PID. These would include (for example) references to noble_gas_temperatures, clumped_isotopes or fluid_inclusions. The structure of the <code>ndb.externaldatabases</code> table allows us to refer to external resources such as Dryad, PANGEA or CrossRef, if data is included within a publication. The table also supports a many-to-many relationship, so a single entity can be linked to multiple databases for various reasons.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ndb.externalspeleothemdata(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    entityid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.speleothems(entityid) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    externalid text,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    extdatabaseid <span class="dt">integer</span> <span class="kw">REFERENCES</span> ndb.externaldatabases(extdatabaseid),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    externaldescription text</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-baker1997stalagmite" class="csl-entry" role="listitem">
+Baker, A, WL Barnes, and PL Smart. 1997. <span>“Stalagmite Drip Discharge and Organic Matter Fluxes in Lower Cave, Bristol.”</span> <em>Hydrological Processes</em> 11: 1541–56.
+</div>
+<div id="ref-j2007speleothems" class="csl-entry" role="listitem">
+J. Fairchild, Ian, Silvia Frisia, Andrea Borsato, and Anna F. Tooth. 2007. <span>“Speleothems.”</span> <em>Geochemical Sediments and Landscapes</em>, 200–245.
+</div>
+<div id="ref-essd-16-1933-2024" class="csl-entry" role="listitem">
+Kaushal, N., F. A. Lechleitner, M. Wilhelm, K. Azennoud, J. C. Bühler, K. Braun, Y. Ait Brahim, et al. 2024. <span>“SISALv3: A Global Speleothem Stable Isotope and Trace Element Database.”</span> <em>Earth System Science Data</em> 16 (4): 1933–63. <a href="https://doi.org/10.5194/essd-16-1933-2024">https://doi.org/10.5194/essd-16-1933-2024</a>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
