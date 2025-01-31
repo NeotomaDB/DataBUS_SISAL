@@ -4,6 +4,7 @@ from json import loads
 from os import getenv
 from os import path
 import csv
+from re import sub
 
 
 def write_to_csv(sisal:list, colnames:tuple) -> None:
@@ -21,7 +22,7 @@ def write_to_csv(sisal:list, colnames:tuple) -> None:
     keys = colnames
     tofile = []
     for i in sisal:
-        outdict = {}
+        out_dict = {}
         for k in range(len(keys)):
             if keys[k] not in outdict.keys():
                 outdict[keys[k]] = i[k] 
@@ -30,7 +31,7 @@ def write_to_csv(sisal:list, colnames:tuple) -> None:
     with open(f'../../data/sisal_site_{sisal[0][0]}.csv', 'w', newline='', encoding="UTF-8") as output_file:
         dict_writer = csv.DictWriter(output_file, new_keys)
         dict_writer.writeheader()
-        dict_writer.writerows(tofile)
+        dict_writer.writerows(to_file)
     return None
 
 assert path.isdir('../../data'), "There is no directory at '../../data'."
@@ -40,10 +41,26 @@ call_siteids = """
     FROM site
 """
 
+    Returns:
+        bool: _Does the directory or file exist?_
+    """
+    if filename:
+        clean_path = sub('/$', '', data_path)
+        output = path.isfile(f'{clean_path}{filename}')
+    else:
+        output = path.isdir(data_path)
+    return output
+
+# Create database connector:
 load_dotenv()
 CONN_STRING = loads(getenv("SISAL_CONNECT"))
         
 con = connect(**CONN_STRING)
+
+# Get all unique site_id values from SISAL v3
+call_siteids = """
+SELECT DISTINCT site.site_id
+FROM site"""
 
 cur = con.cursor()
 cur.execute(call_siteids)
@@ -59,4 +76,5 @@ for i in row:
     cur.execute(big_query, {'site_id': i[0]})
     colnames = cur.column_names
     site_output = cur.fetchall()
-    write_to_csv(site_output, colnames)
+    if data_path_exists('../../data/'):
+        write_to_csv(site_output, colnames, data_path='../../data/')
