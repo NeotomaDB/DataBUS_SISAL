@@ -7,7 +7,7 @@ authors:
 - family-names: "Goring"
   given-names: "Simon"
   orcid: "https://orcid.org/0000-0002-2700-4605"
-title: "Neotoma Paleoecology Database DataBUS"
+title: "Neotoma Paleoecology Database DataBUS uploader for the SISAL v3 Database"
 version: 0.1.0
 date-released: 2023-11-15
 url: "https://github.com/NeotomaDB/DataBUS"
