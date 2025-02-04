@@ -1,4 +1,4 @@
-# DataBUS
+# DataBUS: SISAL v3 Data Upload
 
 [![NSF-1948926](https://img.shields.io/badge/NSF-1948926-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948926)
 
