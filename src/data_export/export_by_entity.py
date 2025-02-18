@@ -24,7 +24,7 @@ def write_to_csv(sisal:list, col_names:tuple, data_path = '../../data/') -> None
                 out_dict[keys[k]] = i[k] 
         to_file.append(out_dict)
     new_keys = out_dict.keys()
-    with open(f'{data_path}sisal_site_{sisal[0][0]}.csv', 'w', newline='') as output_file:
+    with open(f'{data_path}sisal_entity_{sisal[0][0]}.csv', 'w', newline='') as output_file:
         dict_writer = csv.DictWriter(output_file, new_keys)
         dict_writer.writeheader()
         dict_writer.writerows(to_file)
@@ -53,12 +53,12 @@ CONN_STRING = loads(getenv("SISAL_CONNECT"))
 con = mysql.connector.connect(**CONN_STRING)
 
 # Get all unique site_id values from SISAL v3
-call_siteids = """
-SELECT DISTINCT site.site_id
-FROM site"""
+call_entityids = """
+SELECT DISTINCT entity.entity_id
+FROM entity"""
 
 cur = con.cursor()
-cur.execute(call_siteids)
+cur.execute(call_entityids)
 row = cur.fetchall()
 
 # Load in the larger query:
@@ -66,7 +66,7 @@ with open('sql/wide_export.sql') as f:
     big_query = f.read()
 
 for i in row:
-    cur.execute(big_query, {'site_id': i[0]})
+    cur.execute(big_query, {'entity_id': i[0]})
     colnames = cur.column_names
     site_output = cur.fetchall()
     if data_path_exists('../../data/'):

@@ -99,5 +99,5 @@ sis_cr.StalAge_age_uncert_neg,
     LEFT JOIN entity AS compe ON en.entity_id = compe.entity_id
     LEFT JOIN composite_link_entity AS complen ON compe.entity_id = complen.composite_entity_id
     LEFT JOIN entity AS single_ent ON complen.single_entity_id = single_ent.entity_id
-    WHERE st.site_id = %(site_id)s
+    WHERE en.entity_id = %(entity_id)s
     ORDER BY en.entity_id, depths.depth;
