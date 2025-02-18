@@ -355,7 +355,7 @@ VALUES ('current'),
 How is depth measured? I'm moving this to a higher level table (without "entity" in front of it) because I think this is important going forward regardless.
 
 ```{sql, add_depth_reference}
-CREATE TABLE IF NOT EXISTS ndb.depthreferencesystem(
+CREATE TABLE IF NOT EXISTS ndb.depthreferencesystems(
     depthreferencesystemid serial PRIMARY KEY,
     depthreference text,
     depthreferencenotes text,
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS ndb.depthreferencesystem(
 ```
 
 ```{sql, add_depth_reference_values}
-INSERT INTO ndb.depthreferencesystem(depthreference, depthreferencenotes)
+INSERT INTO ndb.depthreferencesystems(depthreference, depthreferencenotes)
 VALUES
     ('from top', 'Measured Depth at section top (depth at bottom is depth + thickness).'),
     ('from base', 'Measured Depth at section top (depth at top is depth - thickness).'),
@@ -417,6 +417,8 @@ CREATE TABLE IF NOT EXISTS ndb.speleothems(
     entityid serial PRIMARY KEY,
     entityname text,
     monitoring boolean,
+    depthreferencesystemid integer REFERENCES ndb.depthreferencesystems(depthreferencesystemid),
+    speleothemgeologyid integer REFERENCES ndb.speleothemgeologyid(speleothemgeologyid),
     rockageid integer REFERENCES ndb.relativeages(relativeageid),
     entrancedistance real,
     entrancedistanceunits int REFERENCES ndb.variableunits(variableunitsid)
