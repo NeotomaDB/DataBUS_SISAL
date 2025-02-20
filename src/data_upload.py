@@ -23,7 +23,7 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK')) #'PGDB_LOCAL' when uploading to Neotoma proper
+data = json.loads(os.getenv('PGDB_TANK'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
@@ -84,13 +84,6 @@ for filename in filenames:
                                                 uploader = uploader)
     logfile = logging_response(uploader['anunits'], logfile)
 
-    logfile.append('\n === Inserting Lead Models ===')
-    uploader['pbmodel'] = nu.insert_pbmodel(cur = cur,
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                            uploader = uploader)
-    logfile = logging_response(uploader['pbmodel'], logfile)
-
     logfile.append('\n=== Inserting Chronology ===')
     uploader['chronology'] = nu.insert_chronology(cur = cur,
                                                   yml_dict = yml_dict,
@@ -125,13 +118,6 @@ for filename in filenames:
                                                     csv_file = csv_file,
                                                     uploader = uploader)
     logfile = logging_response(uploader['processor'], logfile)
- 
-    logfile.append('\n=== Inserting Repository ===')
-    uploader['repository'] = nu.insert_dataset_repository(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_file = csv_file,
-                                                        uploader = uploader)
-    logfile = logging_response(uploader['repository'], logfile)
 
     logfile.append('\n=== Inserting Dataset Database ===')
     uploader['database'] = nu.insert_dataset_database(cur = cur,
@@ -167,13 +153,6 @@ for filename in filenames:
                                     uploader = uploader)
     logfile = logging_response(uploader['data'], logfile)
 
-    logfile.append('\n === Inserting Uncertainties ===')
-    uploader['uncertainties'] = nu.insert_datauncertainty(cur, 
-                                    yml_dict = yml_dict,
-                                    csv_file = csv_file,
-                                    uploader = uploader)
-    logfile = logging_response(uploader['uncertainties'], logfile)
-
     logfile.append('\n === Inserting Publications ===')
     uploader['publications'] = nu.insert_publication(cur, 
                                     yml_dict = yml_dict,
@@ -191,9 +170,7 @@ for filename in filenames:
     all_true = all_true and hashcheck
     if all_true:
         print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-        #Uncomment when ready to upload
         #conn.commit()
-        #Delete/comment when ready to upload
         conn.rollback()
         os.makedirs(uploaded_files, exist_ok=True)
         uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))

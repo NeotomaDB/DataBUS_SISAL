@@ -1,0 +1,1845 @@
+apiVersion: neotoma v2.0
+headers: 2
+kind: Development
+metadata:
+# Constants
+- column: datasettypeid
+  neotoma: ndb.datasettypes.datasettype
+  overwrite: false
+  required: true
+  value: speleothem
+- column: databaseid
+  neotoma: 'ndb.datasetdatabases.databasename'
+  overwrite: false
+  required: true
+  value: SISAL
+### Sites
+- column: site_name
+  neotoma: ndb.sites.sitename
+  notes: name by author
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: elevation
+  neotoma: ndb.sites.altitude
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+- column: site_id
+  neotoma: ndb.sites.sitedescription
+  notes: SISAL's database level. The idea here is cross-referencing the SISAL database siteid link.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: notes
+  neotoma: ndb.sites.notes
+  notes: All notes in SISAL are at site level only.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: null
+- column: latitude
+  neotoma: ndb.sites.geog.latitude
+  notes: number
+  notes ii: Link as a spatial object.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Site
+  type: float
+- column: longitude
+  neotoma: ndb.sites.geog.longitude
+  notes: Link as a spatial object.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+## Collection Units
+- column: site_name
+  neotoma: ndb.collectionunits.handle
+  notes: name by author
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: site_name
+  neotoma: ndb.collectionunits.collunitname
+  notes: name by author
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+# Speleothems - missing entrancedistanceunits
+- column: site_id
+  neotoma: ndb.speleothems.siteid
+  notes: database level
+  notes ii: This would be the Neotoma SiteID to link (as opposed to the SISAL siteid)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: int
+- column: entity_id
+  neotoma: ndb.speleothems.entityid
+  notes: database level
+  notes ii: Referencing the speleothem entity (not the core itself)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: int
+- column: entity_name
+  neotoma: ndb.speleothems.entityname
+  notes: name by author
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+- column: monitoring
+  neotoma: ndb.speleothems.monitoring
+  notes: yes or no question
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Site
+  type: null
+  vocab: ['yes', 'no']
+- column: rock_age
+  neotoma: ndb.speleothems.rockageid
+  notes: the actual rock age (geological age) from a dropdown list
+  notes ii: This table exists within  ndb.relativeages
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [Holocene, Pleistocene, Pliocene, Miocene, Oligocene, Eocene, Palaeocene,
+    Cretaceous, Jurassic, Triassic, Permian, Carboniferous, Devonian, Silurian, Ordovician,
+    Cambrian, Precambrian, mixed (add note to notes sheet), other (add note to notes
+      sheet), unknown]
+- column: distance_entrance
+  neotoma: ndb.speleothems.entrancedistance
+  notes: actual distance of speleothem from the cave entrance as a 'number'
+  notes ii: Are these in standard units? # no units to report in data
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: float
+- column: speleothem_type
+  neotoma: ndb.speleothems.speleothemtypeid
+  notes: actual speleothem type (stalagmite, stalactite, composite, flowstone) from
+    dropdown list options
+  notes ii: Find values in speleothemtypes table
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['stalagmite', 'stalactite', 'flowstone', 'composite',
+          'mixed (add note to notes sheet)', 'other (add note to notes sheet)', 
+          'unknown']
+- column: entity_status
+  neotoma: ndb.speleothems.entitystatusid
+  notes: dropdown list options asking if the entity has been superceded by a newer
+    dataset e.g. with higher resolution and more accurate chronology that SHOULD be
+    used instead
+  notes ii: The statusids would be in a separate table to enforce consistency
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [completely supersedes, completely superseded by, partially supersedes, partially
+      superseded by, not applicable]
+- column: drip_type
+  neotoma: ndb.speleothems.speleothemdriptypeid
+  notes: actual drip type (e.g. seasonal etc) from dropdown list options
+  notes ii: We need a drip type table.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['seepage flow','seasonal drip','fast flow', 'mixed (add note to notes sheet)',
+          'other (add note to notes sheet)','unknown']
+- column: geology
+  neotoma: ndb.speleothems.speleothemgeologyid
+  notes: the actual geology (rock-type) from a dropdown list
+  notes ii: Speleothems may have different geologies within a single site depending
+    on their position
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [limestone, dolomite, marble, dolomitic limestone, marly limestone, calcarenite,
+    gypsum, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
+# Analysis Units
+- column: sample_id
+  neotoma: ndb.analysisunits.analysisunitname
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: null
+- column: depth_sample
+  neotoma: ndb.analysisunits.depth
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: float
+- column: sample_thickness
+  neotoma: ndb.analysisunits.thickness
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: float
+- column: mineralogy
+  neotoma: ndb.analysisunits.faciesid
+  notes: dropdown list options
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: null
+  vocab: ['calcite', 'secondary calcite', 'aragonite', 
+          'vaterite', 'mixed', 'other', 'unknown']     
+### Samples
+- column: lab_num
+  neotoma: ndb.samples.labnumber
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+## Sample Ages
+- column: age_model_type
+  neotoma: ndb.chronologies.agemodel
+  notes: dropdown list option
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Original chronology
+  type: str
+  vocab: [linear, linear between dates, polynomial fit, polynomial fit omitting outliers,
+    Bayesian, Bayesian Bacon, Bayesian Bchron, StalAge, StalAge and other, Clam, COPRA,
+    OxCal, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
+- column: lin_interp_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_interp_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_interp_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bchron_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bchron_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bchron_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: OxCal_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: OxCal_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: OxCal_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: StalAge_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: StalAge_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: StalAge_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: copRa_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: copRa_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: copRa_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: interp_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  notes ii: Need to define 'agetype'
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Original chronology
+  type: float
+- column: interp_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Original chronology
+  type: float
+- column: interp_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Original chronology
+  type: float
+- column: lin_reg_age
+  neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_reg_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_reg_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: sample_id
+  neotoma: ndb.sampleages.sampleid # Cannot be that sampleID because SISAL's and Neotoma's ID may not be the same
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: null
+## Are these sample ages or chronologies?
+- column: 14C_correction
+  neotoma: ndb.radiocarbon.resevoir
+  notes: percentage
+  notes ii: Is this for calcium/resevoir correction?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: Ba_Ca_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Ba_Ca
+  taxonname: Ba_Ca
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: Ba_Ca_precision
+    unitcolumn: null
+- column: Ba_Ca_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: Ba_Ca
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: Ba_Ca_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: Ba_Ca_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['NIST SRM 610','NIST SRM 612','NIST SRM 614','CaCO3 (NIST\
+    \ SRM 915a)','SrCO3 (NIST SRM 987)','MACS-1','MACS-3','standard\
+    \ stock solutons of known concentrations',\_'multi-element standards pre-calibrated\
+    \ by Merck etc.','Japanese coral standard JCP-1 doped with single element\
+    \ standards of known concentrations','metal standards','other (add note\
+    \ to notes sheet)','unknown']
+- column: Mg_Ca_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Mg_Ca
+  taxonname: Mg_Ca
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: Mg_Ca_precision
+    unitcolumn: null
+- column: Mg_Ca_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: Mg_Ca
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: Mg_Ca_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: Mg_Ca_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['NIST SRM 610','NIST SRM 612','NIST SRM 614','CaCO3 (NIST\
+    \ SRM 915a)','SrCO3 (NIST SRM 987)','MACS-1','MACS-3','standard\
+    \ stock solutons of known concentrations',\_'multi-element standards pre-calibrated\
+    \ by Merck etc.','Japanese coral standard JCP-1 doped with single element\
+    \ standards of known concentrations','metal standards','other (add note\
+    \ to notes sheet)','unknown']
+- column: P_Ca_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: P_Ca
+  taxonname: P_Ca
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: P_Ca_precision
+    unitcolumn: null
+- column: P_Ca_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: P_Ca
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: P_Ca_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: P_Ca_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['NIST SRM 610','NIST SRM 612','NIST SRM 614','CaCO3 (NIST\
+    \ SRM 915a)','SrCO3 (NIST SRM 987)','MACS-1','MACS-3','standard\
+    \ stock solutons of known concentrations','multi-element standards pre-calibrated\
+    \ by Merck etc.','Japanese coral standard JCP-1 doped with single element\
+    \ standards of known concentrations','metal standards','other (add note\
+    \ to notes sheet)','unknown']
+- column: Sr_Ca_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sr_Ca
+  taxonname: Sr_Ca
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: Sr_Ca_precision
+    unitcolumn: null
+- column: Sr_Ca_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: Sr_Ca
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: Sr_Ca_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  notes ii: Already part of the Neotoma model.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: Sr_Ca_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  notes ii: Already part of the Neotoma model.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['NIST SRM 610','NIST SRM 612','NIST SRM 614','CaCO3 (NIST\
+    \ SRM 915a)','SrCO3 (NIST SRM 987)','MACS-1','MACS-3','standard\
+    \ stock solutons of known concentrations',\_'multi-element standards pre-calibrated\
+    \ by Merck etc.','Japanese coral standard JCP-1 doped with single element\
+    \ standards of known concentrations','metal standards','other (add note\
+    \ to notes sheet)','unknown']
+- column: Sr_isotopes_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: Sr_isotopes_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sr_isotopes
+  taxonname: Sr_isotopes
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Sr_isotopes_precision
+    unitcolumn: null
+- column: Sr_isotopes_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: Sr_isotopes
+  uncertaintybasis: null
+  type: float
+  vocab: null
+- column: Sr_isotopes_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [NIST SRM 610, NIST SRM 612, NIST SRM 614, CaCO3 (NIST SRM 915a), SrCO3 (NIST
+      SRM 987), MACS-1, MACS-3, standard stock solutons of known concentrations, multi-element
+      standards pre-calibrated by Merck etc., Japanese coral standard JCP-1 doped
+      with single element standards of known concentrations, metal standards, other
+      (add note to notes sheet), unknown]
+- column: U_Ca_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: U_Ca
+  taxonname: U_Ca
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: U_Ca_precision
+    unitcolumn: null
+- column: U_Ca_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: U_Ca
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: U_Ca_method
+  neotoma: ndb.isoinstrumentation.isointrumentationtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [solution ICP-MS, solution OES-MS, solution ICP-AES, synchroton XRF, micro
+      XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
+    TIMS, other (add note to notes sheet), unknown]
+- column: U_Ca_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['NIST SRM 610','NIST SRM 612','NIST SRM 614','CaCO3 (NIST\
+    \ SRM 915a)','SrCO3 (NIST SRM 987)','MACS-1','MACS-3','standard\
+    \ stock solutons of known concentrations',\_'multi-element standards pre-calibrated\
+    \ by Merck etc.','Japanese coral standard JCP-1 doped with single element\
+    \ standards of known concentrations','metal standards','other (add note\
+    \ to notes sheet)','unknown']
+- column: calib_used
+  neotoma: ndb.chroncontrolscal14.calibrationcurveid
+  notes: dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: [INTCAL13 NH, INTCAL13 SH, INTCAL13 marine, INTCAL09, INTCAL09 marine, INTCAL04
+      NH, INTCAL04 SH, INTCAL98, FAIRBANKS09, not calibrated, unknown]
+- column: cave_map
+  neotoma: ndb.speleothem.imagemap
+  notes: asks the question 'if this has been made available with the database version
+    in the repository', yes or no, checked at database level
+  notes ii: External links?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', 'unknown', 'other (add note to notes sheet)']
+- column: citation
+  neotoma: ndb.publications.citation
+  notes: alphanumeric
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Reference
+  type: string
+- column: clumped_isotopes
+  neotoma: ndb.speleothem.clumped_isotopes
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: composite_entity_id
+  neotoma: ndb.aggregatedatasets
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Composite link entity
+  type: null
+- column: contact
+  neotoma: ndb.datasetpis.contactname
+  notes: name of author / data contributor / sisal coordinator that handled the primary
+    data entry
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Entity
+  type: null
+- column: copernicus_lcc
+  neotoma: ndb.speleothem.copernicus_lcc
+  notes: externally sourced dataset filled at database level from shape files
+  notes ii: Satelite based
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: corr_age
+  neotoma: ndb.chroncontrols.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: corr_age_uncert_neg
+  neotoma: ndb.chroncontrols.agelimityounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: corr_age_uncert_pos
+  neotoma: ndb.chroncontrols.agelimitolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: cover_thickness
+  neotoma: ndb.speleothem.coverthickness
+  notes: actual cover thickness as a 'number'
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: cover_type
+  neotoma: ndb.speleothem.covertype
+  notes: actual cover type filled from dropddown list options by authors or from
+    publications
+  notes ii: FROM AUTHOR
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['thick',\r'thin',\r'patchy',\r'barren',\r'mixed (add note\
+    \ to notes sheet)',\r'other (add note to notes sheet)',\r'unknown']
+- column: d13C
+  neotoma: ndb.externalspeleothem.id
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  notes ii: This is for external data if it's measured but not reported in SISAL
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no']
+- column: d13C_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: d13C
+  taxonname: d13C
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: d13C_precision
+    unitcolumn: null
+- column: d13C_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: d13C
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: d18O
+  neotoma: ndb.externalspeleothem.id
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  notes ii: This is for external data if it's measured but not reported in SISAL
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no']
+- column: d18O_measurement
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: d18O
+  taxonname: d18O
+  type: float
+  uncertainty:
+    uncertaintybasis: 'Precision'
+    uncertaintycolumn: d18O_precision
+    unitcolumn: null
+- column: d18O_precision
+  formatorrange: '> 0'
+  neotoma: ndb.datauncertainties.uncertaintyvalue
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: d18O
+  uncertaintybasis: 'Precision'
+  type: float
+  vocab: null
+- column: d18O_dripwater_carbonate_difference
+  neotoma: ndb.speleothem.dripwatercarbonatedifference
+  notes: actual measurement given as a number by authors
+  notes ii: 'Feels like we could do better. . . '
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: date_type
+  neotoma: ndb.chroncontrols.chroncontroltypeid
+  notes: dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: [C14, MC-ICP-MS U/Th, ICP-MS U/Th Other, Alpha U/Th, TIMS, U/Th unspecified,
+    Cross-dating, Multiple methods, Event; hiatus, Event; actively forming, Event;
+      start of laminations, Event; end of laminations, other (add note to notes sheet),
+    unknown]
+- column: dating_id
+  neotoma: ndb.chroncontrols.chroncontrolid
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: dating_thickness
+  neotoma: ndb.chroncontrols.thickness
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: depth_dating
+  neotoma: ndb.chroncontrols.depth
+  notes: number
+  notes ii: Should be tied to the analysisunit from which its pulled
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: depth_ref
+  neotoma: ndb.speleothem.depthreference
+  notes: depth measured from the top or the bottom of the core; dropdown list option
+  notes ii: The speleothem is sectioned in cross section and sampled in the axis of
+    drip
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [from top, from base, not applicable]
+- column: drip_height
+  neotoma: ndb.speleothem.dripheightid
+  notes: height of drip from stalagmite / flowstone as a number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: 'drip_water_trace_elements'
+  neotoma: ndb.externalspeleothem.id
+  notes: 'yes or no question '
+  notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: entity_scan
+  neotoma: ndb.speleothem.entityscan #must be different place
+  notes: asks the question 'if this has been made available with the database version
+    in the repository', yes or no, checked at database level
+  notes ii: External links?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: fluid_inclusions
+  neotoma: ndb.speleothem.fluidinclusions #not right place
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: 'host_rock_trace_elements'
+  neotoma: ndb.externalspeleothem.id
+  notes: 'yes or no question '
+  notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: TRUE/FALSE
+- column: iso_std
+  neotoma: ndb.isostandards.isostandardtypeid
+  notes: isotope measurement standard as 'PDB' or 'VPDB' filled by authors
+  notes ii: Links to ndb.isostandards (currently empty, but we can populate it)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [PDB, Vienna-PDB]
+- column: lab_num
+  neotoma: ndb.geochronology.labnumber
+  notes: alphanumeric
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: land_use
+  neotoma: ndb.speleothem.landuse
+  notes: 'actual land use type filled from dropddown list options by authors or from
+    publications '
+  notes ii: As above, a long cave may cross multiple vegetation types.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [water body, wetland, forest, farmland, pasture, concrete and built up, mixed
+      (add note to notes sheet), other (add note to notes sheet), unknown]
+- column: material_dated
+  neotoma: ndb.geochronology.materialdated
+  notes: dropdown list options
+  notes ii: This is a free-form field. Maybe we should actually create a table for
+    it?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: [calcite, aragonite, organic, mixed (add note to notes sheet), other (add
+      note to notes sheet), unknown]
+- column: mineralogy_petrology_fabrics
+  neotoma: ndb.speleothem.mineralogy_petrology_fabrics
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: noble_gas_temperatures
+  neotoma: ndb.speleothem.nobel_gas_temperatures
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: organics
+  neotoma: ndb.speleothem.organics
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: persist_id
+  neotoma: ndb.speleothem.persistid
+  notes: database level
+  notes ii: Not needed (I don't think), but we can link to it
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: int
+- column: publication_doi
+  formatorrange: Valid DOI regex
+  neotoma: ndb.publications.doi
+  notes: alphanumeric
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Reference
+  type: string
+- column: ref_id
+  neotoma: ndb.speleothem.speleothemid
+  notes: database level; links multiple references to single entity
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity link reference
+  type: null
+- column: sample_id
+  neotoma: ndb.sampleid
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Original chronology
+  type: null
+- column: single_entity_id
+  neotoma: ndb.speleothem.speleothemid #???
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Composite link entity
+  type: null
+- column: site_id
+  neotoma: ndb.siteid
+  notes: database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Notes
+  type: null
+- column: uncorr_age
+  neotoma: ndb.geochronology.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: uncorr_age_uncert_neg
+  neotoma: ndb.geochronology.erroryounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: uncorr_age_uncert_pos
+  neotoma: ndb.geochronology.errorolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: vegetation_type
+  neotoma: ndb.speleothem.vegetation
+  notes: 'actual vegetation type filled from dropddown list options by authors or
+    from publications '
+  notes ii: As above, a long cave may cross multiple vegetation types.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [evergreen, deciduous, shrubland, grassland, sparse, barren, mixed (add note
+      to notes sheet), other (add note to notes sheet), unknown]
+
+
+########################################  
+# Non defined
+- column: corresponding_current
+  neotoma: '-'
+  notes: entity_name in the database that SHOULD be used instead
+  notes ii: IGNORE -- Based on Notes
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: wokam
+  neotoma: --
+  notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
+    filled at database level from WOKAM shapefiles
+  notes ii: External data layer
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: C14
+  neotoma: ndb.geochroncontrols.
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  notes ii: Is this not then linked to the geochronology table?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: Mg_Ca
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  notes ii: I think this winds up coming from ndb.variables, because an absence there
+    indicates it is not measured.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: Mg_Ca_downsampled
+  neotoma: ???
+  notes: yes or no question
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [No-not applicable, No-aliquots of same powder used for stable isotope and
+      trace element measurements., No-but different powders used for stable isotope
+      and trace element measurements., Yes-author downsampled, Yes-SISAL downsampled,
+    other (add note to notes sheet), unknown]
+- column: Mg_Ca_downsampling_method
+  neotoma: ???
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [running average/mean, linear interpolation, NESTool - kernel based downsampling,
+    IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
+      filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
+      to notes sheet), unknown]
+- column: ODL
+  neotoma: 'ndb.geochroncontrols. . . '
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: Sr_Ca
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  notes ii: I think this winds up coming from ndb.variables, because an absence there
+    indicates it is not measured.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: 'Sr_Ca_downsampled'
+  neotoma: ???
+  notes ii: sjg - I'm not sure. I don't understand where this fits in the current
+    Neotoma model of isotope measurements.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [No-not applicable, No-aliquots of same powder used for stable isotope and
+      trace element measurements., No-but different powders used for stable isotope
+      and trace element measurements., Yes-author downsampled, Yes-SISAL downsampled,
+    other (add note to notes sheet), unknown]
+- column: 'Sr_Ca_downsampling_method'
+  neotoma: ???
+  notes: selection by authors from dropdown list options
+  notes ii: sjg - I'm not sure. I don't understand where this fits in the current
+    Neotoma model of isotope measurements.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [running average/mean, linear interpolation, NESTool - kernel based downsampling,
+    IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
+      filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
+      to notes sheet), unknown]
+- column: Ba_Ca
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: 'Ba_Ca_downsampled'
+  neotoma: ???
+  notes: yes or no question
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [No-not applicable, No-aliquots of same powder used for stable isotope and
+      trace element measurements., No-but different powders used for stable isotope
+      and trace element measurements., Yes-author downsampled, Yes-SISAL downsampled,
+    other (add note to notes sheet), unknown]
+- column: 'Ba_Ca_downsampling_method'
+  neotoma: ???
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [running average/mean, linear interpolation, NESTool - kernel based downsampling,
+    IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
+      filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
+      to notes sheet), unknown]
+- column: U_Ca
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: 'U_Ca_downsampled'
+  neotoma: ???
+  notes: yes or no question
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [No-not applicable, No-aliquots of same powder used for stable isotope and
+      trace element measurements., No-but different powders used for stable isotope
+      and trace element measurements., Yes-author downsampled, Yes-SISAL downsampled,
+    other (add note to notes sheet), unknown]
+- column: 'U_Ca_downsampling_method'
+  neotoma: ???
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [running average/mean, linear interpolation, NESTool - kernel based downsampling,
+    IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
+      filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
+      to notes sheet), unknown]
+- column: P_Ca
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: 'P_Ca_downsampled'
+  neotoma: ???
+  notes: yes or no question
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [No-not applicable, No-aliquots of same powder used for stable isotope and
+      trace element measurements., No-but different powders used for stable isotope
+      and trace element measurements., Yes-author downsampled, Yes-SISAL downsampled,
+    other (add note to notes sheet), unknown]
+- column: 'P_Ca_downsampling_method'
+  neotoma: ???
+  notes: selection by authors from dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: [running average/mean, linear interpolation, NESTool - kernel based downsampling,
+    IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
+      filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
+      to notes sheet), unknown]
+- column: Sr_isotopes
+  neotoma: --
+  notes: asks the question 'if this dataset has been made available in the database',
+    yes or no, checked at database level
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: data_DOI_url
+  neotoma: ndb.externaldata
+  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: null
+- column: min_weight
+  neotoma: ???
+  notes: number
+  notes ii: Not currently supported, but makes sense to include it.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: max_weight
+  neotoma: ???
+  notes: number
+  notes ii: Not currently supported, but makes sense to include it.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: date_used
+  neotoma: --
+  notes: yes or no question
+  notes ii: This gets sorted in the chronology. A collectionunit can have multiple
+    geochron elements associated with it, but they aren't neccessarily used in the
+    specific chronology.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no', mixed (add note to notesheet)]
+- column: date_used_Bacon
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_Bchron
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_OxCal
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_StalAge
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_copRa
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_lin_interp
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: date_used_lin_reg
+  neotoma: '---'
+  notes: database level, yes or no question, asks if the date was used to create SISAL
+    standard chronology
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: ['yes', 'no']
+- column: 238U_content
+  neotoma: ???
+  notes: number
+  notes ii: We may have to rethink the 210Pb stuff, depending on how we want to handle
+    this all.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 238U_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 232Th_content
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 232Th_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 234U_238U_activity_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 234U_238U_activity
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 230Th_232Th_ratio
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: '230Th_238U_activity_uncertainty'
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 230Th_238U_activity
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 230Th_content
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 230Th_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: 230Th_232Th_ratio_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: ini_230Th_232Th_ratio_uncertainty
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: ini_230Th_232Th_ratio
+  neotoma: ???
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+- column: decay_constant
+  neotoma: ???
+  notes: dropdown list options
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Dating
+  type: null
+  vocab: [Cheng et al. 2000, Cheng et al. 2013, Edwards et al. 1987, Ivanovich & Harmon
+      1992, other (add note to notes sheet), unknown]
+- column: arag_corr
+  neotoma: ???
+  notes: yes or no question. Standards used for isotope emasurements are typically
+    composed of calcite even if the samples are composed of aragonite. A correction
+    (~0.6 per mille) may or maynot be made for this.
+  notes ii: Not sure where to do this. Aragonite correction?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Sample
+  type: null
+  vocab: ['yes','no','not applicable','unknown']
+
+
+
+# not listed
+- column: '---'
+  neotoma: ndb.speleothem.geography
+  notes ii: three dimensional spatial object
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: '---'
+  table: '---'
+  type: null
+# - column: host_rock_trace_elements
+# - column: drip_water_trace_elements
+# - column: trace_elements_datafile
+# - column: trace_elements_metadatafile
+# - column: d18O_water_equilibrium
+# - column: depth
+# - column: depth_lam
+# - column: lam_thickness
+# - column: lam_age
+# - column: lam_age_uncert_pos
+# - column: lam_age_uncert_neg
+# - column: hiatus
+# - column: ann_lam_check
+# - column: dep_rate_check
