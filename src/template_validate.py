@@ -138,13 +138,14 @@ for filename in filenames:
                                               csv_file = csv_file,
                                               wide = True)
         logfile = logging_response(validator['taxa'], logfile)
-        
+        break
         logfile.append('\n === Validating Data Uncertainties ===')
         validator['uncertainty'] = nv.valid_datauncertainty2(cur = cur,
                                                  yml_dict = yml_dict,
                                                  csv_file = csv_file,
                                                  wide = True)
         logfile = logging_response(validator['uncertainty'], logfile)
+        break
 
         
         # # Nothing needs to be committed to the database

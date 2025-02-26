@@ -502,7 +502,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: Ba_Ca_precision
-    unitcolumn: null
+    unitcolumn: Ba_Ca_precision_units
+  unitcolumn: Ba_Ca_measurement_units
+- column: Ba_Ca_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Ba_Ca_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -513,6 +520,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: Ba_Ca_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Ba_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
@@ -554,7 +567,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: Mg_Ca_precision
-    unitcolumn: null
+    unitcolumn: Mg_Ca_precision_units
+  unitcolumn: Mg_Ca_measurement_units
+- column: Mg_Ca_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Mg_Ca_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -565,6 +585,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: Mg_Ca_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Mg_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
@@ -606,7 +632,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: P_Ca_precision
-    unitcolumn: null
+    unitcolumn: P_Ca_precision_units
+  unitcolumn: P_Ca_measurement_units
+- column: P_Ca_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: P_Ca_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -617,6 +650,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: P_Ca_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: P_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
@@ -658,7 +697,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: Sr_Ca_precision
-    unitcolumn: null
+    unitcolumn: Sr_Ca_precision_units
+  unitcolumn: Sr_Ca_measurement_units
+- column: Sr_Ca_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Sr_Ca_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -669,6 +715,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: Sr_Ca_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Sr_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
@@ -713,7 +765,6 @@ metadata:
 - column: Sr_isotopes_measurement
   formatorrange: '> 0'
   neotoma: ndb.data.value
-  notes: number
   overwrite: false
   required: false
   rowwise: true
@@ -722,9 +773,16 @@ metadata:
   taxonname: Sr_isotopes
   type: float
   uncertainty:
-    uncertaintybasis: null
+    uncertaintybasis: 'Precision'
     uncertaintycolumn: Sr_isotopes_precision
-    unitcolumn: null
+    unitcolumn: Sr_isotopes_precision_units
+  unitcolumn: Sr_isotopes_measurement_units
+- column: Sr_isotopes_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Sr_isotopes_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -735,6 +793,12 @@ metadata:
   uncertaintybasis: null
   type: float
   vocab: null
+- column: Sr_isotopes_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: Sr_isotopes_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
@@ -763,7 +827,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: U_Ca_precision
-    unitcolumn: null
+    unitcolumn: U_Ca_precision_units
+  unitcolumn: U_Ca_measurement_units
+- column: U_Ca_measurement_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: U_Ca_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -774,6 +845,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: U_Ca_precision_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: U_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
@@ -949,7 +1026,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: d13C_precision
-    unitcolumn: null
+    unitcolumn: d13C_precision_units
+  unitcolumn: d13C_measurement_units
+- column: d13C_measurement_units
+  formatorrange: '> 0'
+  neotoma: ndb.variables.variableunits
+  required: false
+  rowwise: false
+  type: str
 - column: d13C_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -960,6 +1044,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: d13C_precision_units
+  formatorrange: '> 0'
+  neotoma: ndb.variables.variableunits
+  required: false
+  rowwise: false
+  type: str
 - column: d18O
   neotoma: ndb.externalspeleothem.id
   notes: asks the question 'if this dataset has been made available in the database',
@@ -986,7 +1076,14 @@ metadata:
   uncertainty:
     uncertaintybasis: 'Precision'
     uncertaintycolumn: d18O_precision
-    unitcolumn: null
+    unitcolumn: d18O_precision_units
+  unitcolumn: d18O_measurement_units
+- column: d18O_measurement_units
+  formatorrange: '> 0'
+  neotoma: ndb.variables.variableunits
+  required: false
+  rowwise: false
+  type: str
 - column: d18O_precision
   formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -997,6 +1094,12 @@ metadata:
   uncertaintybasis: 'Precision'
   type: float
   vocab: null
+- column: d18O_precision_units
+  formatorrange: '> 0'
+  neotoma: ndb.variables.variableunits
+  required: false
+  rowwise: false
+  type: str
 - column: d18O_dripwater_carbonate_difference
   neotoma: ndb.speleothem.dripwatercarbonatedifference
   notes: actual measurement given as a number by authors
