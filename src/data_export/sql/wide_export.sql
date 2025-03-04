@@ -37,6 +37,7 @@ SELECT DISTINCT
         dtl.depth_lam, dtl.lam_thickness, dtl.lam_age, dtl.lam_age_uncert_pos, dtl.lam_age_uncert_neg,
         smp.sample_thickness, smp.depth_sample, smp.mineralogy, smp.arag_corr,
         hia.hiatus,
+        gap.gap,
         ba_ca.Ba_Ca_measurement, ba_ca.Ba_Ca_precision,
         mg_ca.Mg_Ca_measurement, mg_ca.Mg_Ca_precision,
         p_ca.P_Ca_measurement, p_ca.P_Ca_precision,
@@ -48,26 +49,26 @@ SELECT DISTINCT
         ochron.interp_age, ochron.interp_age_uncert_pos, ochron.interp_age_uncert_neg,
 		ochron.age_model_type, ochron.ann_lam_check, ochron.dep_rate_check,
         sis_cr.lin_interp_age,
-sis_cr.lin_interp_age_uncert_pos,
-sis_cr.lin_interp_age_uncert_neg,
-sis_cr.lin_reg_age,
-sis_cr.lin_reg_age_uncert_pos,
-sis_cr.lin_reg_age_uncert_neg,
-sis_cr.Bchron_age,
-sis_cr.Bchron_age_uncert_pos,
-sis_cr.Bchron_age_uncert_neg,
-sis_cr.Bacon_age,
-sis_cr.Bacon_age_uncert_pos,
-sis_cr.Bacon_age_uncert_neg,
-sis_cr.OxCal_age,
-sis_cr.OxCal_age_uncert_pos,
-sis_cr.OxCal_age_uncert_neg,
-sis_cr.copRa_age,
-sis_cr.copRa_age_uncert_pos,
-sis_cr.copRa_age_uncert_neg,
-sis_cr.StalAge_age,
-sis_cr.StalAge_age_uncert_pos,
-sis_cr.StalAge_age_uncert_neg,
+        sis_cr.lin_interp_age_uncert_pos,
+        sis_cr.lin_interp_age_uncert_neg,
+        sis_cr.lin_reg_age,
+        sis_cr.lin_reg_age_uncert_pos,
+        sis_cr.lin_reg_age_uncert_neg,
+        sis_cr.Bchron_age,
+        sis_cr.Bchron_age_uncert_pos,
+        sis_cr.Bchron_age_uncert_neg,
+        sis_cr.Bacon_age,
+        sis_cr.Bacon_age_uncert_pos,
+        sis_cr.Bacon_age_uncert_neg,
+        sis_cr.OxCal_age,
+        sis_cr.OxCal_age_uncert_pos,
+        sis_cr.OxCal_age_uncert_neg,
+        sis_cr.copRa_age,
+        sis_cr.copRa_age_uncert_pos,
+        sis_cr.copRa_age_uncert_neg,
+        sis_cr.StalAge_age,
+        sis_cr.StalAge_age_uncert_pos,
+        sis_cr.StalAge_age_uncert_neg,
         complen.composite_entity_id
     FROM
         site AS st
@@ -87,6 +88,7 @@ sis_cr.StalAge_age_uncert_neg,
     LEFT JOIN dating AS dt ON dt.entity_id = en.entity_id AND dt.depth_dating = depths.depth
     LEFT JOIN dating_lamina AS dtl ON dtl.entity_id = en.entity_id AND dtl.depth_lam = depths.depth
     LEFT JOIN hiatus AS hia ON hia.sample_id = smp.sample_id
+    LEFT JOIN gap AS gap ON gap.sample_id = smp.sample_id
     LEFT JOIN ba_ca ON ba_ca.sample_id = smp.sample_id
     LEFT JOIN mg_ca ON mg_ca.sample_id = smp.sample_id
     LEFT JOIN p_ca ON p_ca.sample_id = smp.sample_id

@@ -174,3 +174,5 @@ managedb.sh
 .DS_Store
 NODE field explanations.doc
 *.csv#
+speleothem_tables.pdf
+src/unitList_SISALv3.xlsx
