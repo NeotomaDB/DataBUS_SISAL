@@ -24,7 +24,7 @@ def write_to_csv(sisal:list, col_names:tuple, data_path = '../../data/') -> None
                 out_dict[keys[k]] = i[k] 
         to_file.append(out_dict)
     new_keys = out_dict.keys()
-    with open(f'{data_path}sisal_entity_{sisal[0][0]}.csv', 'w', newline='') as output_file:
+    with open(f'{data_path}sisal_entity_{sisal[0][7]}.csv', 'w', newline='') as output_file:
         dict_writer = csv.DictWriter(output_file, new_keys)
         dict_writer.writeheader()
         dict_writer.writerows(to_file)
