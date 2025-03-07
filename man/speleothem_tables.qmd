@@ -66,7 +66,6 @@ The entity relation shows how `sites` would be linked to the `entity` elements a
 
 The speleothem entity table (named `speleothems`) is linked to the site's `siteid`. It helps link all speleothems together at a single site, for example, within a cave complex. The entity is the specific speleothem, and each entity may have one or more collection units, representing a single core or cross-section of the entity. In the case of a speleothem, there is the organizing "Cave", the "Stalagtite", and then on that "Stalagtite" there is one or more collectionunits. Because the entity table relies on several fixed vocabularies as foreign key references, we define those first:
 
-
 ### Controlled Vocabularies
 
 ```{r connectionstring, echo=FALSE, warning=FALSE, message=FALSE}
@@ -498,6 +497,40 @@ VALUES
     ('other (see notes)', (SELECT publicationid FROM pubid)),
     ('calcarenite', (SELECT publicationid FROM pubid));
 ```
+
+### Adding Explicit Gap and Hiatus Tables
+
+SISAL inclused explicit mentions of hiatus and gaps within collection units. Although Neotoma does mention the presence of hiatuses (or gaps), it often does not explicitly mention the position of these gaps/hiatuses or the period of time they might represent. These are often contained within the chronology.
+
+We want to support the SISAL structure, which relates these gaps or hiatuses to the `sample_id`, while also applying to Neotoma and the chronology construction, so that, for example, estimates of hiatus length can be directly examined, and related to particular chronologies.
+
+#### Hiatus
+
+A hiatus is a section of the collection unit where there is a period of time during which no deposition occurs. In principle, a hiatus is an instantaneous feature, and so should occur between analysis units, or within a single analysis unit. A hiatus may have a directly inferred time-span, for example, we know that a lake dried up for 10 years. A hiatus may have an uncertain time period, for example, one that is inferred through the use of a chronology tool like Bacon.
+
+```sql
+CREATE TABLE IF NOT EXISTS ndb.hiatuses(
+    hiatusid serial PRIMARY KEY,
+    analysisunitstart integer REFERENCES ndb.analysisunits(analysisunitid),
+    analysisunitend integer REFERENCES ndb.analysisunits(analysisunitid),
+    notes text,
+    UNIQUE(hiatusid, analysisunitstart, analysisunitend));
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS ndb.hiatuschronology(
+    hiatusid integer REFERENCES ndb.hiatuses(hiatusid),
+    chronologyid integer REFERENCES ndb.chronologies(chronologyid),
+    hiatuslength integer CHECK (hiatuslength >= 0),
+    hiatusuncertainty integer,
+    UNIQUE(hiatusid, chronologyid));
+```
+
+This structure allows us to identify a hiatus within a record. It allows us to identify a hiatus that is effectively a single point in the record, or one that exists as part of a lithological unit that may span multiple analysis units.
+
+Because the `hiatus` itself is linked to the `analysisunitid`, we are then linked to the analysts and PIs for the record, so we can know who actually identified the hiatus.
+
+Through the `ndb.hiatuschronology` table we can then assign a temporal length for the hiatus along with uncertainty, but also allow a new chronology to have an updated hiatus length. Because this is tied to the `chronologyid` we then know the analyst who has made the assessment.
 
 ## Speleothem Entity Table
 
