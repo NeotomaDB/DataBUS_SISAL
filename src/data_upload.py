@@ -60,14 +60,12 @@ for filename in filenames:
         
     yml_dict = nh.template_to_dict(temp_file=args['template'])
     yml_data = yml_dict['metadata']
+    inputs = {'cur': cur,
+              'yml_dict': yml_dict,
+              'csv_file': csv_file}
 
-    csv_valid = valid_csv(filename = filename,
-                                yml_data = yml_data)
-
-    logfile.append('\n=== Inserting New Site ===')
-    uploader['sites'] = nu.insert_site(cur = cur,
-                                    yml_dict = yml_dict,
-                                    csv_file = csv_file)
+    logfile.append('\n=== Inserting Site ===')
+    uploader['sites'] = nu.insert_site(**inputs)
     logfile = logging_response(uploader['sites'], logfile)
 
     logfile.append('\n === Inserting Collection Units ===')
@@ -76,6 +74,14 @@ for filename in filenames:
                                             csv_file = csv_file,
                                             uploader = uploader)
     logfile = logging_response(uploader['collunitid'], logfile)
+    
+    # Insert Entities
+    logfile.append('\n === Inserting Speleothem Entities')
+    uploader['speleothem'] = nu.insert_speleothem(cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+    logfile = logging_response(uploader['speleothem'], logfile)
   
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(cur = cur,
@@ -84,26 +90,26 @@ for filename in filenames:
                                                 uploader = uploader)
     logfile = logging_response(uploader['anunits'], logfile)
 
-    logfile.append('\n=== Inserting Chronology ===')
-    uploader['chronology'] = nu.insert_chronology(cur = cur,
-                                                  yml_dict = yml_dict,
-                                                  csv_file = csv_file,
-                                                  uploader = uploader)
-    logfile = logging_response(uploader['chronology'], logfile)
+    # logfile.append('\n=== Inserting Chronology ===')
+    # uploader['chronology'] = nu.insert_chronology(cur = cur,
+    #                                               yml_dict = yml_dict,
+    #                                               csv_file = csv_file,
+    #                                               uploader = uploader)
+    # logfile = logging_response(uploader['chronology'], logfile)
     
-    logfile.append('\n=== Inserting Chroncontrol ===')
-    uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader)
-    logfile = logging_response(uploader['chroncontrol'], logfile)
+    # logfile.append('\n=== Inserting Chroncontrol ===')
+    # uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
+    #                                                 yml_dict = yml_dict,
+    #                                                 csv_file = csv_file,
+    #                                                 uploader = uploader)
+    # logfile = logging_response(uploader['chroncontrol'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
-    uploader['datasetid'] = nu.insert_dataset(cur = cur,
+    uploader['datasets'] = nu.insert_dataset(cur = cur,
                                             yml_dict = yml_dict,
                                             csv_file = csv_file,
                                             uploader = uploader)
-    logfile = logging_response(uploader['datasetid'], logfile)
+    logfile = logging_response(uploader['datasets'], logfile)
 
     logfile.append('\n=== Inserting Dataset PI ===')
     uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
@@ -111,7 +117,7 @@ for filename in filenames:
                                                 csv_file = csv_file,
                                                 uploader = uploader)
     logfile = logging_response(uploader['datasetpi'], logfile)
- 
+
     logfile.append('\n=== Inserting Data Processor ===')
     uploader['processor'] = nu.insert_data_processor(cur = cur,
                                                     yml_dict = yml_dict,
@@ -139,19 +145,28 @@ for filename in filenames:
                                         uploader = uploader)
     logfile = logging_response(uploader['sampleAnalyst'], logfile)
 
-    logfile.append('\n === Inserting Sample Age ===')
-    uploader['sampleAge'] = nu.insert_sample_age(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_file = csv_file,
-                                        uploader = uploader)
-    logfile = logging_response(uploader['sampleAge'], logfile)
+    # logfile.append('\n === Inserting Sample Age ===')
+    # uploader['sampleAge'] = nu.insert_sample_age(cur, 
+    #                                     yml_dict = yml_dict,
+    #                                     csv_file = csv_file,
+    #                                     uploader = uploader)
+    # logfile = logging_response(uploader['sampleAge'], logfile)
 
     logfile.append('\n === Inserting Data ===')
     uploader['data'] = nu.insert_data(cur, 
                                     yml_dict = yml_dict,
                                     csv_file = csv_file,
-                                    uploader = uploader)
+                                    uploader = uploader,
+                                    wide = True)
     logfile = logging_response(uploader['data'], logfile)
+    
+    logfile.append('\n === Inserting Data Uncertainties ===')
+    uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
+                                                 yml_dict = yml_dict,
+                                                 csv_file = csv_file,
+                                                 uploader = uploader,
+                                                 wide = True)
+    logfile = logging_response(uploader['uncertainty'], logfile)
 
     logfile.append('\n === Inserting Publications ===')
     uploader['publications'] = nu.insert_publication(cur, 

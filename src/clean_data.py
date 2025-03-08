@@ -12,8 +12,6 @@ cleaned.mkdir(exist_ok=True)
 
 units = pd.read_excel('src/unitList_SISALv3.xlsx', index_col='variable name')
 
-
-
 for file in filenames:
     data = pd.read_csv(file)
     for var_name in units.index:

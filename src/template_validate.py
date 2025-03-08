@@ -49,22 +49,6 @@ for filename in filenames:
         yml_data = yml_dict['metadata']
         validator = dict()
         csv_file = nh.read_csv(filename)
-        
-        # Get the unitcols and units to be used
-        # Check that the vocab in the template matches the csv vcocab
-        #vocab_ = nv.vocabDict(yml_data)
-
-        # logfile.append('\n=== File Validation ===')
-        # validator['csvValid'] = nv.valid_csv(filename = filename,
-        #                            yml_data = yml_data)
-        # logfile = logging_dict(validator['csvValid'], logfile)
-
-        # logfile.append('\n === Validating Template Unit Definitions ===')
-        # df = pd.read_csv(filename) #use csv reader
-        # validator['units'] = nv.valid_units(cur = cur,
-        #                          yml_dict = yml_dict,
-        #                          df = df)
-        # logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
         validator['sites'] = nv.valid_site(cur = cur,
@@ -138,15 +122,15 @@ for filename in filenames:
                                               csv_file = csv_file,
                                               wide = True)
         logfile = logging_response(validator['taxa'], logfile)
-        break
+        
         logfile.append('\n === Validating Data Uncertainties ===')
-        validator['uncertainty'] = nv.valid_datauncertainty2(cur = cur,
+        validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
                                                  yml_dict = yml_dict,
                                                  csv_file = csv_file,
                                                  wide = True)
         logfile = logging_response(validator['uncertainty'], logfile)
-        break
 
+        # Add valid publications
         
         # # Nothing needs to be committed to the database
         conn.rollback()

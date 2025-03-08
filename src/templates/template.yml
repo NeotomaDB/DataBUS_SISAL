@@ -518,6 +518,7 @@ metadata:
   taxonid: null
   taxonname: Ba_Ca
   uncertaintybasis: 'Precision'
+  unitcolumn: Ba_Ca_precision_units
   type: float
   vocab: null
 - column: Ba_Ca_precision_units
@@ -583,6 +584,7 @@ metadata:
   taxonid: null
   taxonname: Mg_Ca
   uncertaintybasis: 'Precision'
+  unitcolumn: Mg_Ca_precision_units
   type: float
   vocab: null
 - column: Mg_Ca_precision_units
@@ -648,6 +650,7 @@ metadata:
   taxonid: null
   taxonname: P_Ca
   uncertaintybasis: 'Precision'
+  unitcolumn: P_Ca_precision_units
   type: float
   vocab: null
 - column: P_Ca_precision_units
@@ -713,6 +716,7 @@ metadata:
   taxonid: null
   taxonname: Sr_Ca
   uncertaintybasis: 'Precision'
+  unitcolumn: Sr_Ca_precision_units
   type: float
   vocab: null
 - column: Sr_Ca_precision_units
@@ -791,6 +795,7 @@ metadata:
   taxonid: null
   taxonname: Sr_isotopes
   uncertaintybasis: null
+  unitcolumn: Sr_isotopes_precision_units
   type: float
   vocab: null
 - column: Sr_isotopes_precision_units
@@ -843,6 +848,7 @@ metadata:
   taxonid: null
   taxonname: U_Ca
   uncertaintybasis: 'Precision'
+  unitcolumn: U_Ca_precision_units
   type: float
   vocab: null
 - column: U_Ca_precision_units
@@ -906,7 +912,7 @@ metadata:
   notes: alphanumeric
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true #This should be false. Ask Simon and team
   schema: sisal
   table: Reference
   type: string
@@ -933,8 +939,6 @@ metadata:
   type: null
 - column: contact
   neotoma: ndb.datasetpis.contactname
-  notes: name of author / data contributor / sisal coordinator that handled the primary
-    data entry
   overwrite: false
   required: false
   rowwise: true
@@ -1021,7 +1025,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: d13C
-  taxonname: d13C
+  taxonname: δ13C
   type: float
   uncertainty:
     uncertaintybasis: 'Precision'
@@ -1040,8 +1044,9 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: d13C
+  taxonname: δ13C
   uncertaintybasis: 'Precision'
+  unitcolumn: d13C_precision_units
   type: float
   vocab: null
 - column: d13C_precision_units
@@ -1071,7 +1076,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: d18O
-  taxonname: d18O
+  taxonname: δ18O
   type: float
   uncertainty:
     uncertaintybasis: 'Precision'
@@ -1090,8 +1095,9 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: d18O
+  taxonname: δ18O
   uncertaintybasis: 'Precision'
+  unitcolumn: d18O_precision_units
   type: float
   vocab: null
 - column: d18O_precision_units
@@ -1309,13 +1315,13 @@ metadata:
   schema: sisal
   table: Entity
   type: int
-- column: publication_doi
+- column: publication_DOI
   formatorrange: Valid DOI regex
   neotoma: ndb.publications.doi
   notes: alphanumeric
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true # This is probably false, ask Simon
   schema: sisal
   table: Reference
   type: string
