@@ -500,7 +500,7 @@ metadata:
   taxonname: Ba_Ca
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: Ba_Ca_precision
     unitcolumn: Ba_Ca_precision_units
   unitcolumn: Ba_Ca_measurement_units
@@ -517,7 +517,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: Ba_Ca
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Ba_Ca_precision_units
   type: float
   vocab: null
@@ -566,7 +566,7 @@ metadata:
   taxonname: Mg_Ca
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: Mg_Ca_precision
     unitcolumn: Mg_Ca_precision_units
   unitcolumn: Mg_Ca_measurement_units
@@ -583,7 +583,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: Mg_Ca
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Mg_Ca_precision_units
   type: float
   vocab: null
@@ -632,7 +632,7 @@ metadata:
   taxonname: P_Ca
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: P_Ca_precision
     unitcolumn: P_Ca_precision_units
   unitcolumn: P_Ca_measurement_units
@@ -649,7 +649,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: P_Ca
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: P_Ca_precision_units
   type: float
   vocab: null
@@ -698,7 +698,7 @@ metadata:
   taxonname: Sr_Ca
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: Sr_Ca_precision
     unitcolumn: Sr_Ca_precision_units
   unitcolumn: Sr_Ca_measurement_units
@@ -715,7 +715,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: Sr_Ca
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Sr_Ca_precision_units
   type: float
   vocab: null
@@ -777,7 +777,7 @@ metadata:
   taxonname: Sr_isotopes
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: Sr_isotopes_precision
     unitcolumn: Sr_isotopes_precision_units
   unitcolumn: Sr_isotopes_measurement_units
@@ -830,7 +830,7 @@ metadata:
   taxonname: U_Ca
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: U_Ca_precision
     unitcolumn: U_Ca_precision_units
   unitcolumn: U_Ca_measurement_units
@@ -847,7 +847,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: U_Ca
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: U_Ca_precision_units
   type: float
   vocab: null
@@ -1028,7 +1028,7 @@ metadata:
   taxonname: δ13C
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: d13C_precision
     unitcolumn: d13C_precision_units
   unitcolumn: d13C_measurement_units
@@ -1045,7 +1045,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: δ13C
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: d13C_precision_units
   type: float
   vocab: null
@@ -1079,7 +1079,7 @@ metadata:
   taxonname: δ18O
   type: float
   uncertainty:
-    uncertaintybasis: 'Precision'
+    uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: d18O_precision
     unitcolumn: d18O_precision_units
   unitcolumn: d18O_measurement_units
@@ -1096,7 +1096,7 @@ metadata:
   rowwise: true
   taxonid: null
   taxonname: δ18O
-  uncertaintybasis: 'Precision'
+  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: d18O_precision_units
   type: float
   vocab: null
