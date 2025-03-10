@@ -12,6 +12,9 @@ format:
 bibliography: speleothems.bib
 ---
 
+
+
+
 ## SISAL Overview
 
 SISAL is a global database of speleothem data [@essd-16-1933-2024] that uses a standard template for data upload. SISAL is stored as a MySQL database that can be queried by users and updated by data managers. Relative to Neotoma, the database shares many common features, for example, both databases store data across `sites`, they measure samples using depths along collection elements, and they both record chronologies for records. However, there are several differences based on conceptual and analytic differences between the primary data within each database. 
@@ -66,20 +69,16 @@ The entity relation shows how `sites` would be linked to the `entity` elements a
 
 The speleothem entity table (named `speleothems`) is linked to the site's `siteid`. It helps link all speleothems together at a single site, for example, within a cave complex. The entity is the specific speleothem, and each entity may have one or more collection units, representing a single core or cross-section of the entity. In the case of a speleothem, there is the organizing "Cave", the "Stalagtite", and then on that "Stalagtite" there is one or more collectionunits. Because the entity table relies on several fixed vocabularies as foreign key references, we define those first:
 
+
 ### Controlled Vocabularies
 
-```{r connectionstring, echo=FALSE, warning=FALSE, message=FALSE}
-dotenv::load_dot_env()
 
-conn <- DBI::dbConnect(
-  RPostgres::Postgres(),
-  dbname = Sys.getenv('DATABASE'),
-  host = Sys.getenv('HOST'),
-  port = Sys.getenv('PORT'),
-  user = Sys.getenv('USER'),
-  password = Sys.getenv('PASSWORD')
-)
-```
+
+::: {.cell}
+
+:::
+
+
 
 For controlled vocabularies we want to provide a "general" solution for term lists, so that we can support the use of multiple potential term lists. This would allow particular sub-disciplines to define terms in a form that makes sense for their group, or uses a standard terminology that reflects the underlying processes within their community. If terms are superceeded within a community, we can support multiple terms for the same record, each tied to a specific publication, allowing us to select the publication of record, and comparing outcomes between classification systems.
 
@@ -151,7 +150,11 @@ SISAL defines seven core speleothem types. Because these are drawn directly from
 * other (add note to notes sheet)
 * unknown
 
-```{sql, speleothemtypes}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.speleothemtypes(
     speleothemtypeid serial PRIMARY KEY,
     speleothemtype varchar(50),
@@ -160,14 +163,20 @@ CREATE TABLE IF NOT EXISTS ndb.speleothemtypes(
     UNIQUE(speleothemtype, publicationid)
 );
 ```
+:::
 
-```{sql, speleothemtypes_add_pub}
+::: {.cell}
+
+```{.sql .cell-code}
 INSERT INTO ndb.publications(citation, doi)
 VALUES ('Sisal v3', '10.5194/essd-16-1933-2024')
 ON CONFLICT DO NOTHING;
 ```
+:::
 
-```{sql, speleothemtypes_add_values}
+::: {.cell}
+
+```{.sql .cell-code}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
@@ -182,6 +191,9 @@ VALUES
     ('unknown', 'Speleothem type is not known.', (SELECT publicationid FROM pubid))
 ON CONFLICT DO NOTHING;
 ```
+:::
+
+
 
 #### Speleothem Drip Types
 
@@ -207,7 +219,11 @@ Baker, A., Barnes, W. L. & Smart, P. L. Stalagmite drip discharge and organic ma
 * Vadose Flow
 * Subcutaneous Flow
 
-```{sql, add_drips}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.speleothemdriptypes(
     speleothemdriptypeid serial PRIMARY KEY,
     speleothemdriptype varchar(50),
@@ -216,8 +232,11 @@ CREATE TABLE IF NOT EXISTS ndb.speleothemdriptypes(
     UNIQUE(speleothemtype, publicationid)
 );
 ```
+:::
 
-```{sql, add_drips_add_values}
+::: {.cell}
+
+```{.sql .cell-code}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
@@ -231,6 +250,9 @@ VALUES
     ('unknown', '', (SELECT publicationid FROM pubid))
     ON CONFLICT  DO NOTHING;
 ```
+:::
+
+
 
 #### Vegetation Cover
 
@@ -266,7 +288,11 @@ We propose to modify this with a set of terms derived from the [FAO Land Cover c
 * Sparse Shrublands: Dominated by woody perennials (1-2m) 10-60% cover with minimal herbaceous understory.
 * Unclassified: Has not received a map label because of missing inputs.
 
-```{sql, add_vegetation}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.vegetationcovertypes(
     vegetationcovertypeid serial PRIMARY KEY,
     vegetationcovertype text,
@@ -275,8 +301,11 @@ CREATE TABLE IF NOT EXISTS ndb.vegetationcovertypes(
     UNIQUE(vegetationcovertype, publicationid)
 );
 ```
+:::
 
-```{sql, add_vegetation_fao}
+::: {.cell}
+
+```{.sql .cell-code}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE year = '2005' and citation ILIKE '%Land cover classification%'
 )
@@ -300,12 +329,15 @@ VALUES ('Barren','At least of area 60% is non-vegetated barren (sand, rock, soil
 ('Unclassified','Has not received a map label because of missing inputs.', (SELECT publicationid FROM pubid))
 ON CONFLICT DO NOTHING;
 ```
+:::
 
-```{sql, add_vegetation_sisal}
+::: {.cell}
+
+```{.sql .cell-code}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
-INSERT INTO ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, publicationid)
+INSERT INTO ndb.vegetationcovertypes (vegetationcovertype, vegetationcovernotes, vegetationpublicationid)
 VALUES ('evergreen','', (SELECT publicationid FROM pubid)),
 ('deciduous','', (SELECT publicationid FROM pubid)),
 ('shrubland','', (SELECT publicationid FROM pubid)),
@@ -317,8 +349,11 @@ VALUES ('evergreen','', (SELECT publicationid FROM pubid)),
 ('unknown','', (SELECT publicationid FROM pubid))
 ON CONFLICT DO NOTHING;
 ```
+:::
 
-```{sql, add_vegetation_site_link}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.sitevegetationcover(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
     vegetationcovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
@@ -326,6 +361,9 @@ CREATE TABLE IF NOT EXISTS ndb.sitevegetationcover(
     vegetationcovernotes text
 );
 ```
+:::
+
+
 
 Note, that to ensure that these values do not sum to greater than 100 we need to add a trigger on insert and update to validate whether or not the `vegetationcoverpercent` for a `siteid` (possibly associated with a `publicationid`) sums to <= 100%.
 
@@ -372,29 +410,23 @@ The FAO Uses a system with the following classes:
 * Inland water
 
 
-```{sql, add_landuse}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.landusetypes(
     landusecovertypeid serial PRIMARY KEY,
     landusecovertype varchar (128) UNIQUE,
     landusecovernotes text,
     publicationid integer REFERENCES ndb.publications(publicationid)
 );
-
-WITH pubid AS (
-    SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
-)
-INSERT INTO ndb.landusetypes (landusecovertype, landusecovernotes, publicationid)
-VALUES ('water body','', (SELECT publicationid FROM pubid)),
-('wetland','', (SELECT publicationid FROM pubid)),
-('farmland','', (SELECT publicationid FROM pubid)),
-('pasture','', (SELECT publicationid FROM pubid)),
-('concrete and built up','', (SELECT publicationid FROM pubid)),
-('mixed (add note to notes sheet)','', (SELECT publicationid FROM pubid)),
-('other (add note to notes sheet)','', (SELECT publicationid FROM pubid)),
-('unknown','', (SELECT publicationid FROM pubid))
-ON CONFLICT DO NOTHING;
 ```
-```{sql, add_landuse_sitelink}
+:::
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.sitelandusecover(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
     landusecovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
@@ -403,31 +435,48 @@ CREATE TABLE IF NOT EXISTS ndb.sitelandusecover(
 );
 
 ```
+:::
+
+
 
 #### Land Cover
 
 I'm going to use this for speleothems only:
 
-```{sql, add_landcover_entitylink}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entitycovertypes(
     entitycoverid serial PRIMARY KEY,
     entitycovertype varchar(50),
     entitycovernotes text
 );
 ```
+:::
+
+
 
 #### Entity Statuses
 
 Note that the status levels provided in the [spreadsheet](https://docs.google.com/spreadsheets/d/1Koh60iPd_MVL6C6NaV08SGupAzxRwE00EtqgLxd-xSc/edit?usp=sharing) do not match the ones in the database.
 
-```{sql, add_entity_status}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.speleothementitystatuses(
     entitystatusid serial PRIMARY KEY,
     entitystatus text
 );
 ```
+:::
 
-```{sql, add_entity_status_values}
+::: {.cell}
+
+```{.sql .cell-code}
 INSERT INTO ndb.speleothementitystatuses (entitystatus)
 VALUES ('current'),
        ('current partially modified'),
@@ -438,12 +487,19 @@ VALUES ('current'),
        ('partially superseded by'),
        ('not applicable');
 ```
+:::
+
+
 
 #### Depth Reference
 
 How is depth measured? I'm moving this to a higher level table (without "entity" in front of it) because I think this is important going forward regardless.
 
-```{sql, add_depth_reference}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.depthreferencesystems(
     depthreferencesystemid serial PRIMARY KEY,
     depthreference text,
@@ -451,8 +507,11 @@ CREATE TABLE IF NOT EXISTS ndb.depthreferencesystems(
     depthreferencepublicationid integer REFERENCES ndb.publications(publicationid)
 );
 ```
+:::
 
-```{sql, add_depth_reference_values}
+::: {.cell}
+
+```{.sql .cell-code}
 INSERT INTO ndb.depthreferencesystems(depthreference, depthreferencenotes)
 VALUES
     ('from top', 'Measured Depth at section top (depth at bottom is depth + thickness).'),
@@ -464,6 +523,9 @@ VALUES
     ('assumed bottom', 'Not reported but submitted with assumed standard of bottom-depth reporting.'),
     ('assumed midpoint', 'Not reported but submitted with assumed standard of midpoint-depth reporting.');
 ```
+:::
+
+
 
 #### Speleothem Entity Geology
 
@@ -472,7 +534,11 @@ For individual speleothems within mapped system, the underlying (or overlying) g
 Take a look at this?
 https://www.bgs.ac.uk/technologies/bgs-rock-classification-scheme/
 
-```{sql, add_geology}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.speleothementitygeology(
     speleothemgeologyid serial PRIMARY KEY,
     speleothemgeology text,
@@ -480,8 +546,11 @@ CREATE TABLE IF NOT EXISTS ndb.speleothementitygeology(
     speleothemgeologypublicationid integer REFERENCES ndb.publications(publicationid)
 );
 ```
+:::
 
-```{sql, add_geology_values}
+::: {.cell}
+
+```{.sql .cell-code}
 WITH pubid AS (
     SELECT publicationid FROM ndb.publications WHERE doi = '10.5194/essd-16-1933-2024'
 )
@@ -497,44 +566,17 @@ VALUES
     ('other (see notes)', (SELECT publicationid FROM pubid)),
     ('calcarenite', (SELECT publicationid FROM pubid));
 ```
+:::
 
-### Adding Explicit Gap and Hiatus Tables
 
-SISAL inclused explicit mentions of hiatus and gaps within collection units. Although Neotoma does mention the presence of hiatuses (or gaps), it often does not explicitly mention the position of these gaps/hiatuses or the period of time they might represent. These are often contained within the chronology.
-
-We want to support the SISAL structure, which relates these gaps or hiatuses to the `sample_id`, while also applying to Neotoma and the chronology construction, so that, for example, estimates of hiatus length can be directly examined, and related to particular chronologies.
-
-#### Hiatus
-
-A hiatus is a section of the collection unit where there is a period of time during which no deposition occurs. In principle, a hiatus is an instantaneous feature, and so should occur between analysis units, or within a single analysis unit. A hiatus may have a directly inferred time-span, for example, we know that a lake dried up for 10 years. A hiatus may have an uncertain time period, for example, one that is inferred through the use of a chronology tool like Bacon.
-
-```sql
-CREATE TABLE IF NOT EXISTS ndb.hiatuses(
-    hiatusid serial PRIMARY KEY,
-    analysisunitstart integer REFERENCES ndb.analysisunits(analysisunitid),
-    analysisunitend integer REFERENCES ndb.analysisunits(analysisunitid),
-    notes text,
-    UNIQUE(hiatusid, analysisunitstart, analysisunitend));
-```
-
-```sql
-CREATE TABLE IF NOT EXISTS ndb.hiatuschronology(
-    hiatusid integer REFERENCES ndb.hiatuses(hiatusid),
-    chronologyid integer REFERENCES ndb.chronologies(chronologyid),
-    hiatuslength integer CHECK (hiatuslength >= 0),
-    hiatusuncertainty integer,
-    UNIQUE(hiatusid, chronologyid));
-```
-
-This structure allows us to identify a hiatus within a record. It allows us to identify a hiatus that is effectively a single point in the record, or one that exists as part of a lithological unit that may span multiple analysis units.
-
-Because the `hiatus` itself is linked to the `analysisunitid`, we are then linked to the analysts and PIs for the record, so we can know who actually identified the hiatus.
-
-Through the `ndb.hiatuschronology` table we can then assign a temporal length for the hiatus along with uncertainty, but also allow a new chronology to have an updated hiatus length. Because this is tied to the `chronologyid` we then know the analyst who has made the assessment.
 
 ## Speleothem Entity Table
 
-```{sql, add_speleothementity}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.speleothems(
     siteid integer REFERENCES ndb.sites(siteid) ON DELETE CASCADE,
     entityid serial PRIMARY KEY,
@@ -548,8 +590,11 @@ CREATE TABLE IF NOT EXISTS ndb.speleothems(
     speleothemtypeid int REFERENCES ndb.speleothemtypes(speleothemtypeid)
 );
 ```
+:::
 
-```{sql, add_speleothementity_entityrel}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entityrelationship(
     entityid int REFERENCES ndb.speleothems(entityid),
     entitystatusid integer REFERENCES ndb.speleothementitystatuses(entitystatusid),
@@ -557,8 +602,11 @@ CREATE TABLE IF NOT EXISTS ndb.entityrelationship(
 )
 
 ```
+:::
 
-```{sql, add_speleothementity_entitydrip}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entitydripheight(
     entityid int REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     speleothemdriptypeid int REFERENCES ndb.speleothemdriptypes(spelothemdriptypeid),
@@ -567,8 +615,11 @@ CREATE TABLE IF NOT EXISTS ndb.entitydripheight(
 );
 
 ```
+:::
 
-```{sql, add_speleothementity_veg}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entityvegetationcover(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     vegetationcovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
@@ -577,8 +628,11 @@ CREATE TABLE IF NOT EXISTS ndb.entityvegetationcover(
 );
 
 ```
+:::
 
-```{sql, add_speleothementity_landuse}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entitylandusecover(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     landusecovertypeid integer REFERENCES ndb.vegetationcovertypes(vegetationcovertypeid) ON DELETE CASCADE,
@@ -586,8 +640,11 @@ CREATE TABLE IF NOT EXISTS ndb.entitylandusecover(
     landusecovernotes text
 );
 ```
+:::
 
-```{sql, add_speleothementity_cover}
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.entitycovers(
     entityid int REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     entitycoverid int REFERENCES ndb.entitycovertypes(entitycoverid),
@@ -595,12 +652,19 @@ CREATE TABLE IF NOT EXISTS ndb.entitycovers(
     entitycoverunits int REFERENCES ndb.variableunits(variableunitsid)
 );
 ```
+:::
+
+
 
 #### Working with TRUE/FALSE data
 
 There are a number of columns in the SISAL database that refer to elements such as fluid inclusions, organics or other elements that may be recorded but are not explicitly a part of the SISAL database. For these we use the table `externalspeleothemdata`. This allows us to define these elements and refer to an external resource using a PID. These would include (for example) references to noble_gas_temperatures, clumped_isotopes or fluid_inclusions. The structure of the `ndb.externaldatabases` table allows us to refer to external resources such as Dryad, PANGEA or CrossRef, if data is included within a publication. The table also supports a many-to-many relationship, so a single entity can be linked to multiple databases for various reasons.
 
-```{sql, add_externaltable}
+
+
+::: {.cell}
+
+```{.sql .cell-code}
 CREATE TABLE IF NOT EXISTS ndb.externalspeleothemdata(
     entityid integer REFERENCES ndb.speleothems(entityid) ON DELETE CASCADE,
     externalid text,
@@ -608,4 +672,4 @@ CREATE TABLE IF NOT EXISTS ndb.externalspeleothemdata(
     externaldescription text
 );
 ```
-
+:::
