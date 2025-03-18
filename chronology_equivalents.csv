@@ -1,10 +1,10 @@
 SISAL_name,geochrontype,chroncontroltype
-MC-ICP-MS U/Th,Uranium series,Uranium-series
+MC-ICP-MS U/Th,Uranium series,MC-ICP-MS U/Th
 Event; hiatus,,Event stratigraphic
-ICP-MS U/Th Other,Uranium series,Uranium-series
-Alpha U/Th,Uranium series,Uranium-series
-TIMS,Thermal Ionization Mass Spectrometry,
-U/Th unspecified,Uranium series,Uranium-series
+ICP-MS U/Th Other,Uranium series,ICP-MS U/Th Other
+Alpha U/Th,Uranium series,Alpha U/Th
+TIMS,Uranium series,TIMS
+U/Th unspecified,Uranium series,U/Th unspecified
 Event; actively forming,,Active deposition surface
 Event; start of laminations,,Annual laminations (varves)
 Event; end of laminations,,Annual laminations (varves)
