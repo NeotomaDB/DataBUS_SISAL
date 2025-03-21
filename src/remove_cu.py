@@ -10,7 +10,7 @@ data = json.loads(os.getenv('PGDB_TANK'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
-a_list = list(range(33479, 33491))
+a_list = [33411]
 print(a_list)
 query = """SELECT siteid, recdatecreated
            FROM ndb.sites
@@ -26,10 +26,10 @@ for index, row in data.iterrows():
     date = row['recdatecreated']
     print(f"site: {site}")
     if (datetime.now() - date).days <= 1:
-        #query = """SELECT ts.deletesite(%(site)s)"""
-        #cur.execute(query, {'site': site})
+        query = """SELECT ts.deletesite(%(site)s)"""
+        cur.execute(query, {'site': site})
         print(f"Removed Site: {site}.")
     else:
         print("Handle not removed")
-conn.commit()
+    conn.commit()
 print("Finished")

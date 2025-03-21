@@ -99,11 +99,11 @@ for filename in filenames:
         logfile = logging_response(uploader['datasets'], logfile)
 
         logfile.append('\n=== Inserting Geochronology Dataset ===')
-        uploader['datasets'] = nu.insert_dataset(cur = cur,
+        uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file,
                                                 uploader = uploader)
-        logfile = logging_response(uploader['datasets'], logfile)
+        logfile = logging_response(uploader['geochrondatasets'], logfile)
 
         logfile.append('\n=== Inserting Chronology ===')
         uploader['chronology'] = nu.insert_chronology(cur = cur,
@@ -145,6 +145,13 @@ for filename in filenames:
                                             csv_file = csv_file,
                                             uploader = uploader)
         logfile = logging_response(uploader['samples'], logfile)
+        
+        logfile.append('\n=== Inserting Samples for GeoChron ===')
+        uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                            uploader = uploader)
+        logfile = logging_response(uploader['sample_geochron'], logfile)
 
         logfile.append('\n=== Inserting Geochronologies ===')
         uploader['geochron'] = nu.insert_geochron(cur = cur,
@@ -196,15 +203,13 @@ for filename in filenames:
                                         csv_file = csv_file,
                                         uploader = uploader)
         logfile = logging_response(uploader['publications'], logfile)
-
-
-                
+        print(logfile)
         all_true = all([uploader[key].validAll for key in uploader])
         all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            #conn.commit()
-            conn.rollback()
+            conn.commit()
+            #conn.rollback()
             os.makedirs(uploaded_files, exist_ok=True)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
@@ -216,7 +221,7 @@ for filename in filenames:
         else:
             print(f"filename {filename} could not be uploaded.")
             os.makedirs(failed_files, exist_ok=True)
-            modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
+            modified_filename = filename.replace('data/', 'data/upload_logs/')
             with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
                 for i in logfile:
                     writer.write(i)
@@ -226,7 +231,7 @@ for filename in filenames:
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()
-        os.makedirs(failed_files, exist_ok=True)
+        os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
         modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
         with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
             for i in logfile:
