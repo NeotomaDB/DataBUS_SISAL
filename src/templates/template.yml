@@ -1,6 +1,6 @@
 apiVersion: neotoma v2.0
 headers: 2
-kind: Development
+kind: Development 
 metadata:
 # Constants
 - column: datasettypeid
@@ -62,14 +62,14 @@ metadata:
 - column: site_name
   neotoma: ndb.collectionunits.handle
   notes: name by author
-  overwrite: false
+  overwrite: true
   required: false
   rowwise: false
   type: string
 - column: site_name
   neotoma: ndb.collectionunits.collunitname
   notes: name by author
-  overwrite: false
+  overwrite: true
   required: false
   rowwise: false
   type: string
@@ -209,8 +209,26 @@ metadata:
   schema: sisal
   table: Sample
   type: float
+- column: depth_sample
+  neotoma: ndb.chroncontrols.depth
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: float
 - column: sample_thickness
   neotoma: ndb.analysisunits.thickness
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Sample
+  type: float
+- column: sample_thickness
+  neotoma: ndb.chroncontrols.thickness
   notes: number
   overwrite: false
   required: false
@@ -249,8 +267,53 @@ metadata:
   vocab: [linear, linear between dates, polynomial fit, polynomial fit omitting outliers,
     Bayesian, Bayesian Bacon, Bayesian Bchron, StalAge, StalAge and other, Clam, COPRA,
     OxCal, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
-- column: lin_interp_age
+- column: agetype
+  neotoma: ndb.chronologies.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: agetype
+  neotoma: ndb.geochronology.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: agetype
+  neotoma: ndb.chroncontrols.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: interp_age
   neotoma: ndb.sampleages.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: interp_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: interp_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_interp_age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -259,7 +322,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: lin_interp_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -268,7 +331,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: lin_interp_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -277,7 +340,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bacon_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -286,7 +349,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bacon_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -295,7 +358,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bacon_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -304,7 +367,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bchron_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -313,7 +376,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bchron_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -322,7 +385,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bchron_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -331,7 +394,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -340,7 +403,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -349,7 +412,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -358,7 +421,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -367,7 +430,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -376,7 +439,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -385,7 +448,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -394,7 +457,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -403,7 +466,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -412,7 +475,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: interp_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.chronologies.age
   notes: number
   notes ii: Need to define 'agetype'
   overwrite: false
@@ -422,7 +485,7 @@ metadata:
   table: Original chronology
   type: float
 - column: interp_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.chronologies.ageyounger
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
   overwrite: false
@@ -432,7 +495,7 @@ metadata:
   table: Original chronology
   type: float
 - column: interp_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.chronologies.ageolder
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
   overwrite: false
@@ -442,7 +505,7 @@ metadata:
   table: Original chronology
   type: float
 - column: lin_reg_age
-  neotoma: ndb.sampleages.age
+  neotoma: ndb.notinuse.age
   notes: number
   overwrite: false
   required: false
@@ -451,7 +514,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: lin_reg_age_uncert_neg
-  neotoma: ndb.sampleages.ageyounger
+  neotoma: ndb.notinuse.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -460,7 +523,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: lin_reg_age_uncert_pos
-  neotoma: ndb.sampleages.ageolder
+  neotoma: ndb.notinuse.ageolder
   notes: number
   overwrite: false
   required: false
@@ -469,7 +532,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: sample_id
-  neotoma: ndb.sampleages.sampleid # Cannot be that sampleID because SISAL's and Neotoma's ID may not be the same
+  neotoma: ndb.chronologies.sampleid # Cannot be that sampleID because SISAL's and Neotoma's ID may not be the same
   notes: database level
   overwrite: false
   required: false
@@ -497,7 +560,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Ba_Ca
-  taxonname: Ba_Ca
+  taxonname: Barium:Calcium
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -516,7 +579,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: Ba_Ca
+  taxonname: Barium:Calcium
   uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Ba_Ca_precision_units
   type: float
@@ -563,7 +626,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Mg_Ca
-  taxonname: Mg_Ca
+  taxonname: Magnesium:Calcium
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -582,7 +645,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: Mg_Ca
+  taxonname: Magnesium:Calcium
   uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Mg_Ca_precision_units
   type: float
@@ -629,7 +692,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: P_Ca
-  taxonname: P_Ca
+  taxonname: Phosphorus:Calcium
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -648,7 +711,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: P_Ca
+  taxonname: Phosphorus:Calcium
   uncertaintybasis: '2 Standard Deviations'
   unitcolumn: P_Ca_precision_units
   type: float
@@ -695,7 +758,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Sr_Ca
-  taxonname: Sr_Ca
+  taxonname: Strontium:Calcium
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -714,7 +777,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: Sr_Ca
+  taxonname: Strontium:Calcium
   uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Sr_Ca_precision_units
   type: float
@@ -827,7 +890,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: U_Ca
-  taxonname: U_Ca
+  taxonname: Uranium:Calcium
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -846,7 +909,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: U_Ca
+  taxonname: Uranium:Calcium
   uncertaintybasis: '2 Standard Deviations'
   unitcolumn: U_Ca_precision_units
   type: float
@@ -960,28 +1023,28 @@ metadata:
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: corr_age_uncert_neg
   neotoma: ndb.chroncontrols.agelimityounger
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: corr_age_uncert_pos
   neotoma: ndb.chroncontrols.agelimitolder
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: cover_thickness
   neotoma: ndb.speleothem.coverthickness
   notes: actual cover thickness as a 'number'
@@ -1121,10 +1184,23 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: string
+  vocab: [C14, MC-ICP-MS U/Th, ICP-MS U/Th Other, Alpha U/Th, TIMS, U/Th unspecified,
+    Cross-dating, Multiple methods, Event; hiatus, Event; actively forming, Event;
+      start of laminations, Event; end of laminations, other (add note to notes sheet),
+    unknown]
+- column: date_type
+  neotoma: ndb.geochronology.geochrontypeid
+  notes: dropdown list options
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: Dating
+  type: string
   vocab: [C14, MC-ICP-MS U/Th, ICP-MS U/Th Other, Alpha U/Th, TIMS, U/Th unspecified,
     Cross-dating, Multiple methods, Event; hiatus, Event; actively forming, Event;
       start of laminations, Event; end of laminations, other (add note to notes sheet),
@@ -1141,16 +1217,6 @@ metadata:
 - column: dating_thickness
   neotoma: ndb.chroncontrols.thickness
   notes: number
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Dating
-  type: null
-- column: depth_dating
-  neotoma: ndb.chroncontrols.depth
-  notes: number
-  notes ii: Should be tied to the analysisunit from which its pulled
   overwrite: false
   required: false
   rowwise: false
@@ -1239,10 +1305,10 @@ metadata:
   notes: alphanumeric
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: string
 - column: land_use
   neotoma: ndb.speleothem.landuse
   notes: 'actual land use type filled from dropddown list options by authors or from
@@ -1263,10 +1329,10 @@ metadata:
     it?
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: string
   vocab: [calcite, aragonite, organic, mixed (add note to notes sheet), other (add
       note to notes sheet), unknown]
 - column: mineralogy_petrology_fabrics
@@ -1366,28 +1432,28 @@ metadata:
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: uncorr_age_uncert_neg
   neotoma: ndb.geochronology.erroryounger
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: uncorr_age_uncert_pos
   neotoma: ndb.geochronology.errorolder
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: vegetation_type
   neotoma: ndb.speleothem.vegetation
   notes: 'actual vegetation type filled from dropddown list options by authors or

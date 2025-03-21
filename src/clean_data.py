@@ -31,9 +31,18 @@ def fix_names(name):
         return format_name(name)
 
 for file in filenames:
+    print(file)
     data = pd.read_csv(file)
+
+    # To remove empty columns
+    #cols_to_drop = [col for col in data.columns if col not in ['sample_id', 'entity_id'] and data[col].isna().all()]
+    #data = data.drop(columns=cols_to_drop)
+
     citations = data[['sample_id', 'ref_id', 'publication_DOI', 'citation']]
     data = data.drop(columns = ['ref_id', 'publication_DOI', 'citation'])
+
+    # Add agetype
+    data['agetype'] = 'Calibrated radiocarbon years BP'
 
     # Fix contacts
     data['contact'] = data['contact'].str.replace(',', ' |')
@@ -46,11 +55,16 @@ for file in filenames:
     data[data == 'FFILL'] = np.nan
 
     # Fix publications 
-    citations = citations.groupby('sample_id').agg({'ref_id': lambda x: ', '.join(x.astype(str)),
-                                                    'publication_DOI': ', '.join,
-                                                    'citation': ' | '.join}).reset_index()
-
-    # Add units
+    try:
+        citations = citations.groupby('sample_id').agg({'ref_id': lambda x: ', '.join(x.astype(str)),
+                                                        'publication_DOI': ', '.join,
+                                                        'citation': ' | '.join}).reset_index()
+    except Exception as e:
+        print(e)
+        citations = citations.groupby('sample_id').agg({'ref_id': lambda x: ', '.join(map(str, x.dropna())),  
+                                                        'publication_DOI': lambda x: ', '.join(map(str, x.dropna())),  
+                                                        'citation': lambda x: ' | '.join(map(str, x.dropna()))}).reset_index()
+        print(citations)
     for var_name in units.index:
         if var_name in data.columns:
             new_col = f'{var_name}_units'
