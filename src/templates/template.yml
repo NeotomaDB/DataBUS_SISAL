@@ -1219,10 +1219,10 @@ metadata:
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: depth_ref
   neotoma: ndb.speleothem.depthreference
   notes: depth measured from the top or the bottom of the core; dropdown list option

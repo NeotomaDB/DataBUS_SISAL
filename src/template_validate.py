@@ -85,84 +85,80 @@ for filename in filenames:
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file)
         logfile = logging_response(validator['geodataset'], logfile)
-        print(validator['geodataset'])
 
         logfile.append('\n === Checking Chronologies ===')
         validator['chronologies'] = nv.valid_chronologies(cur = cur,
                                                           yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_response(validator['chronologies'], logfile)
-        print(validator['chronologies'])
 
         logfile.append('\n === Checking Chron Controls ===')
         validator['chron_controls'] = nv.valid_chroncontrols(cur = cur,
                                                              yml_dict = yml_dict,
                                                              csv_file = csv_file)
         logfile = logging_response(validator['chron_controls'], logfile)
-        print(validator['chron_controls'])
-
-        # logfile.append('\n === Checking Geo Chron Controls ===')
-
-        # logfile.append('\n === Checking Against Contact Names ===')
-        # validator['agent'] = nv.valid_contact(cur,
-        #                                     csv_file,
-        #                                     yml_dict)
-        # logfile = logging_response(validator['agent'], logfile)
-
-        # logfile.append('\n=== Validating Dataset Database ===')
-        # validator['database'] = nv.valid_dataset_database(cur = cur,
-        #                                                 yml_dict = yml_dict)
-        # logfile = logging_response(validator['database'], logfile)
-
-        # logfile.append('\n=== Validating Samples ===')
-        # validator['sample'] = nv.valid_sample(cur = cur,
-        #                                       yml_dict = yml_dict,
-        #                                       csv_file = csv_file,
-        #                                       validator = validator)
-        # logfile = logging_response(validator['sample'], logfile)
 
         logfile.append('\n=== Validating Geochrons ===')
         validator['geochron'] = nv.valid_geochron(cur = cur,
                                                   yml_dict = yml_dict,
                                                   csv_file = csv_file)
         logfile = logging_response(validator['geochron'], logfile)
-        print(validator['geochron'])
-        break
 
-        # logfile.append('\n=== Validating Sample Ages ===')
-        # validator['sample_age'] = nv.valid_sample_age(cur = cur,
-        #                                       yml_dict = yml_dict,
-        #                                       csv_file = csv_file,
-        #                                       validator = validator)
-        # logfile = logging_response(validator['sample_age'], logfile)
+        logfile.append('\n === Checking Geochron Control ===')
+        validator['geochroncontrol'] = nv.valid_geochroncontrol(cur = cur,
+                                                      yml_dict = yml_dict,
+                                                      csv_file = csv_file)
+        logfile = logging_response(validator['geochroncontrol'], logfile)
 
-        # logfile.append('\n === Validating Data ===')
-        # validator['taxa'] = nv.valid_data(cur = cur,
-        #                                       yml_dict = yml_dict,
-        #                                       csv_file = csv_file,
-        #                                       wide = True)
-        # logfile = logging_response(validator['taxa'], logfile)
+        logfile.append('\n === Checking Against Contact Names ===')
+        validator['agent'] = nv.valid_contact(cur,
+                                            csv_file,
+                                            yml_dict)
+        logfile = logging_response(validator['agent'], logfile)
+
+        logfile.append('\n=== Validating Dataset Database ===')
+        validator['database'] = nv.valid_dataset_database(cur = cur,
+                                                        yml_dict = yml_dict)
+        logfile = logging_response(validator['database'], logfile)
+
+        logfile.append('\n=== Validating Samples ===')
+        validator['sample'] = nv.valid_sample(cur = cur,
+                                              yml_dict = yml_dict,
+                                              csv_file = csv_file,
+                                              validator = validator)
+        logfile = logging_response(validator['sample'], logfile)
+
+        logfile.append('\n=== Validating Sample Ages ===')
+        validator['sample_age'] = nv.valid_sample_age(cur = cur,
+                                              yml_dict = yml_dict,
+                                              csv_file = csv_file,
+                                              validator = validator)
+        logfile = logging_response(validator['sample_age'], logfile)
+
+        logfile.append('\n === Validating Data ===')
+        validator['taxa'] = nv.valid_data(cur = cur,
+                                              yml_dict = yml_dict,
+                                              csv_file = csv_file,
+                                              wide = True)
+        logfile = logging_response(validator['taxa'], logfile)
         
-        # logfile.append('\n === Validating Data Uncertainties ===')
-        # validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
-        #                                          yml_dict = yml_dict,
-        #                                          csv_file = csv_file,
-        #                                          wide = True)
-        # logfile = logging_response(validator['uncertainty'], logfile)
+        logfile.append('\n === Validating Data Uncertainties ===')
+        validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
+                                                 yml_dict = yml_dict,
+                                                 csv_file = csv_file,
+                                                 wide = True)
+        logfile = logging_response(validator['uncertainty'], logfile)
 
-        # logfile.append('\n === Validating Publication ===')
-        # validator['publication'] = nv.valid_publication(cur = cur,
-        #                                          yml_dict = yml_dict,
-        #                                          csv_file = csv_file)
-        # logfile = logging_response(validator['publication'], logfile)
+        logfile.append('\n === Validating Publication ===')
+        validator['publication'] = nv.valid_publication(cur = cur,
+                                                 yml_dict = yml_dict,
+                                                 csv_file = csv_file)
+        logfile = logging_response(validator['publication'], logfile)
         
         # # Nothing needs to be committed to the database
         conn.rollback()
-        #all_true = True
-        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', 'dataset',
-                                                            'agent', 'database', 'sample', 'taxa', 'speleothem',
-                                                            #'chronologies', #'chron_controls', 
-                                                            'sample_age', 'uncertainty']])
+
+        all_true = all([validator[key].validAll for key in validator.keys()])
         not_validated_files = "data/not_validated_files"
 
         if all_true is False:
