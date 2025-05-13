@@ -203,7 +203,6 @@ for filename in filenames:
                                         csv_file = csv_file,
                                         uploader = uploader)
         logfile = logging_response(uploader['publications'], logfile)
-        print(logfile)
         all_true = all([uploader[key].validAll for key in uploader])
         all_true = all_true and hashcheck
         if all_true:
@@ -220,8 +219,8 @@ for filename in filenames:
                     writer.write('\n')
         else:
             print(f"filename {filename} could not be uploaded.")
-            os.makedirs(failed_files, exist_ok=True)
-            modified_filename = filename.replace('data/', 'data/upload_logs/')
+            os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
+            modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
             with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
                 for i in logfile:
                     writer.write(i)

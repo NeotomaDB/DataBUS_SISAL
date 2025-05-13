@@ -62,7 +62,6 @@ for filename in filenames:
                                                          csv_file = csv_file)
         logfile = logging_response(validator['collunits'], logfile)
         
-        # Valid Entities
         logfile.append('\n === Checking Against Speleothem Entities')
         validator['speleothem'] = nv.valid_speleothem(cur,
                                                       yml_dict = yml_dict,
@@ -89,25 +88,31 @@ for filename in filenames:
         logfile.append('\n === Checking Chronologies ===')
         validator['chronologies'] = nv.valid_chronologies(cur = cur,
                                                           yml_dict = yml_dict,
-                                                          csv_file = csv_file)
+                                                          csv_file = csv_file,
+                                                          multiple = True)
         logfile = logging_response(validator['chronologies'], logfile)
 
         logfile.append('\n === Checking Chron Controls ===')
         validator['chron_controls'] = nv.valid_chroncontrols(cur = cur,
                                                              yml_dict = yml_dict,
-                                                             csv_file = csv_file)
+                                                             csv_file = csv_file,
+                                                             validator = validator)
         logfile = logging_response(validator['chron_controls'], logfile)
+
+        logfile.append('\n === Checking Hiatuses ===')
+        validator['hiatus'] = nv.valid_hiatus(cur = cur,
+                                               yml_dict = yml_dict,
+                                               csv_file = csv_file)
+        logfile = logging_response(validator['hiatus'], logfile)
 
         logfile.append('\n=== Validating Geochrons ===')
         validator['geochron'] = nv.valid_geochron(cur = cur,
                                                   yml_dict = yml_dict,
                                                   csv_file = csv_file)
         logfile = logging_response(validator['geochron'], logfile)
-
+        
         logfile.append('\n === Checking Geochron Control ===')
-        validator['geochroncontrol'] = nv.valid_geochroncontrol(cur = cur,
-                                                      yml_dict = yml_dict,
-                                                      csv_file = csv_file)
+        validator['geochroncontrol'] = nv.valid_geochroncontrol(validator = validator)
         logfile = logging_response(validator['geochroncontrol'], logfile)
 
         logfile.append('\n === Checking Against Contact Names ===')
@@ -141,7 +146,7 @@ for filename in filenames:
                                               csv_file = csv_file,
                                               wide = True)
         logfile = logging_response(validator['taxa'], logfile)
-        
+                        
         logfile.append('\n === Validating Data Uncertainties ===')
         validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
                                                  yml_dict = yml_dict,

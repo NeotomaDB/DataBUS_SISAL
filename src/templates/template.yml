@@ -313,7 +313,7 @@ metadata:
   table: SISAL chronology
   type: float
 - column: lin_interp_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
   notes: number
   overwrite: false
   required: false
@@ -321,8 +321,13 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: lin_interp_age
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: lin_interp_age_uncert_neg
+  ageboundolder: lin_interp_age_uncert_pos
 - column: lin_interp_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.chronologies.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -330,8 +335,9 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: lin_interp_age
 - column: lin_interp_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.chronologies.ageolder
   notes: number
   overwrite: false
   required: false
@@ -339,8 +345,43 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: lin_interp_age
+- column: lam_age
+  neotoma: ndb.chronologies.age
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: lam_age
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: lam_age_uncert_neg
+  ageboundolder: lam_age_uncert_pos
+- column: lam_age_uncert_neg
+  neotoma: ndb.chronologies.ageyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: lam_age
+- column: lam_age_uncert_pos
+  neotoma: ndb.chronologies.ageolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: lam_age
 - column: Bacon_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
   notes: number
   overwrite: false
   required: false
@@ -348,8 +389,13 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: Bacon
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: Bacon_age_uncert_neg
+  ageboundolder: Bacon_age_uncert_pos
 - column: Bacon_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.chronologies.ageyounger
   notes: number
   overwrite: false
   required: false
@@ -357,8 +403,9 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: Bacon
 - column: Bacon_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.chronologies.ageolder
   notes: number
   overwrite: false
   required: false
@@ -366,6 +413,7 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
+  chronologyname: Bacon
 - column: Bchron_age
   neotoma: ndb.notinuse.age
   notes: number
@@ -484,6 +532,11 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
+  chronologyname: interp
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: interp_age_uncert_neg
+  ageboundolder: interp_age_uncert_pos
 - column: interp_age_uncert_neg
   neotoma: ndb.chronologies.ageyounger
   notes: number
@@ -494,6 +547,7 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
+  chronologyname: interp
 - column: interp_age_uncert_pos
   neotoma: ndb.chronologies.ageolder
   notes: number
@@ -504,6 +558,7 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
+  chronologyname: interp
 - column: lin_reg_age
   neotoma: ndb.notinuse.age
   notes: number
@@ -1022,7 +1077,7 @@ metadata:
   neotoma: ndb.chroncontrols.age
   notes: number
   overwrite: false
-  required: false
+  required: true
   rowwise: true
   schema: sisal
   table: Dating
@@ -1184,7 +1239,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   schema: sisal
   table: Dating
   type: string
@@ -1197,7 +1252,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   schema: sisal
   table: Dating
   type: string
@@ -1410,7 +1465,7 @@ metadata:
   table: Original chronology
   type: null
 - column: single_entity_id
-  neotoma: ndb.speleothem.speleothemid #???
+  neotoma: ndb.speleothem.speleothemid
   notes: database level
   overwrite: false
   required: false
@@ -1647,7 +1702,7 @@ metadata:
   type: null
   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: 'U_Ca_downsampled'
-  neotoma: ???
+  neotoma: ---
   notes: yes or no question
   overwrite: false
   required: false
@@ -1684,7 +1739,7 @@ metadata:
   type: null
   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: 'P_Ca_downsampled'
-  neotoma: ???
+  neotoma: ---
   notes: yes or no question
   overwrite: false
   required: false
@@ -1840,99 +1895,114 @@ metadata:
   type: null
   vocab: ['yes', 'no']
 - column: 238U_content
-  neotoma: ???
+  neotoma: ndb.data.value
   notes: number
   notes ii: We may have to rethink the 210Pb stuff, depending on how we want to handle
     this all.
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
+  uncertainty:
+    uncertaintybasis: '2 Standard Deviations'
+    uncertaintycolumn: 238U_uncertainty
+    unitcolumn: 238U_uncertainty_units
+  unitcolumn: 238U_content_units
 - column: 238U_uncertainty
-  neotoma: ???
+  neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 232Th_content
-  neotoma: ???
+  neotoma: ndb.data.value
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
+  uncertainty:
+    uncertaintybasis: '2 Standard Deviations'
+    uncertaintycolumn: 232Th_uncertainty
+    unitcolumn: 232Th_uncertainty_units
+  unitcolumn: 232Th_content_units
 - column: 232Th_uncertainty
   neotoma: ???
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 234U_238U_activity_uncertainty
-  neotoma: ???
+  neotoma: ndb.uraniumseries.activityuncertainty234u238u
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 234U_238U_activity
-  neotoma: ???
+  neotoma: ndb.uraniumseries.activity234u238u
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 230Th_232Th_ratio
-  neotoma: ???
+  neotoma: ndb.uraniumseries.ratio230th232th
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: '230Th_238U_activity_uncertainty'
-  neotoma: ???
+  neotoma: ndb.uraniumseries.activityuncertainty230th238u
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 230Th_238U_activity
-  neotoma: ???
+  neotoma: ndb.uraniumseries.activity230th238u
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: 230Th_content
-  neotoma: ???
+  neotoma: ndb.data.value
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
+  uncertainty:
+    uncertaintybasis: '2 Standard Deviations'
+    uncertaintycolumn: 230Th_uncertainty
+    unitcolumn: 2230Th_uncertainty_units
+  unitcolumn: 232Th_content_units
 - column: 230Th_uncertainty
-  neotoma: ???
+  neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
   required: false
@@ -1941,16 +2011,16 @@ metadata:
   table: Dating
   type: null
 - column: 230Th_232Th_ratio_uncertainty
-  neotoma: ???
+  neotoma: ndb.uraniumseries.ratiouncertainty230th232th
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
 - column: ini_230Th_232Th_ratio_uncertainty
-  neotoma: ???
+  neotoma: ndb.uraniumseries.iniratiouncertainty230th232th
   notes: number
   overwrite: false
   required: false
@@ -1959,11 +2029,11 @@ metadata:
   table: Dating
   type: null
 - column: ini_230Th_232Th_ratio
-  neotoma: ???
+  neotoma: ndb.uraniumseries.iniratio230th232th
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: null
@@ -1991,8 +2061,14 @@ metadata:
   table: Sample
   type: null
   vocab: ['yes','no','not applicable','unknown']
-
-
+- column: hiatus
+  neotoma: ndb.hiatuses.hiatus
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  type: string
+  vocab: [H]
 
 # not listed
 - column: '---'
@@ -2012,9 +2088,8 @@ metadata:
 # - column: depth
 # - column: depth_lam
 # - column: lam_thickness
-# - column: lam_age
-# - column: lam_age_uncert_pos
-# - column: lam_age_uncert_neg
-# - column: hiatus
+
+
+
 # - column: ann_lam_check
 # - column: dep_rate_check
