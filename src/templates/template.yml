@@ -272,7 +272,7 @@ metadata:
   overwrite: false
   required: false
   rowwise: false
-  type: str
+  type: string
 - column: agetype
   neotoma: ndb.geochronology.agetype
   overwrite: false
@@ -327,7 +327,7 @@ metadata:
   ageboundyounger: lin_interp_age_uncert_neg
   ageboundolder: lin_interp_age_uncert_pos
 - column: lin_interp_age_uncert_neg
-  neotoma: ndb.chronologies.ageyounger
+  neotoma: ndb.chronologies.ageboundyounger
   notes: number
   overwrite: false
   required: false
@@ -337,7 +337,7 @@ metadata:
   type: float
   chronologyname: lin_interp_age
 - column: lin_interp_age_uncert_pos
-  neotoma: ndb.chronologies.ageolder
+  neotoma: ndb.chronologies.ageboundolder
   notes: number
   overwrite: false
   required: false
@@ -361,7 +361,7 @@ metadata:
   ageboundyounger: lam_age_uncert_neg
   ageboundolder: lam_age_uncert_pos
 - column: lam_age_uncert_neg
-  neotoma: ndb.chronologies.ageyounger
+  neotoma: ndb.chronologies.ageboundyounger
   notes: number
   overwrite: false
   required: false
@@ -371,7 +371,7 @@ metadata:
   type: float
   chronologyname: lam_age
 - column: lam_age_uncert_pos
-  neotoma: ndb.chronologies.ageolder
+  neotoma: ndb.chronologies.ageboundolder
   notes: number
   overwrite: false
   required: false
@@ -395,7 +395,7 @@ metadata:
   ageboundyounger: Bacon_age_uncert_neg
   ageboundolder: Bacon_age_uncert_pos
 - column: Bacon_age_uncert_neg
-  neotoma: ndb.chronologies.ageyounger
+  neotoma: ndb.chronologies.ageboundyounger
   notes: number
   overwrite: false
   required: false
@@ -405,7 +405,7 @@ metadata:
   type: float
   chronologyname: Bacon
 - column: Bacon_age_uncert_pos
-  neotoma: ndb.chronologies.ageolder
+  neotoma: ndb.chronologies.ageboundolder
   notes: number
   overwrite: false
   required: false
@@ -538,7 +538,7 @@ metadata:
   ageboundyounger: interp_age_uncert_neg
   ageboundolder: interp_age_uncert_pos
 - column: interp_age_uncert_neg
-  neotoma: ndb.chronologies.ageyounger
+  neotoma: ndb.chronologies.ageboundyounger
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
   overwrite: false
@@ -549,7 +549,7 @@ metadata:
   type: float
   chronologyname: interp
 - column: interp_age_uncert_pos
-  neotoma: ndb.chronologies.ageolder
+  neotoma: ndb.chronologies.ageboundolder
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
   overwrite: false
@@ -1239,7 +1239,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: string
@@ -1252,7 +1252,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: string
@@ -1904,7 +1904,8 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
+  taxonname: 238U #??
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: 238U_uncertainty
@@ -1918,7 +1919,8 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
+  taxonname: 238U
 - column: 232Th_content
   neotoma: ndb.data.value
   notes: number
@@ -1927,21 +1929,23 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  taxonname: 232Th #??
+  type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: 232Th_uncertainty
     unitcolumn: 232Th_uncertainty_units
   unitcolumn: 232Th_content_units
 - column: 232Th_uncertainty
-  neotoma: ???
+  neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
+  taxonname: 232Th
 - column: 234U_238U_activity_uncertainty
   neotoma: ndb.uraniumseries.activityuncertainty234u238u
   notes: number
@@ -1950,7 +1954,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: 234U_238U_activity
   neotoma: ndb.uraniumseries.activity234u238u
   notes: number
@@ -1959,7 +1963,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: 230Th_232Th_ratio
   neotoma: ndb.uraniumseries.ratio230th232th
   notes: number
@@ -1968,7 +1972,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: '230Th_238U_activity_uncertainty'
   neotoma: ndb.uraniumseries.activityuncertainty230th238u
   notes: number
@@ -1977,7 +1981,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: 230Th_238U_activity
   neotoma: ndb.uraniumseries.activity230th238u
   notes: number
@@ -1986,7 +1990,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: 230Th_content
   neotoma: ndb.data.value
   notes: number
@@ -1995,7 +1999,8 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  taxonname: 230Th #??
+  type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: 230Th_uncertainty
@@ -2006,10 +2011,11 @@ metadata:
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
+  taxonname: 230Th
 - column: 230Th_232Th_ratio_uncertainty
   neotoma: ndb.uraniumseries.ratiouncertainty230th232th
   notes: number
@@ -2018,16 +2024,16 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: ini_230Th_232Th_ratio_uncertainty
   neotoma: ndb.uraniumseries.iniratiouncertainty230th232th
   notes: number
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: ini_230Th_232Th_ratio
   neotoma: ndb.uraniumseries.iniratio230th232th
   notes: number
@@ -2036,16 +2042,16 @@ metadata:
   rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: float
 - column: decay_constant
-  neotoma: ???
+  neotoma: ndb.uraniumseries.decayconstantid
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
-  type: null
+  type: string
   vocab: [Cheng et al. 2000, Cheng et al. 2013, Edwards et al. 1987, Ivanovich & Harmon
       1992, other (add note to notes sheet), unknown]
 - column: arag_corr

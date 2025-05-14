@@ -21,7 +21,7 @@ python src/template_validate.py --template src/templates/template.yml
 
 args = nh.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL'))
+data = json.loads(os.getenv('PGDB_TANK'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -90,9 +90,9 @@ for filename in filenames:
                                                           yml_dict = yml_dict,
                                                           csv_file = csv_file,
                                                           multiple = True)
-        logfile = logging_response(validator['chronologies'], logfile)
+        logfile = logging_response(validator['chronologies'], logfile)  
 
-        logfile.append('\n === Checking Chron Controls ===')
+        logfile.append('\n === Checking ChronControls ===')
         validator['chron_controls'] = nv.valid_chroncontrols(cur = cur,
                                                              yml_dict = yml_dict,
                                                              csv_file = csv_file,
@@ -115,6 +115,12 @@ for filename in filenames:
         validator['geochroncontrol'] = nv.valid_geochroncontrol(validator = validator)
         logfile = logging_response(validator['geochroncontrol'], logfile)
 
+        logfile.append('\n === Checking UTh Series ===')
+        validator['uthseries'] = nv.valid_uth_series(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file)
+        logfile = logging_response(validator['uthseries'], logfile)
+                                                    
         logfile.append('\n === Checking Against Contact Names ===')
         validator['agent'] = nv.valid_contact(cur,
                                             csv_file,

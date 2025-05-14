@@ -76,7 +76,6 @@ for filename in filenames:
                                                 uploader = uploader)
         logfile = logging_response(uploader['collunitid'], logfile)
         
-        # Insert Entities
         logfile.append('\n === Inserting Speleothem Entities')
         uploader['speleothem'] = nu.insert_speleothem(cur,
                                                         yml_dict = yml_dict,
@@ -98,26 +97,33 @@ for filename in filenames:
                                                 uploader = uploader)
         logfile = logging_response(uploader['datasets'], logfile)
 
-        logfile.append('\n=== Inserting Geochronology Dataset ===')
+        logfile.append('\n=== Inserting GeoChronDataset ===')
         uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file,
                                                 uploader = uploader)
         logfile = logging_response(uploader['geochrondatasets'], logfile)
 
-        logfile.append('\n=== Inserting Chronology ===')
+        logfile.append('\n=== Inserting Chronology ===') # check if it works in Japan
         uploader['chronology'] = nu.insert_chronology(cur = cur,
                                                     yml_dict = yml_dict,
                                                     csv_file = csv_file,
-                                                    uploader = uploader)
+                                                    uploader = uploader,
+                                                    multiple = True)
         logfile = logging_response(uploader['chronology'], logfile)
 
-        logfile.append('\n=== Inserting Chroncontrol ===')
+        logfile.append('\n=== Inserting ChronControls ===')
         uploader['chroncontrols'] = nu.insert_chroncontrols(cur = cur,
                                                         yml_dict = yml_dict,
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['chroncontrols'], logfile)
+
+        # logfile.append('\n === Checking Hiatuses ===')
+        # uploader['hiatus'] = nu.insert_hiatus(cur = cur,
+        #                                        yml_dict = yml_dict,
+        #                                        csv_file = csv_file)
+        # logfile = logging_response(uploader['hiatus'], logfile)
 
         logfile.append('\n=== Inserting Dataset PI ===')
         uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
@@ -145,7 +151,7 @@ for filename in filenames:
                                             csv_file = csv_file,
                                             uploader = uploader)
         logfile = logging_response(uploader['samples'], logfile)
-        
+         
         logfile.append('\n=== Inserting Samples for GeoChron ===')
         uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
                                             yml_dict = yml_dict,
@@ -166,6 +172,13 @@ for filename in filenames:
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['geochroncontrols'], logfile)
+        
+        # TODO upload_uth_series
+        # logfile.append('\n === Checking UTh Series ===')
+        # uploader['uthseries'] = nu.insert_uth_series(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file)
+        # logfile = logging_response(uploader['uthseries'], logfile)
 
         logfile.append('\n=== Inserting Sample Analyst ===')
         uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
@@ -203,12 +216,16 @@ for filename in filenames:
                                         csv_file = csv_file,
                                         uploader = uploader)
         logfile = logging_response(uploader['publications'], logfile)
+
+        logfile.append('\n === Finalizing Insert  ===')
+        uploader['finalize'] = nu.insert_final(cur, 
+                                               uploader = uploader)
         all_true = all([uploader[key].validAll for key in uploader])
         all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            conn.commit()
-            #conn.rollback()
+            #conn.commit()
+            conn.rollback()
             os.makedirs(uploaded_files, exist_ok=True)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
