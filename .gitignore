@@ -178,3 +178,7 @@ speleothem_tables.pdf
 src/unitList_SISALv3.xlsx
 SISAL_names_analysis.ipynb
 man/speleothem_tables.tex
+src/remove_cu.py
+src/find_error_msg.py
+
+unique_invalid_blocks.txt
