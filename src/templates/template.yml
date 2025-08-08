@@ -59,7 +59,7 @@ metadata:
   rowwise: false
   type: float
 ## Collection Units
-- column: site_name
+- column: persist_id
   neotoma: ndb.collectionunits.handle
   notes: name by author
   overwrite: true
@@ -80,7 +80,7 @@ metadata:
   notes ii: This would be the Neotoma SiteID to link (as opposed to the SISAL siteid)
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: false # if false then it accepts composites
   schema: sisal
   table: Entity
   type: int
@@ -200,7 +200,7 @@ metadata:
   schema: sisal
   table: Sample
   type: null
-- column: depth_sample
+- column: depth
   neotoma: ndb.analysisunits.depth
   notes: number
   overwrite: false
@@ -1279,7 +1279,7 @@ metadata:
   table: Dating
   type: float
 - column: depth_ref
-  neotoma: ndb.speleothem.depthreference
+  neotoma: ndb.speleothems.depthreference
   notes: depth measured from the top or the bottom of the core; dropdown list option
   notes ii: The speleothem is sectioned in cross section and sampled in the axis of
     drip
@@ -1456,7 +1456,7 @@ metadata:
   table: Entity link reference
   type: null
 - column: sample_id
-  neotoma: ndb.sampleid
+  neotoma: ndb.samples.samplename
   notes: database level
   overwrite: false
   required: false
@@ -1530,17 +1530,6 @@ metadata:
   neotoma: '-'
   notes: entity_name in the database that SHOULD be used instead
   notes ii: IGNORE -- Based on Notes
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-- column: wokam
-  neotoma: --
-  notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
-    filled at database level from WOKAM shapefiles
-  notes ii: External data layer
   overwrite: false
   required: false
   rowwise: false
@@ -1912,6 +1901,7 @@ metadata:
     unitcolumn: 238U_uncertainty_units
   unitcolumn: 238U_content_units
 - column: 238U_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
@@ -1937,6 +1927,7 @@ metadata:
     unitcolumn: 232Th_uncertainty_units
   unitcolumn: 232Th_content_units
 - column: 232Th_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
@@ -1947,6 +1938,7 @@ metadata:
   type: float
   taxonname: 232Th
 - column: 234U_238U_activity_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.activityuncertainty234u238u
   notes: number
   overwrite: false
@@ -2007,6 +1999,7 @@ metadata:
     unitcolumn: 2230Th_uncertainty_units
   unitcolumn: 232Th_content_units
 - column: 230Th_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
   notes: number
   overwrite: false
@@ -2017,6 +2010,7 @@ metadata:
   type: float
   taxonname: 230Th
 - column: 230Th_232Th_ratio_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.ratiouncertainty230th232th
   notes: number
   overwrite: false
@@ -2026,6 +2020,7 @@ metadata:
   table: Dating
   type: float
 - column: ini_230Th_232Th_ratio_uncertainty
+  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.iniratiouncertainty230th232th
   notes: number
   overwrite: false
@@ -2085,6 +2080,18 @@ metadata:
   rowwise: false
   schema: '---'
   table: '---'
+  type: null
+
+- column: wokam
+  neotoma: --
+  notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
+    filled at database level from WOKAM shapefiles
+  notes ii: External data layer
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
   type: null
 # - column: host_rock_trace_elements
 # - column: drip_water_trace_elements
