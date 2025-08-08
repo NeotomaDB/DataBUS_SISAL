@@ -3,24 +3,27 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 import pandas as pd
+import codecs
 from datetime import datetime, timedelta
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
+raw = os.getenv('PGDB_TANK')
+data = codecs.decode(raw.encode('utf-8'), 'unicode_escape')
+data = json.loads(data)
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
-a_list = [33411]
-print(a_list)
-query = """SELECT siteid, recdatecreated
-           FROM ndb.sites
-           ORDER BY recdatecreated DESC
-           LIMIT 1"""
+query = """SELECT s.siteid, c.recdatecreated FROM ndb.sites s
+           JOIN ndb.collectionunits c ON s.siteid = c.siteid
+           JOIN ndb.datasets d ON c.collectionunitid = d.collectionunitid
+           JOIN ndb.datasettypes dt ON d.datasettypeid = dt.datasettypeid
+           WHERE dt.datasettypeid = 44
+           LIMIT 60;"""
 
 cur.execute(query)
 data = cur.fetchall()
 data = pd.DataFrame(data, columns = ['siteid', 'recdatecreated'])
-
+print(data)
 for index, row in data.iterrows():
     site = row['siteid']
     date = row['recdatecreated']
