@@ -9,6 +9,8 @@ import DataBUS.neotomaUploader as nu
 from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
+import codecs
+from datetime import datetime
 """
 Use this command after having validated the files to 
 upload to Neotoma.
@@ -23,8 +25,9 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
-
+raw = os.getenv('PGDB_TANK')
+data = codecs.decode(raw.encode('utf-8'), 'unicode_escape')
+data = json.loads(data)
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -32,6 +35,7 @@ args = nh.parse_arguments()
 overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
+total_files = len(filenames)
 upload_logs = 'data/upload_logs'
 if not os.path.exists(upload_logs):
             os.makedirs(upload_logs)
@@ -39,11 +43,14 @@ if not os.path.exists(upload_logs):
 uploaded_files = "data/uploaded_files"
 failed_files = "data/failed_files/failed_uploads"
 
-for filename in filenames:
+start_time = datetime.now()
+print(f"Start uploading {total_files} files at {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+next_percent = 5
+
+for j, filename in enumerate(filenames, 1):
     test_dict = {}
     print(filename)
     logfile = []
-
     hashcheck = nh.hash_file(filename)
     filecheck = check_file(filename)
 
@@ -119,12 +126,13 @@ for filename in filenames:
                                                         uploader = uploader)
         logfile = logging_response(uploader['chroncontrols'], logfile)
 
-        # logfile.append('\n === Checking Hiatuses ===')
-        # uploader['hiatus'] = nu.insert_hiatus(cur = cur,
-        #                                        yml_dict = yml_dict,
-        #                                        csv_file = csv_file)
-        # logfile = logging_response(uploader['hiatus'], logfile)
-
+        logfile.append('\n === Checking Hiatuses ===')
+        uploader['hiatus'] = nu.insert_hiatus(cur = cur,
+                                               yml_dict = yml_dict,
+                                               csv_file = csv_file,
+                                               uploader = uploader)
+        logfile = logging_response(uploader['hiatus'], logfile)
+                                                    
         logfile.append('\n=== Inserting Dataset PI ===')
         uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
                                                     yml_dict = yml_dict,
@@ -165,20 +173,13 @@ for filename in filenames:
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['geochron'], logfile)
-
+        
         logfile.append('\n=== Inserting Geochron Controls ===')
         uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
                                                         yml_dict = yml_dict,
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['geochroncontrols'], logfile)
-        
-        # TODO upload_uth_series
-        # logfile.append('\n === Checking UTh Series ===')
-        # uploader['uthseries'] = nu.insert_uth_series(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file)
-        # logfile = logging_response(uploader['uthseries'], logfile)
 
         logfile.append('\n=== Inserting Sample Analyst ===')
         uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
@@ -202,6 +203,13 @@ for filename in filenames:
                                         wide = True)
         logfile = logging_response(uploader['data'], logfile)
         
+        logfile.append('\n === Checking UTh Series ===')
+        uploader['uthseries'] = nu.insert_uth_series(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+        logfile = logging_response(uploader['uthseries'], logfile)
+
         logfile.append('\n === Inserting Data Uncertainties ===')
         uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
                                                     yml_dict = yml_dict,
@@ -224,8 +232,8 @@ for filename in filenames:
         all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            #conn.commit()
-            conn.rollback()
+            conn.commit()
+            #conn.rollback()
             os.makedirs(uploaded_files, exist_ok=True)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
@@ -235,6 +243,10 @@ for filename in filenames:
                     writer.write(i)
                     writer.write('\n')
         else:
+            not_uploaded_files = "data/failed_uploads"
+            os.makedirs(not_uploaded_files, exist_ok=True)
+            not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+            os.replace(filename, not_uploaded_path)
             print(f"filename {filename} could not be uploaded.")
             os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
             modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
@@ -244,6 +256,10 @@ for filename in filenames:
                     writer.write('\n')
             conn.rollback()
     except Exception as e:
+        not_uploaded_files = "data/failed_uploads"
+        os.makedirs(not_uploaded_files, exist_ok=True)
+        not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+        os.replace(filename, not_uploaded_path)
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()
@@ -253,3 +269,14 @@ for filename in filenames:
             for i in logfile:
                 writer.write(i)
                 writer.write('\n')
+    finally:
+         ### Temporary to check how many files are pending
+        percent_complete = (j / total_files) * 100
+        if percent_complete >= next_percent:
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print(f"Uploaded {next_percent}% at {now}")
+            next_percent += 5
+    
+end_time = datetime.now()
+print(f"Finished uploading at {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+### End of temporary code
