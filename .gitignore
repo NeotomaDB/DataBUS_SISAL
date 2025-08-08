@@ -1,5 +1,7 @@
 
-data/
+data/*
+!data/sisal_entity_5.csv
+
 data-all/
 data-toy/
 .venv
