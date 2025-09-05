@@ -5,14 +5,20 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = "==3.11.10"
 dependencies = [
-    "databus",
-    "mysql-connector-python>=9.2.0",
-    "numpy>=1.25",
-    "pandas>=2.0.2",
-    "psycopg>=3.2.4",
-    "python-dotenv>=1.0",
-    "pyyaml>=6.0",
-    "requests>=2.32.3",
+    "numpy>1.25.0",
+    "pandas==2.0.2",
+    "psycopg2-binary>=2.9.10",
+    "python-dateutil==2.8.2",
+    "python-dotenv==1.0.0",
+    "pytz==2023.3",
+    "PyYAML==5.3.1",
+    "six==1.16.0",
+    "tzdata==2023.3",
+    "openpyxl",
+    "requests",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.16",
+    "mkdocstrings[python-legacy]>=0.18",
 ]
 
 [tool.uv.sources]
