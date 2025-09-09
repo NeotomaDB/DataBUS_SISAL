@@ -22,8 +22,6 @@ python src/template_validate.py --template src/templates/template.yml
 
 args = nh.parse_arguments()
 load_dotenv()
-var = urllib.parse.unquote(os.getenv('PGDB_TANK'))
-print(var)
 data = json.loads(os.getenv('PGDB_TANK'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)

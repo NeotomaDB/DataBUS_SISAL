@@ -1,25 +1,49 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "databus-sisal"
 version = "0.1.0"
 description = "Add your description here"
-readme = "README.md"
+authors = [{name = "Socorro E Dominguez Vidana", email = "dominguezvid@uwisc.edu"}]
+license = "MIT"
+license-files = ["LICENSE.md"]
 requires-python = "==3.11.10"
+readme = {file = "README.md", content-type = "text/markdown"}
+keywords = ["neotoma", "paleoecology", "interoperability", "postgres", "SQL"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS :: MacOS X",
+  "Topic :: Database",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Software Development :: Object Brokering"
+]
 dependencies = [
-    "numpy>1.25.0",
+    "databus",
+    "numpy>=1.26.0,<1.27",
+    "openpyxl>=3.1.5",
     "pandas==2.0.2",
-    "psycopg2-binary>=2.9.10",
+    "mysql-connector-python>=9.2.0",
+    "psycopg2-binary==2.9.10",
     "python-dateutil==2.8.2",
     "python-dotenv==1.0.0",
     "pytz==2023.3",
-    "PyYAML==5.3.1",
+    "pyyaml>=5.3.1",
+    "requests>=2.32.3",
     "six==1.16.0",
     "tzdata==2023.3",
-    "openpyxl",
-    "requests",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.6.16",
-    "mkdocstrings[python-legacy]>=0.18",
 ]
+
+[project.urls]
+Issues = "https://github.com/NeotomaDB/DataBUS_SISAL/issues"
+Repository = "https://github.com/NeotomaDB/DataBUS_SISAL/"
+
+[project.optional-dependencies]
+build = ["build", "twine"]
+dev = ["black", "bumpver", "isort", "mypy", "pytest"]
 
 [tool.uv.sources]
 databus = { git = "https://github.com/NeotomaDB/DataBUS" }
