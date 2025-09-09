@@ -24,10 +24,10 @@ Change 'template.xlsx' to desired filename as long as
 template file that has an .xlsx or .yml extension
 """
 
+args = nh.parse_arguments()
 load_dotenv()
-raw = os.getenv('PGDB_TANK')
-data = codecs.decode(raw.encode('utf-8'), 'unicode_escape')
-data = json.loads(data)
+data = json.loads(os.getenv('PGDB_TANK'))
+
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -89,164 +89,165 @@ for j, filename in enumerate(filenames, 1):
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['speleothem'], logfile)
+        print(uploader['speleothem'])
+        break
+        # logfile.append('\n=== Inserting Analysis Units ===')
+        # uploader['anunits'] = nu.insert_analysisunit(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file,
+        #                                             uploader = uploader)
+        # logfile = logging_response(uploader['anunits'], logfile)
 
-        logfile.append('\n=== Inserting Analysis Units ===')
-        uploader['anunits'] = nu.insert_analysisunit(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader)
-        logfile = logging_response(uploader['anunits'], logfile)
+        # logfile.append('\n=== Inserting Dataset ===')
+        # uploader['datasets'] = nu.insert_dataset(cur = cur,
+        #                                         yml_dict = yml_dict,
+        #                                         csv_file = csv_file,
+        #                                         uploader = uploader)
+        # logfile = logging_response(uploader['datasets'], logfile)
 
-        logfile.append('\n=== Inserting Dataset ===')
-        uploader['datasets'] = nu.insert_dataset(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_file = csv_file,
-                                                uploader = uploader)
-        logfile = logging_response(uploader['datasets'], logfile)
+        # logfile.append('\n=== Inserting GeoChronDataset ===')
+        # uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
+        #                                         yml_dict = yml_dict,
+        #                                         csv_file = csv_file,
+        #                                         uploader = uploader)
+        # logfile = logging_response(uploader['geochrondatasets'], logfile)
 
-        logfile.append('\n=== Inserting GeoChronDataset ===')
-        uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_file = csv_file,
-                                                uploader = uploader)
-        logfile = logging_response(uploader['geochrondatasets'], logfile)
+        # logfile.append('\n=== Inserting Chronology ===') # check if it works in Japan
+        # uploader['chronology'] = nu.insert_chronology(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file,
+        #                                             uploader = uploader,
+        #                                             multiple = True)
+        # logfile = logging_response(uploader['chronology'], logfile)
 
-        logfile.append('\n=== Inserting Chronology ===') # check if it works in Japan
-        uploader['chronology'] = nu.insert_chronology(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader,
-                                                    multiple = True)
-        logfile = logging_response(uploader['chronology'], logfile)
+        # logfile.append('\n=== Inserting ChronControls ===')
+        # uploader['chroncontrols'] = nu.insert_chroncontrols(cur = cur,
+        #                                                 yml_dict = yml_dict,
+        #                                                 csv_file = csv_file,
+        #                                                 uploader = uploader)
+        # logfile = logging_response(uploader['chroncontrols'], logfile)
 
-        logfile.append('\n=== Inserting ChronControls ===')
-        uploader['chroncontrols'] = nu.insert_chroncontrols(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_file = csv_file,
-                                                        uploader = uploader)
-        logfile = logging_response(uploader['chroncontrols'], logfile)
-
-        logfile.append('\n === Checking Hiatuses ===')
-        uploader['hiatus'] = nu.insert_hiatus(cur = cur,
-                                               yml_dict = yml_dict,
-                                               csv_file = csv_file,
-                                               uploader = uploader)
-        logfile = logging_response(uploader['hiatus'], logfile)
+        # logfile.append('\n === Checking Hiatuses ===')
+        # uploader['hiatus'] = nu.insert_hiatus(cur = cur,
+        #                                        yml_dict = yml_dict,
+        #                                        csv_file = csv_file,
+        #                                        uploader = uploader)
+        # logfile = logging_response(uploader['hiatus'], logfile)
                                                     
-        logfile.append('\n=== Inserting Dataset PI ===')
-        uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader)
-        logfile = logging_response(uploader['datasetpi'], logfile)
+        # logfile.append('\n=== Inserting Dataset PI ===')
+        # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file,
+        #                                             uploader = uploader)
+        # logfile = logging_response(uploader['datasetpi'], logfile)
 
-        logfile.append('\n=== Inserting Data Processor ===')
-        uploader['processor'] = nu.insert_data_processor(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_file = csv_file,
-                                                        uploader = uploader)
-        logfile = logging_response(uploader['processor'], logfile)
+        # logfile.append('\n=== Inserting Data Processor ===')
+        # uploader['processor'] = nu.insert_data_processor(cur = cur,
+        #                                                 yml_dict = yml_dict,
+        #                                                 csv_file = csv_file,
+        #                                                 uploader = uploader)
+        # logfile = logging_response(uploader['processor'], logfile)
 
-        logfile.append('\n=== Inserting Dataset Database ===')
-        uploader['database'] = nu.insert_dataset_database(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        uploader = uploader)
-        logfile = logging_response(uploader['database'], logfile)
+        # logfile.append('\n=== Inserting Dataset Database ===')
+        # uploader['database'] = nu.insert_dataset_database(cur = cur,
+        #                                                 yml_dict = yml_dict,
+        #                                                 uploader = uploader)
+        # logfile = logging_response(uploader['database'], logfile)
 
-        logfile.append('\n=== Inserting Samples ===')
-        uploader['samples'] = nu.insert_sample(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                            uploader = uploader)
-        logfile = logging_response(uploader['samples'], logfile)
+        # logfile.append('\n=== Inserting Samples ===')
+        # uploader['samples'] = nu.insert_sample(cur, 
+        #                                     yml_dict = yml_dict,
+        #                                     csv_file = csv_file,
+        #                                     uploader = uploader)
+        # logfile = logging_response(uploader['samples'], logfile)
          
-        logfile.append('\n=== Inserting Samples for GeoChron ===')
-        uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                            uploader = uploader)
-        logfile = logging_response(uploader['sample_geochron'], logfile)
+        # logfile.append('\n=== Inserting Samples for GeoChron ===')
+        # uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
+        #                                     yml_dict = yml_dict,
+        #                                     csv_file = csv_file,
+        #                                     uploader = uploader)
+        # logfile = logging_response(uploader['sample_geochron'], logfile)
 
-        logfile.append('\n=== Inserting Geochronologies ===')
-        uploader['geochron'] = nu.insert_geochron(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_file = csv_file,
-                                                        uploader = uploader)
-        logfile = logging_response(uploader['geochron'], logfile)
+        # logfile.append('\n=== Inserting Geochronologies ===')
+        # uploader['geochron'] = nu.insert_geochron(cur = cur,
+        #                                                 yml_dict = yml_dict,
+        #                                                 csv_file = csv_file,
+        #                                                 uploader = uploader)
+        # logfile = logging_response(uploader['geochron'], logfile)
         
-        logfile.append('\n=== Inserting Geochron Controls ===')
-        uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_file = csv_file,
-                                                        uploader = uploader)
-        logfile = logging_response(uploader['geochroncontrols'], logfile)
+        # logfile.append('\n=== Inserting Geochron Controls ===')
+        # uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
+        #                                                 yml_dict = yml_dict,
+        #                                                 csv_file = csv_file,
+        #                                                 uploader = uploader)
+        # logfile = logging_response(uploader['geochroncontrols'], logfile)
 
-        logfile.append('\n=== Inserting Sample Analyst ===')
-        uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                            uploader = uploader)
-        logfile = logging_response(uploader['sampleAnalyst'], logfile)
+        # logfile.append('\n=== Inserting Sample Analyst ===')
+        # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+        #                                     yml_dict = yml_dict,
+        #                                     csv_file = csv_file,
+        #                                     uploader = uploader)
+        # logfile = logging_response(uploader['sampleAnalyst'], logfile)
 
-        logfile.append('\n === Inserting Sample Age ===')
-        uploader['sampleAge'] = nu.insert_sample_age(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                            uploader = uploader)
-        logfile = logging_response(uploader['sampleAge'], logfile)
+        # logfile.append('\n === Inserting Sample Age ===')
+        # uploader['sampleAge'] = nu.insert_sample_age(cur, 
+        #                                     yml_dict = yml_dict,
+        #                                     csv_file = csv_file,
+        #                                     uploader = uploader)
+        # logfile = logging_response(uploader['sampleAge'], logfile)
 
-        logfile.append('\n === Inserting Data ===')
-        uploader['data'] = nu.insert_data(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_file = csv_file,
-                                        uploader = uploader,
-                                        wide = True)
-        logfile = logging_response(uploader['data'], logfile)
+        # logfile.append('\n === Inserting Data ===')
+        # uploader['data'] = nu.insert_data(cur, 
+        #                                 yml_dict = yml_dict,
+        #                                 csv_file = csv_file,
+        #                                 uploader = uploader,
+        #                                 wide = True)
+        # logfile = logging_response(uploader['data'], logfile)
         
-        logfile.append('\n === Checking UTh Series ===')
-        uploader['uthseries'] = nu.insert_uth_series(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader)
-        logfile = logging_response(uploader['uthseries'], logfile)
+        # logfile.append('\n === Checking UTh Series ===')
+        # uploader['uthseries'] = nu.insert_uth_series(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file,
+        #                                             uploader = uploader)
+        # logfile = logging_response(uploader['uthseries'], logfile)
 
-        logfile.append('\n === Inserting Data Uncertainties ===')
-        uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_file = csv_file,
-                                                    uploader = uploader,
-                                                    wide = True)
-        logfile = logging_response(uploader['uncertainty'], logfile)
+        # logfile.append('\n === Inserting Data Uncertainties ===')
+        # uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
+        #                                             yml_dict = yml_dict,
+        #                                             csv_file = csv_file,
+        #                                             uploader = uploader,
+        #                                             wide = True)
+        # logfile = logging_response(uploader['uncertainty'], logfile)
 
-        logfile.append('\n === Inserting Publications ===')
-        uploader['publications'] = nu.insert_publication(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_file = csv_file,
-                                        uploader = uploader)
-        logfile = logging_response(uploader['publications'], logfile)
+        # logfile.append('\n === Inserting Publications ===')
+        # uploader['publications'] = nu.insert_publication(cur, 
+        #                                 yml_dict = yml_dict,
+        #                                 csv_file = csv_file,
+        #                                 uploader = uploader)
+        # logfile = logging_response(uploader['publications'], logfile)
 
-        logfile.append('\n === Finalizing Insert  ===')
-        uploader['finalize'] = nu.insert_final(cur, 
-                                               uploader = uploader)
-        all_true = all([uploader[key].validAll for key in uploader])
-        all_true = all_true and hashcheck
+        # logfile.append('\n === Finalizing Insert  ===')
+        # uploader['finalize'] = nu.insert_final(cur, 
+        #                                        uploader = uploader)
+        # all_true = all([uploader[key].validAll for key in uploader])
+        # all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            conn.commit()
-            #conn.rollback()
-            os.makedirs(uploaded_files, exist_ok=True)
-            uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
-            os.replace(filename, uploaded_path)
-            modified_filename = filename.replace('data/', 'data/upload_logs/')
-            with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
-                for i in logfile:
-                    writer.write(i)
-                    writer.write('\n')
+            #conn.commit()
+            conn.rollback()
+            # os.makedirs(uploaded_files, exist_ok=True)
+            # uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
+            # os.replace(filename, uploaded_path)
+            # modified_filename = filename.replace('data/', 'data/upload_logs/')
+            # with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
+            #     for i in logfile:
+            #         writer.write(i)
+            #         writer.write('\n')
         else:
-            not_uploaded_files = "data/failed_uploads"
-            os.makedirs(not_uploaded_files, exist_ok=True)
-            not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-            os.replace(filename, not_uploaded_path)
+            # not_uploaded_files = "data/failed_uploads"
+            # os.makedirs(not_uploaded_files, exist_ok=True)
+            # not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+            # os.replace(filename, not_uploaded_path)
             print(f"filename {filename} could not be uploaded.")
             os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
             modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
@@ -256,10 +257,12 @@ for j, filename in enumerate(filenames, 1):
                     writer.write('\n')
             conn.rollback()
     except Exception as e:
-        not_uploaded_files = "data/failed_uploads"
-        os.makedirs(not_uploaded_files, exist_ok=True)
-        not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-        os.replace(filename, not_uploaded_path)
+        print(e)
+        break
+        # not_uploaded_files = "data/failed_uploads"
+        # os.makedirs(not_uploaded_files, exist_ok=True)
+        # not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+        # os.replace(filename, not_uploaded_path)
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()
@@ -270,6 +273,7 @@ for j, filename in enumerate(filenames, 1):
                 writer.write(i)
                 writer.write('\n')
     finally:
+        break
          ### Temporary to check how many files are pending
         percent_complete = (j / total_files) * 100
         if percent_complete >= next_percent:
