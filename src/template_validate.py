@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
 from DataBUS.neotomaHelpers.logging_dict import logging_response
-import urllib.parse #while in Japan, this is needed to parse the connection string
 """
 To run:
 python src/template_validate.py --template src/templates/template.yml

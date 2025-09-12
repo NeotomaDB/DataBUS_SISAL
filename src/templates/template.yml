@@ -1100,17 +1100,8 @@ metadata:
   schema: sisal
   table: Dating
   type: float
-- column: cover_thickness
-  neotoma: ndb.speleothem.coverthickness
-  notes: actual cover thickness as a 'number'
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
 - column: cover_type
-  neotoma: ndb.speleothem.covertype
+  neotoma: ndb.speleothems.covertype
   notes: actual cover type filled from dropddown list options by authors or from
     publications
   notes ii: FROM AUTHOR
@@ -1119,9 +1110,27 @@ metadata:
   rowwise: false
   schema: sisal
   table: Entity
-  type: null
+  type: string
   vocab: ['thick',\r'thin',\r'patchy',\r'barren',\r'mixed (add note\
     \ to notes sheet)',\r'other (add note to notes sheet)',\r'unknown']
+- column: cover_thickness
+  neotoma: ndb.speleothems.coverthickness
+  notes: actual cover thickness as a 'number'
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: numeric
+- column: cover_thickness_units
+  neotoma: ndb.speleothems.entitycoverunits
+  notes: actual cover thickness as a 'number'
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
 - column: d13C
   neotoma: ndb.externalspeleothem.id
   notes: asks the question 'if this dataset has been made available in the database',
@@ -1291,14 +1300,23 @@ metadata:
   type: null
   vocab: [from top, from base, not applicable]
 - column: drip_height
-  neotoma: ndb.speleothem.dripheightid
+  neotoma: ndb.speleothems.dripheight
   notes: height of drip from stalagmite / flowstone as a number
   overwrite: false
   required: false
   rowwise: false
   schema: sisal
   table: Entity
-  type: null
+  type: float
+- column: drip_height_units
+  neotoma: ndb.speleothems.dripheightunits
+  notes: units of height of drip from stalagmite / flowstone as a number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
 - column: 'drip_water_trace_elements'
   neotoma: ndb.externalspeleothem.id
   notes: 'yes or no question '
@@ -1365,7 +1383,7 @@ metadata:
   table: Dating
   type: string
 - column: land_use
-  neotoma: ndb.speleothem.landuse
+  neotoma: ndb.speleothems.landusecovertypeid
   notes: 'actual land use type filled from dropddown list options by authors or from
     publications '
   notes ii: As above, a long cave may cross multiple vegetation types.
