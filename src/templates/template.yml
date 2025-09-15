@@ -1528,7 +1528,7 @@ metadata:
   table: Dating
   type: float
 - column: vegetation_type
-  neotoma: ndb.speleothem.vegetation
+  neotoma: ndb.speleothems.vegetationcovertypeid
   notes: 'actual vegetation type filled from dropddown list options by authors or
     from publications '
   notes ii: As above, a long cave may cross multiple vegetation types.
