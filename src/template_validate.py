@@ -152,7 +152,8 @@ for filename in filenames:
                                                 csv_file = csv_file,
                                                 wide = True)
             logfile = logging_response(validator['taxa'], logfile)
-                         
+            
+            # Function to validate UTh series
             logfile.append('\n === Validating Data Uncertainties ===')
             validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
                                                     yml_dict = yml_dict,
