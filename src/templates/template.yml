@@ -241,7 +241,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   schema: sisal
   table: Sample
   type: null
@@ -1101,7 +1101,7 @@ metadata:
   table: Dating
   type: float
 - column: cover_type
-  neotoma: ndb.speleothems.covertype
+  neotoma: ndb.speleothems.covertypeid
   notes: actual cover type filled from dropddown list options by authors or from
     publications
   notes ii: FROM AUTHOR
@@ -1123,7 +1123,7 @@ metadata:
   table: Entity
   type: numeric
 - column: cover_thickness_units
-  neotoma: ndb.speleothems.entitycoverunits
+  neotoma: ndb.speleothems.entitycoverunitsid
   notes: actual cover thickness as a 'number'
   overwrite: false
   required: false
@@ -1309,8 +1309,17 @@ metadata:
   table: Entity
   type: float
 - column: drip_height_units
-  neotoma: ndb.speleothems.dripheightunits
+  neotoma: ndb.speleothems.dripheightunitsid
   notes: units of height of drip from stalagmite / flowstone as a number
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+- column: distance_entrance_units
+  neotoma: ndb.speleothems.entrancedistanceunitsid
+  notes: units of distance entrance
   overwrite: false
   required: false
   rowwise: false
@@ -1465,7 +1474,7 @@ metadata:
   table: Reference
   type: string
 - column: ref_id
-  neotoma: ndb.speleothem.speleothemid
+  neotoma: ndb.speleothems.ref_id
   notes: database level; links multiple references to single entity
   overwrite: false
   required: false
@@ -1478,7 +1487,7 @@ metadata:
   notes: database level
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Original chronology
   type: null
@@ -1530,7 +1539,7 @@ metadata:
 - column: vegetation_type
   neotoma: ndb.speleothems.vegetationcovertypeid
   notes: 'actual vegetation type filled from dropddown list options by authors or
-    from publications '
+    from publications'
   notes ii: As above, a long cave may cross multiple vegetation types.
   overwrite: false
   required: false
