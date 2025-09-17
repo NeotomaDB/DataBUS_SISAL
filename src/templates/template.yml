@@ -274,6 +274,12 @@ metadata:
   rowwise: false
   type: string
 - column: agetype
+  neotoma: ndb.sampleages.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: agetype
   neotoma: ndb.geochronology.agetype
   overwrite: false
   required: false
