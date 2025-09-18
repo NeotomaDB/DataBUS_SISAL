@@ -73,7 +73,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-# Speleothems - missing entrancedistanceunits
 - column: site_id
   neotoma: ndb.speleothems.siteid
   notes: database level
@@ -1020,7 +1019,7 @@ metadata:
   vocab: [INTCAL13 NH, INTCAL13 SH, INTCAL13 marine, INTCAL09, INTCAL09 marine, INTCAL04
       NH, INTCAL04 SH, INTCAL98, FAIRBANKS09, not calibrated, unknown]
 - column: cave_map
-  neotoma: ndb.speleothem.imagemap
+  neotoma: ndb.externalspeleothemdata.externalid
   notes: asks the question 'if this has been made available with the database version
     in the repository', yes or no, checked at database level
   notes ii: External links?
@@ -1138,7 +1137,7 @@ metadata:
   table: Entity
   type: string
 - column: d13C
-  neotoma: ndb.externalspeleothem.id
+  neotoma: ndb.externalspeleothemdata.externalid
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
@@ -1189,7 +1188,7 @@ metadata:
   rowwise: false
   type: str
 - column: d18O
-  neotoma: ndb.externalspeleothem.id
+  neotoma: ndb.externalspeleothemdata.externalid
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
@@ -1798,7 +1797,7 @@ metadata:
   type: null
   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: data_DOI_url
-  neotoma: ndb.externaldata
+  neotoma: ndb.externalspeleothemdata.extdatabaseid
   notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
   overwrite: false
   required: false
@@ -2076,7 +2075,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   schema: sisal
   table: Dating
   type: string
@@ -2103,20 +2102,22 @@ metadata:
   schema: sisal
   type: string
   vocab: [H]
-
-# not listed
-- column: '---'
-  neotoma: ndb.speleothem.geography
-  notes ii: three dimensional spatial object
+- column: host_rock_trace_elements
+  neotoma: ndb.externalspeleothemdata.externalid
   overwrite: false
   required: false
   rowwise: false
-  schema: '---'
-  table: '---'
-  type: null
-
+  schema: sisal
+  type: string
+- column: drip_water_trace_elements
+  neotoma: ndb.externalspeleothemdata.externalid
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  type: string
 - column: wokam
-  neotoma: --
+  neotoma: ndb.externalspeleothemdata.externalid
   notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
     filled at database level from WOKAM shapefiles
   notes ii: External data layer
@@ -2126,16 +2127,25 @@ metadata:
   schema: sisal
   table: Entity
   type: null
-# - column: host_rock_trace_elements
-# - column: drip_water_trace_elements
-# - column: trace_elements_datafile
-# - column: trace_elements_metadatafile
+- column: trace_elements_datafile
+  neotoma: ndb.externalspeleothemdata.externaldescription
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  type: string
+- column: trace_elements_metadatafile
+  neotoma: ndb.externalspeleothemdata.externaldescription
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  type: string
+
 # - column: d18O_water_equilibrium
-# - column: depth
 # - column: depth_lam
 # - column: lam_thickness
-
-
-
 # - column: ann_lam_check
 # - column: dep_rate_check
+
+
