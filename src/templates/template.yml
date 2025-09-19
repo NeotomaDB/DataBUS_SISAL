@@ -1019,7 +1019,7 @@ metadata:
   vocab: [INTCAL13 NH, INTCAL13 SH, INTCAL13 marine, INTCAL09, INTCAL09 marine, INTCAL04
       NH, INTCAL04 SH, INTCAL98, FAIRBANKS09, not calibrated, unknown]
 - column: cave_map
-  neotoma: ndb.externalspeleothemdata.externalid
+  neotoma: ndb.externalspeleothemdata
   notes: asks the question 'if this has been made available with the database version
     in the repository', yes or no, checked at database level
   notes ii: External links?
@@ -1137,7 +1137,7 @@ metadata:
   table: Entity
   type: string
 - column: d13C
-  neotoma: ndb.externalspeleothemdata.externalid
+  neotoma: ndb.externalspeleothemdata
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
@@ -1188,7 +1188,7 @@ metadata:
   rowwise: false
   type: str
 - column: d18O
-  neotoma: ndb.externalspeleothemdata.externalid
+  neotoma: ndb.externalspeleothemdata
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
@@ -1332,7 +1332,7 @@ metadata:
   table: Entity
   type: string
 - column: 'drip_water_trace_elements'
-  neotoma: ndb.externalspeleothem.id
+  neotoma: ndb.externalspeleothem
   notes: 'yes or no question '
   notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
   overwrite: false
@@ -1366,7 +1366,7 @@ metadata:
   type: null
   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: 'host_rock_trace_elements'
-  neotoma: ndb.externalspeleothem.id
+  neotoma: ndb.externalspeleothem
   notes: 'yes or no question '
   notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
   overwrite: false
@@ -1483,7 +1483,7 @@ metadata:
   notes: database level; links multiple references to single entity
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Entity link reference
   type: null
@@ -1796,15 +1796,6 @@ metadata:
   table: Entity
   type: null
   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: data_DOI_url
-  neotoma: ndb.externalspeleothemdata.extdatabaseid
-  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
 - column: min_weight
   neotoma: ???
   notes: number
@@ -1926,7 +1917,7 @@ metadata:
   schema: sisal
   table: Dating
   type: float
-  taxonname: 238U #??
+  taxonname: 238U
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
     uncertaintycolumn: 238U_uncertainty
@@ -2102,22 +2093,8 @@ metadata:
   schema: sisal
   type: string
   vocab: [H]
-- column: host_rock_trace_elements
-  neotoma: ndb.externalspeleothemdata.externalid
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  type: string
-- column: drip_water_trace_elements
-  neotoma: ndb.externalspeleothemdata.externalid
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  type: string
 - column: wokam
-  neotoma: ndb.externalspeleothemdata.externalid
+  neotoma: ndb.externalspeleothemdata
   notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
     filled at database level from WOKAM shapefiles
   notes ii: External data layer
@@ -2128,18 +2105,45 @@ metadata:
   table: Entity
   type: null
 - column: trace_elements_datafile
-  neotoma: ndb.externalspeleothemdata.externaldescription
+  neotoma: ndb.externalspeleothemdata
   overwrite: false
   required: false
   rowwise: false
   schema: sisal
   type: string
 - column: trace_elements_metadatafile
-  neotoma: ndb.externalspeleothemdata.externaldescription
+  neotoma: ndb.externalspeleothemdata
   overwrite: false
   required: false
   rowwise: false
   schema: sisal
+  type: string
+- column: data_DOI_URL
+  neotoma: ndb.externalspeleothemdata.externalid
+  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+- column: external_description
+  neotoma: ndb.externalspeleothemdata.externaldescription
+  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+- column: doi_database
+  neotoma: ndb.externalspeleothemdata.extdatabaseid
+  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
   type: string
 
 # - column: d18O_water_equilibrium

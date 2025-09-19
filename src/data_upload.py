@@ -6,10 +6,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
-from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
-import codecs
 from datetime import datetime
 """
 Use this command after having validated the files to 
@@ -72,6 +70,7 @@ for j, filename in enumerate(filenames, 1):
               'yml_dict': yml_dict,
               'csv_file': csv_file}
     try:
+        conn.rollback()
         logfile.append('\n=== Inserting Site ===')
         uploader['sites'] = nu.insert_site(**inputs)
         logfile = logging_response(uploader['sites'], logfile)
@@ -89,165 +88,171 @@ for j, filename in enumerate(filenames, 1):
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['speleothem'], logfile)
-        print(uploader['speleothem'])
-        break
-        # logfile.append('\n=== Inserting Analysis Units ===')
-        # uploader['anunits'] = nu.insert_analysisunit(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file,
-        #                                             uploader = uploader)
-        # logfile = logging_response(uploader['anunits'], logfile)
-
-        # logfile.append('\n=== Inserting Dataset ===')
-        # uploader['datasets'] = nu.insert_dataset(cur = cur,
-        #                                         yml_dict = yml_dict,
-        #                                         csv_file = csv_file,
-        #                                         uploader = uploader)
-        # logfile = logging_response(uploader['datasets'], logfile)
-
-        # logfile.append('\n=== Inserting GeoChronDataset ===')
-        # uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
-        #                                         yml_dict = yml_dict,
-        #                                         csv_file = csv_file,
-        #                                         uploader = uploader)
-        # logfile = logging_response(uploader['geochrondatasets'], logfile)
-
-        # logfile.append('\n=== Inserting Chronology ===') # check if it works in Japan
-        # uploader['chronology'] = nu.insert_chronology(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file,
-        #                                             uploader = uploader,
-        #                                             multiple = True)
-        # logfile = logging_response(uploader['chronology'], logfile)
-
-        # logfile.append('\n=== Inserting ChronControls ===')
-        # uploader['chroncontrols'] = nu.insert_chroncontrols(cur = cur,
-        #                                                 yml_dict = yml_dict,
-        #                                                 csv_file = csv_file,
-        #                                                 uploader = uploader)
-        # logfile = logging_response(uploader['chroncontrols'], logfile)
-
-        # logfile.append('\n === Checking Hiatuses ===')
-        # uploader['hiatus'] = nu.insert_hiatus(cur = cur,
-        #                                        yml_dict = yml_dict,
-        #                                        csv_file = csv_file,
-        #                                        uploader = uploader)
-        # logfile = logging_response(uploader['hiatus'], logfile)
-                                                    
-        # logfile.append('\n=== Inserting Dataset PI ===')
-        # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file,
-        #                                             uploader = uploader)
-        # logfile = logging_response(uploader['datasetpi'], logfile)
-
-        # logfile.append('\n=== Inserting Data Processor ===')
-        # uploader['processor'] = nu.insert_data_processor(cur = cur,
-        #                                                 yml_dict = yml_dict,
-        #                                                 csv_file = csv_file,
-        #                                                 uploader = uploader)
-        # logfile = logging_response(uploader['processor'], logfile)
-
-        # logfile.append('\n=== Inserting Dataset Database ===')
-        # uploader['database'] = nu.insert_dataset_database(cur = cur,
-        #                                                 yml_dict = yml_dict,
-        #                                                 uploader = uploader)
-        # logfile = logging_response(uploader['database'], logfile)
-
-        # logfile.append('\n=== Inserting Samples ===')
-        # uploader['samples'] = nu.insert_sample(cur, 
-        #                                     yml_dict = yml_dict,
-        #                                     csv_file = csv_file,
-        #                                     uploader = uploader)
-        # logfile = logging_response(uploader['samples'], logfile)
-         
-        # logfile.append('\n=== Inserting Samples for GeoChron ===')
-        # uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
-        #                                     yml_dict = yml_dict,
-        #                                     csv_file = csv_file,
-        #                                     uploader = uploader)
-        # logfile = logging_response(uploader['sample_geochron'], logfile)
-
-        # logfile.append('\n=== Inserting Geochronologies ===')
-        # uploader['geochron'] = nu.insert_geochron(cur = cur,
-        #                                                 yml_dict = yml_dict,
-        #                                                 csv_file = csv_file,
-        #                                                 uploader = uploader)
-        # logfile = logging_response(uploader['geochron'], logfile)
         
-        # logfile.append('\n=== Inserting Geochron Controls ===')
-        # uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
-        #                                                 yml_dict = yml_dict,
-        #                                                 csv_file = csv_file,
-        #                                                 uploader = uploader)
-        # logfile = logging_response(uploader['geochroncontrols'], logfile)
+        logfile.append('\n === Inserting External Speleothem Entities')
+        uploader['externalspeleothem'] = nu.insert_external_speleothem(cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_file = csv_file,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['externalspeleothem'], logfile)
 
-        # logfile.append('\n=== Inserting Sample Analyst ===')
-        # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-        #                                     yml_dict = yml_dict,
-        #                                     csv_file = csv_file,
-        #                                     uploader = uploader)
-        # logfile = logging_response(uploader['sampleAnalyst'], logfile)
+        logfile.append('\n=== Inserting Analysis Units ===')
+        uploader['anunits'] = nu.insert_analysisunit(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+        logfile = logging_response(uploader['anunits'], logfile)
 
-        # logfile.append('\n === Inserting Sample Age ===')
-        # uploader['sampleAge'] = nu.insert_sample_age(cur, 
-        #                                     yml_dict = yml_dict,
-        #                                     csv_file = csv_file,
-        #                                     uploader = uploader)
-        # logfile = logging_response(uploader['sampleAge'], logfile)
+        logfile.append('\n=== Inserting Dataset ===')
+        uploader['datasets'] = nu.insert_dataset(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+        logfile = logging_response(uploader['datasets'], logfile)
 
-        # logfile.append('\n === Inserting Data ===')
-        # uploader['data'] = nu.insert_data(cur, 
-        #                                 yml_dict = yml_dict,
-        #                                 csv_file = csv_file,
-        #                                 uploader = uploader,
-        #                                 wide = True)
-        # logfile = logging_response(uploader['data'], logfile)
+        logfile.append('\n=== Inserting GeoChronDataset ===')
+        uploader['geochrondatasets'] = nu.insert_geochron_dataset(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+        logfile = logging_response(uploader['geochrondatasets'], logfile)
+
+        logfile.append('\n=== Inserting Chronology ===')
+        uploader['chronology'] = nu.insert_chronology(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader,
+                                                    multiple = True)
+        logfile = logging_response(uploader['chronology'], logfile)
+
+        logfile.append('\n=== Inserting ChronControls ===')
+        uploader['chroncontrols'] = nu.insert_chroncontrols(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_file = csv_file,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['chroncontrols'], logfile)
+
+        logfile.append('\n === Checking Hiatuses ===')
+        uploader['hiatus'] = nu.insert_hiatus(cur = cur,
+                                               yml_dict = yml_dict,
+                                               csv_file = csv_file,
+                                               uploader = uploader)
+        logfile = logging_response(uploader['hiatus'], logfile)
+                                                   
+        logfile.append('\n=== Inserting Dataset PI ===')
+        uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+        logfile = logging_response(uploader['datasetpi'], logfile)
+
+        logfile.append('\n=== Inserting Data Processor ===')
+        uploader['processor'] = nu.insert_data_processor(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_file = csv_file,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['processor'], logfile)
+
+        logfile.append('\n=== Inserting Dataset Database ===')
+        uploader['database'] = nu.insert_dataset_database(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['database'], logfile)
+
+        logfile.append('\n=== Inserting Samples ===')
+        uploader['samples'] = nu.insert_sample(cur, 
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                            uploader = uploader)
+        logfile = logging_response(uploader['samples'], logfile)
+
+        logfile.append('\n=== Inserting Samples for GeoChron ===')
+        uploader['sample_geochron'] = nu.insert_sample_geochron(cur, 
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                            uploader = uploader)
+        logfile = logging_response(uploader['sample_geochron'], logfile)
+
+        logfile.append('\n=== Inserting Geochronologies ===')
+        uploader['geochron'] = nu.insert_geochron(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_file = csv_file,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['geochron'], logfile)
         
-        # logfile.append('\n === Checking UTh Series ===')
-        # uploader['uthseries'] = nu.insert_uth_series(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file,
-        #                                             uploader = uploader)
-        # logfile = logging_response(uploader['uthseries'], logfile)
+        logfile.append('\n=== Inserting Geochron Controls ===')
+        uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_file = csv_file,
+                                                        uploader = uploader)
+        logfile = logging_response(uploader['geochroncontrols'], logfile)
 
-        # logfile.append('\n === Inserting Data Uncertainties ===')
-        # uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
-        #                                             yml_dict = yml_dict,
-        #                                             csv_file = csv_file,
-        #                                             uploader = uploader,
-        #                                             wide = True)
-        # logfile = logging_response(uploader['uncertainty'], logfile)
+        logfile.append('\n=== Inserting Sample Analyst ===')
+        uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                            uploader = uploader)
+        logfile = logging_response(uploader['sampleAnalyst'], logfile)
 
-        # logfile.append('\n === Inserting Publications ===')
-        # uploader['publications'] = nu.insert_publication(cur, 
-        #                                 yml_dict = yml_dict,
-        #                                 csv_file = csv_file,
-        #                                 uploader = uploader)
-        # logfile = logging_response(uploader['publications'], logfile)
+        logfile.append('\n === Inserting Sample Age ===')
+        uploader['sampleAge'] = nu.insert_sample_age(cur, 
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                            uploader = uploader)
+        logfile = logging_response(uploader['sampleAge'], logfile)
 
-        # logfile.append('\n === Finalizing Insert  ===')
-        # uploader['finalize'] = nu.insert_final(cur, 
-        #                                        uploader = uploader)
-        # all_true = all([uploader[key].validAll for key in uploader])
-        # all_true = all_true and hashcheck
+        logfile.append('\n === Inserting Data ===')
+        uploader['data'] = nu.insert_data(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_file = csv_file,
+                                        uploader = uploader,
+                                        wide = True)
+        logfile = logging_response(uploader['data'], logfile)
+        
+        logfile.append('\n === Checking UTh Series ===')
+        uploader['uthseries'] = nu.insert_uth_series(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+        logfile = logging_response(uploader['uthseries'], logfile)
+
+        logfile.append('\n === Inserting Data Uncertainties ===')
+        uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader,
+                                                    wide = True)
+        logfile = logging_response(uploader['uncertainty'], logfile)
+ 
+        logfile.append('\n === Inserting Publications ===')
+        uploader['publications'] = nu.insert_publication(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_file = csv_file,
+                                        uploader = uploader)
+        logfile = logging_response(uploader['publications'], logfile)
+
+        logfile.append('\n === Finalizing Insert  ===')
+        uploader['finalize'] = nu.insert_final(cur, 
+                                               uploader = uploader)
+        all_true = all([uploader[key].validAll for key in uploader])
+        all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
             #conn.commit()
             conn.rollback()
-            # os.makedirs(uploaded_files, exist_ok=True)
-            # uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
-            # os.replace(filename, uploaded_path)
-            # modified_filename = filename.replace('data/', 'data/upload_logs/')
-            # with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
-            #     for i in logfile:
-            #         writer.write(i)
-            #         writer.write('\n')
+            os.makedirs(uploaded_files, exist_ok=True)
+            uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
+            os.replace(filename, uploaded_path)
+            modified_filename = filename.replace('data/', 'data/upload_logs/')
+            with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
+                for i in logfile:
+                    writer.write(i)
+                    writer.write('\n')
         else:
-            # not_uploaded_files = "data/failed_uploads"
-            # os.makedirs(not_uploaded_files, exist_ok=True)
-            # not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-            # os.replace(filename, not_uploaded_path)
+            not_uploaded_files = "data/failed_uploads"
+            os.makedirs(not_uploaded_files, exist_ok=True)
+            not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+            os.replace(filename, not_uploaded_path)
             print(f"filename {filename} could not be uploaded.")
             os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
             modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
@@ -257,12 +262,10 @@ for j, filename in enumerate(filenames, 1):
                     writer.write('\n')
             conn.rollback()
     except Exception as e:
-        print(e)
-        break
-        # not_uploaded_files = "data/failed_uploads"
-        # os.makedirs(not_uploaded_files, exist_ok=True)
-        # not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-        # os.replace(filename, not_uploaded_path)
+        not_uploaded_files = "data/failed_uploads"
+        os.makedirs(not_uploaded_files, exist_ok=True)
+        not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
+        os.replace(filename, not_uploaded_path)
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()
@@ -273,14 +276,17 @@ for j, filename in enumerate(filenames, 1):
                 writer.write(i)
                 writer.write('\n')
     finally:
-        break
          ### Temporary to check how many files are pending
         percent_complete = (j / total_files) * 100
         if percent_complete >= next_percent:
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             print(f"Uploaded {next_percent}% at {now}")
             next_percent += 5
-    
+
+# Insert speleothem_references table if speleothem data are present
+from DataBUS.neotomaHelpers.speleothem_reference_inserts import speleothem_reference_inserts as sri
+print("Inserting applicable speleothem references...")
+sri(cur, conn, file_path="data/references_entities.csv")    
 end_time = datetime.now()
 print(f"Finished uploading at {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
 ### End of temporary code
