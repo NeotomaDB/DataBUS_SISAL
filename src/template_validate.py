@@ -21,7 +21,7 @@ python src/template_validate.py --template src/templates/template.yml
 
 args = nh.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
@@ -190,6 +190,7 @@ for filename in filenames:
                     writer.write(i)
                     writer.write('\n') 
         except Exception as e:
+            print(e)
             os.makedirs('data/validation_logs/not_validated/', exist_ok=True)
             modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
