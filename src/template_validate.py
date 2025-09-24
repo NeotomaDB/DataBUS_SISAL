@@ -190,7 +190,11 @@ for filename in filenames:
                     writer.write(i)
                     writer.write('\n') 
         except Exception as e:
+            not_validated_files = "data/not_validated_files"
             print(e)
+            os.makedirs(not_validated_files, exist_ok=True)
+            uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
+            os.replace(filename, uploaded_path)
             os.makedirs('data/validation_logs/not_validated/', exist_ok=True)
             modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
