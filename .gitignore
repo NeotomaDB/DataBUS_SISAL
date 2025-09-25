@@ -182,9 +182,7 @@ SISAL_names_analysis.ipynb
 man/speleothem_tables.tex
 src/remove_cu.py
 src/find_error_msg.py
-src/clean_data2.py
-src/clean_data3.py
-src/clean_data4.py
+src/clean_data*.py
 src/insert_pubs.py
 src/templates/walkthrough.csv
 .env.utf8
