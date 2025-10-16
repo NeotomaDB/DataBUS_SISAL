@@ -33,6 +33,8 @@ args = nh.parse_arguments()
 overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
+filenames = [f for f in filenames if os.path.basename(f) != "references_entities.csv"]
+
 total_files = len(filenames)
 upload_logs = 'data/upload_logs'
 if not os.path.exists(upload_logs):
@@ -81,21 +83,21 @@ for j, filename in enumerate(filenames, 1):
                                                 csv_file = csv_file,
                                                 uploader = uploader)
         logfile = logging_response(uploader['collunitid'], logfile)
-        
+
         logfile.append('\n === Inserting Speleothem Entities')
         uploader['speleothem'] = nu.insert_speleothem(cur,
                                                         yml_dict = yml_dict,
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['speleothem'], logfile)
-        
+
         logfile.append('\n === Inserting External Speleothem Entities')
         uploader['externalspeleothem'] = nu.insert_external_speleothem(cur,
                                                         yml_dict = yml_dict,
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['externalspeleothem'], logfile)
-
+        
         logfile.append('\n=== Inserting Analysis Units ===')
         uploader['anunits'] = nu.insert_analysisunit(cur = cur,
                                                     yml_dict = yml_dict,
@@ -138,7 +140,7 @@ for j, filename in enumerate(filenames, 1):
                                                csv_file = csv_file,
                                                uploader = uploader)
         logfile = logging_response(uploader['hiatus'], logfile)
-                                                   
+                                                  
         logfile.append('\n=== Inserting Dataset PI ===')
         uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
                                                     yml_dict = yml_dict,
@@ -179,7 +181,7 @@ for j, filename in enumerate(filenames, 1):
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['geochron'], logfile)
-        
+
         logfile.append('\n=== Inserting Geochron Controls ===')
         uploader['geochroncontrols'] = nu.insert_geochroncontrols(cur = cur,
                                                         yml_dict = yml_dict,
@@ -200,7 +202,7 @@ for j, filename in enumerate(filenames, 1):
                                             csv_file = csv_file,
                                             uploader = uploader)
         logfile = logging_response(uploader['sampleAge'], logfile)
-
+        
         logfile.append('\n === Inserting Data ===')
         uploader['data'] = nu.insert_data(cur, 
                                         yml_dict = yml_dict,
@@ -208,14 +210,14 @@ for j, filename in enumerate(filenames, 1):
                                         uploader = uploader,
                                         wide = True)
         logfile = logging_response(uploader['data'], logfile)
-        
+
         logfile.append('\n === Checking UTh Series ===')
         uploader['uthseries'] = nu.insert_uth_series(cur = cur,
                                                     yml_dict = yml_dict,
                                                     csv_file = csv_file,
                                                     uploader = uploader)
         logfile = logging_response(uploader['uthseries'], logfile)
-
+      
         logfile.append('\n === Inserting Data Uncertainties ===')
         uploader['uncertainty'] = nu.insert_datauncertainty(cur = cur,
                                                     yml_dict = yml_dict,
@@ -238,8 +240,8 @@ for j, filename in enumerate(filenames, 1):
         all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            #conn.commit()
-            conn.rollback()
+            conn.commit()
+            #conn.rollback()
             os.makedirs(uploaded_files, exist_ok=True)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
@@ -284,9 +286,8 @@ for j, filename in enumerate(filenames, 1):
             next_percent += 5
 
 # Insert speleothem_references table if speleothem data are present
-from DataBUS.neotomaHelpers.speleothem_reference_inserts import speleothem_reference_inserts as sri
-print("Inserting applicable speleothem references...")
-sri(cur, conn, file_path="data/references_entities.csv")    
+# from DataBUS.neotomaHelpers.speleothem_reference_inserts import speleothem_reference_inserts as sri
+# print("Inserting applicable speleothem references...")
+# sri(cur, conn, file_path="data/references_entities.csv")    
 end_time = datetime.now()
 print(f"Finished uploading at {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
-### End of temporary code

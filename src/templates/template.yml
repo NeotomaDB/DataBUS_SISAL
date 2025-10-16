@@ -897,7 +897,7 @@ metadata:
   rowwise: true
   schema: sisal
   table: Sr_isotopes
-  taxonname: Sr_isotopes
+  taxonname: Total Sr
   type: float
   uncertainty:
     uncertaintybasis: '2 Standard Deviations'
@@ -1039,42 +1039,11 @@ metadata:
   schema: sisal
   table: Reference
   type: string
-- column: clumped_isotopes
-  neotoma: ndb.speleothem.clumped_isotopes
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: composite_entity_id
-  neotoma: ndb.aggregatedatasets
-  notes: database level
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Composite link entity
-  type: null
 - column: contact
   neotoma: ndb.datasetpis.contactname
   overwrite: false
   required: false
   rowwise: true
-  schema: sisal
-  table: Entity
-  type: null
-- column: copernicus_lcc
-  neotoma: ndb.speleothem.copernicus_lcc
-  notes: externally sourced dataset filled at database level from shape files
-  notes ii: Satelite based
-  overwrite: false
-  required: false
-  rowwise: false
   schema: sisal
   table: Entity
   type: null
@@ -1238,16 +1207,6 @@ metadata:
   required: false
   rowwise: false
   type: str
-- column: d18O_dripwater_carbonate_difference
-  neotoma: ndb.speleothem.dripwatercarbonatedifference
-  notes: actual measurement given as a number by authors
-  notes ii: 'Feels like we could do better. . . '
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
 - column: date_type
   neotoma: ndb.chroncontrols.chroncontroltypeid
   notes: dropdown list options
@@ -1341,30 +1300,6 @@ metadata:
   schema: sisal
   table: Entity
   type: null
-- column: entity_scan
-  neotoma: ndb.speleothem.entityscan #must be different place
-  notes: asks the question 'if this has been made available with the database version
-    in the repository', yes or no, checked at database level
-  notes ii: External links?
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: fluid_inclusions
-  neotoma: ndb.speleothem.fluidinclusions #not right place
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: 'host_rock_trace_elements'
   neotoma: ndb.externalspeleothem
   notes: 'yes or no question '
@@ -1422,52 +1357,6 @@ metadata:
   type: string
   vocab: [calcite, aragonite, organic, mixed (add note to notes sheet), other (add
       note to notes sheet), unknown]
-- column: mineralogy_petrology_fabrics
-  neotoma: ndb.speleothem.mineralogy_petrology_fabrics
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: noble_gas_temperatures
-  neotoma: ndb.speleothem.nobel_gas_temperatures
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: organics
-  neotoma: ndb.speleothem.organics
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-- column: persist_id
-  neotoma: ndb.speleothem.persistid
-  notes: database level
-  notes ii: Not needed (I don't think), but we can link to it
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: int
 - column: publication_DOI
   formatorrange: Valid DOI regex
   neotoma: ndb.publications.doi
@@ -1495,15 +1384,6 @@ metadata:
   rowwise: true
   schema: sisal
   table: Original chronology
-  type: null
-- column: single_entity_id
-  neotoma: ndb.speleothem.speleothemid
-  notes: database level
-  overwrite: false
-  required: false
-  rowwise: true
-  schema: sisal
-  table: Composite link entity
   type: null
 - column: site_id
   neotoma: ndb.siteid
@@ -1554,8 +1434,6 @@ metadata:
   type: null
   vocab: [evergreen, deciduous, shrubland, grassland, sparse, barren, mixed (add note
       to notes sheet), other (add note to notes sheet), unknown]
-
-
 ########################################  
 # Non defined
 - column: corresponding_current
@@ -2152,4 +2030,118 @@ metadata:
 # - column: ann_lam_check
 # - column: dep_rate_check
 
+########## external datasets / additional measurements
+# - column: clumped_isotopes
+#   neotoma: ndb.speleothem.clumped_isotopes
+#   notes: asks the question, ' whether these measurements are available for the speleothem
+#     or not', the database at the moment doesn't allow entry of actual measured values,
+#     authors only select dropdown list options of yes, no or unknown.
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+# - column: copernicus_lcc
+#   neotoma: ndb.speleothem.copernicus_lcc
+#   notes: externally sourced dataset filled at database level from shape files
+#   notes ii: Satelite based
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+# - column: d18O_dripwater_carbonate_difference
+#   neotoma: ndb.speleothem.dripwatercarbonatedifference
+#   notes: actual measurement given as a number by authors
+#   notes ii: 'Feels like we could do better. . . '
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+# - column: entity_scan
+#   neotoma: ndb.speleothem.entityscan #must be different place
+#   notes: asks the question 'if this has been made available with the database version
+#     in the repository', yes or no, checked at database level
+#   notes ii: External links?
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+#   - column: fluid_inclusions
+#   neotoma: ndb.speleothem.fluidinclusions #not right place
+#   notes: asks the question, ' whether these measurements are available for the speleothem
+#     or not', the database at the moment doesn't allow entry of actual measured values,
+#     authors only select dropdown list options of yes, no or unknown.
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+# - column: mineralogy_petrology_fabrics
+#   neotoma: ndb.speleothem.mineralogy_petrology_fabrics
+#   notes: asks the question, ' whether these measurements are available for the speleothem
+#     or not', the database at the moment doesn't allow entry of actual measured values,
+#     authors only select dropdown list options of yes, no or unknown.
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+# - column: noble_gas_temperatures
+#   neotoma: ndb.speleothem.nobel_gas_temperatures
+#   notes: asks the question, ' whether these measurements are available for the speleothem
+#     or not', the database at the moment doesn't allow entry of actual measured values,
+#     authors only select dropdown list options of yes, no or unknown.
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+# - column: organics
+#   neotoma: ndb.speleothem.organics
+#   notes: asks the question, ' whether these measurements are available for the speleothem
+#     or not', the database at the moment doesn't allow entry of actual measured values,
+#     authors only select dropdown list options of yes, no or unknown.
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Entity
+#   type: null
+#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 
+
+#   ####### Composites?
+#   - column: single_entity_id
+#   neotoma: ndb.speleothem.speleothemid
+#   notes: database level
+#   overwrite: false
+#   required: false
+#   rowwise: true
+#   schema: sisal
+#   table: Composite link entity
+#   type: null
+#### Not being used.... needed for composites?
+# - column: composite_entity_id
+#   neotoma: ndb.aggregatedatasets
+#   notes: database level
+#   overwrite: false
+#   required: false
+#   rowwise: false
+#   schema: sisal
+#   table: Composite link entity
+#   type: null
