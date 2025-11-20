@@ -59,15 +59,22 @@ metadata:
   rowwise: false
   type: float
 ## Collection Units
-- column: persist_id
+- column: entity_name
   neotoma: ndb.collectionunits.handle
   notes: name by author
   overwrite: true
   required: false
   rowwise: false
   type: string
-- column: site_name
+- column: persist_id
   neotoma: ndb.collectionunits.collunitname
+  notes: name by author
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: persist_id
+  neotoma: ndb.speleothemcollectionunits.persistid
   notes: name by author
   overwrite: true
   required: false
@@ -272,7 +279,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: agetype
+- column: date_type
   neotoma: ndb.sampleages.agetype
   overwrite: false
   required: false
@@ -292,6 +299,7 @@ metadata:
   type: str
 - column: interp_age
   neotoma: ndb.sampleages.age
+  chronologyname: interp_author
   notes: number
   overwrite: false
   required: false
@@ -301,6 +309,7 @@ metadata:
   type: float
 - column: interp_age_uncert_neg
   neotoma: ndb.sampleages.ageyounger
+  chronologyname: interp_author
   notes: number
   overwrite: false
   required: false
@@ -310,6 +319,7 @@ metadata:
   type: float
 - column: interp_age_uncert_pos
   neotoma: ndb.sampleages.ageolder
+  chronologyname: interp_author
   notes: number
   overwrite: false
   required: false
@@ -319,6 +329,7 @@ metadata:
   type: float
 - column: lin_interp_age
   neotoma: ndb.chronologies.age
+  default: False
   notes: number
   overwrite: false
   required: false
@@ -326,7 +337,7 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lin_interp_age
+  chronologyname: lin_interp_SISAL
   agemodelcolumn:
   agetype:
   ageboundyounger: lin_interp_age_uncert_neg
@@ -340,7 +351,7 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lin_interp_age
+  chronologyname: lin_interp_SISAL
 - column: lin_interp_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
@@ -350,9 +361,10 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lin_interp_age
-- column: lam_age
-  neotoma: ndb.chronologies.age
+  chronologyname: lin_interp_SISAL
+- column: lin_interp_age
+  neotoma: ndb.sampleages.age
+  chronologyname: lin_interp_SISAL
   notes: number
   overwrite: false
   required: false
@@ -360,7 +372,37 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lam_age
+- column: lin_interp_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: lin_interp_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lin_interp_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: lin_interp_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lam_age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: lam_SISAL
   agemodelcolumn:
   agetype:
   ageboundyounger: lam_age_uncert_neg
@@ -374,7 +416,7 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lam_age
+  chronologyname: lam_SISAL
 - column: lam_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
@@ -384,9 +426,10 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: lam_age
-- column: Bacon_age
-  neotoma: ndb.chronologies.age
+  chronologyname: lam_SISAL
+- column: lam_age
+  neotoma: ndb.sampleages.age
+  chronologyname: lam_SISAL
   notes: number
   overwrite: false
   required: false
@@ -394,7 +437,37 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: Bacon
+- column: lam_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: lam_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: lam_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: lam_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: Bacon_SISAL
   agemodelcolumn:
   agetype:
   ageboundyounger: Bacon_age_uncert_neg
@@ -408,7 +481,7 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: Bacon
+  chronologyname: Bacon_SISAL
 - column: Bacon_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
@@ -418,9 +491,75 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-  chronologyname: Bacon
+  chronologyname: Bacon_SISAL
+- column: Bacon_age
+  neotoma: ndb.sampleages.age
+  chronologyname: Bacon_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age_uncert_neg
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: Bacon_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+- column: Bacon_age_uncert_pos
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: Bacon_SISAL
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
 - column: Bchron_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: Bchron_SISAL
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: Bchron_age_uncert_neg
+  ageboundolder: Bchron_age_uncert_pos
+- column: Bchron_age_uncert_neg
+  neotoma: ndb.chronologies.ageboundyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: Bchron_SISAL
+- column: Bchron_age_uncert_pos
+  neotoma: ndb.chronologies.ageboundolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: Bchron_SISAL
+- column: Bchron_age
+  neotoma: ndb.sampleages.age
+  chronologyname: Bchron_SISAL
   notes: number
   overwrite: false
   required: false
@@ -429,7 +568,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bchron_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: Bchron_SISAL
   notes: number
   overwrite: false
   required: false
@@ -438,7 +578,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: Bchron_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: Bchron_SISAL
   notes: number
   overwrite: false
   required: false
@@ -447,7 +588,43 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: OxCal_SISAL
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: OxCal_age_uncert_neg
+  ageboundolder: OxCal_age_uncert_pos
+- column: OxCal_age_uncert_neg
+  neotoma: ndb.chronologies.ageboundyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: OxCal_SISAL
+- column: OxCal_age_uncert_pos
+  neotoma: ndb.chronologies.ageboundolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: OxCal_SISAL
+- column: OxCal_age
+  neotoma: ndb.sampleages.age
+  chronologyname: OxCal_SISAL
   notes: number
   overwrite: false
   required: false
@@ -456,7 +633,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: OxCal_SISAL
   notes: number
   overwrite: false
   required: false
@@ -465,7 +643,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: OxCal_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: OxCal_SISAL
   notes: number
   overwrite: false
   required: false
@@ -474,7 +653,43 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: StalAge_SISAL
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: StalAge_age_uncert_neg
+  ageboundolder: StalAge_age_uncert_pos
+- column: StalAge_age_uncert_neg
+  neotoma: ndb.chronologies.ageboundyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: StalAge_SISAL
+- column: StalAge_age_uncert_pos
+  neotoma: ndb.chronologies.ageboundolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: StalAge_SISAL
+- column: StalAge_age
+  neotoma: ndb.sampleages.age
+  chronologyname: StalAge_SISAL
   notes: number
   overwrite: false
   required: false
@@ -483,7 +698,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: StalAge_SISAL
   notes: number
   overwrite: false
   required: false
@@ -492,7 +708,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: StalAge_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: StalAge_SISAL
   notes: number
   overwrite: false
   required: false
@@ -501,7 +718,43 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age
-  neotoma: ndb.notinuse.age
+  neotoma: ndb.chronologies.age
+  default: False
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: copRa_SISAL
+  agemodelcolumn:
+  agetype:
+  ageboundyounger: copRa_age_uncert_neg
+  ageboundolder: copRa_age_uncert_pos
+- column: copRa_age_uncert_neg
+  neotoma: ndb.chronologies.ageboundyounger
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: copRa_SISAL
+- column: copRa_age_uncert_pos
+  neotoma: ndb.chronologies.ageboundolder
+  notes: number
+  overwrite: false
+  required: false
+  rowwise: true
+  schema: sisal
+  table: SISAL chronology
+  type: float
+  chronologyname: copRa_SISAL
+- column: copRa_age
+  neotoma: ndb.sampleages.age
+  chronologyname: copRa_SISAL
   notes: number
   overwrite: false
   required: false
@@ -510,7 +763,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age_uncert_neg
-  neotoma: ndb.notinuse.ageyounger
+  neotoma: ndb.sampleages.ageyounger
+  chronologyname: copRa_SISAL
   notes: number
   overwrite: false
   required: false
@@ -519,7 +773,8 @@ metadata:
   table: SISAL chronology
   type: float
 - column: copRa_age_uncert_pos
-  neotoma: ndb.notinuse.ageolder
+  neotoma: ndb.sampleages.ageolder
+  chronologyname: copRa_SISAL
   notes: number
   overwrite: false
   required: false
@@ -529,6 +784,7 @@ metadata:
   type: float
 - column: interp_age
   neotoma: ndb.chronologies.age
+  default: True
   notes: number
   notes ii: Need to define 'agetype'
   overwrite: false
@@ -537,7 +793,7 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
-  chronologyname: interp
+  chronologyname: interp_author
   agemodelcolumn:
   agetype:
   ageboundyounger: interp_age_uncert_neg
@@ -552,7 +808,7 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
-  chronologyname: interp
+  chronologyname: interp_author
 - column: interp_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
@@ -563,7 +819,7 @@ metadata:
   schema: sisal
   table: Original chronology
   type: float
-  chronologyname: interp
+  chronologyname: interp_author
 - column: lin_reg_age
   neotoma: ndb.notinuse.age
   notes: number
@@ -1434,6 +1690,93 @@ metadata:
   type: null
   vocab: [evergreen, deciduous, shrubland, grassland, sparse, barren, mixed (add note
       to notes sheet), other (add note to notes sheet), unknown]
+########## additional measurements
+- column: clumped_isotopes
+  neotoma: ndb.speleothems.clumpedisotopes
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: fluid_inclusions
+  neotoma: ndb.speleothems.fluidinclusions
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: mineralogy_petrology_fabric
+  neotoma: ndb.speleothems.mineralogypetrologyfabric
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: noble_gas_temperatures
+  neotoma: ndb.speleothems.noblegastemperatures
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: organics
+  neotoma: ndb.speleothems.organics
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: C14
+  neotoma: ndb.speleothems.c14
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  notes ii: Is this not then linked to the geochronology table?
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+- column: ODL
+  neotoma: ndb.speleothems.odl
+  notes: asks the question, ' whether these measurements are available for the speleothem
+    or not', the database at the moment doesn't allow entry of actual measured values,
+    authors only select dropdown list options of yes, no or unknown.
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Entity
+  type: string
+  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
+
 ########################################  
 # Non defined
 - column: corresponding_current
@@ -1446,25 +1789,12 @@ metadata:
   schema: sisal
   table: Entity
   type: null
-- column: C14
-  neotoma: ndb.geochroncontrols.
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  notes ii: Is this not then linked to the geochronology table?
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: Mg_Ca
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: I think this winds up coming from ndb.variables, because an absence there
-    indicates it is not measured.
+    indicates it is not measured. (Using _measurement)
   overwrite: false
   required: false
   rowwise: false
@@ -1498,24 +1828,12 @@ metadata:
     IgorPro - linear smoothing splines, IgorPro - interpolation, Binned average, Savitzky-Golay
       filter, Gaussian kernel, Loess, Lowess, MATLAB - interpolation, other (add note
       to notes sheet), unknown]
-- column: ODL
-  neotoma: 'ndb.geochroncontrols. . . '
-  notes: asks the question, ' whether these measurements are available for the speleothem
-    or not', the database at the moment doesn't allow entry of actual measured values,
-    authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Entity
-  type: null
-  vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 - column: Sr_Ca
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: I think this winds up coming from ndb.variables, because an absence there
-    indicates it is not measured.
+    indicates it is not measured. (Using _measurement)
   overwrite: false
   required: false
   rowwise: false
@@ -1555,7 +1873,7 @@ metadata:
 - column: Ba_Ca
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
-    yes or no, checked at database level
+    yes or no, checked at database level. Using _measurement
   overwrite: false
   required: false
   rowwise: false
@@ -1592,7 +1910,7 @@ metadata:
 - column: U_Ca
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
-    yes or no, checked at database level
+    yes or no, checked at database level. Using _measurement
   overwrite: false
   required: false
   rowwise: false
@@ -1629,7 +1947,7 @@ metadata:
 - column: P_Ca
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
-    yes or no, checked at database level
+    yes or no, checked at database level. Using _measurement
   overwrite: false
   required: false
   rowwise: false
@@ -1666,7 +1984,7 @@ metadata:
 - column: Sr_isotopes
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
-    yes or no, checked at database level
+    yes or no, checked at database level. Using _measurement
   overwrite: false
   required: false
   rowwise: false
@@ -2029,20 +2347,6 @@ metadata:
 # - column: lam_thickness
 # - column: ann_lam_check
 # - column: dep_rate_check
-
-########## external datasets / additional measurements
-# - column: clumped_isotopes
-#   neotoma: ndb.speleothem.clumped_isotopes
-#   notes: asks the question, ' whether these measurements are available for the speleothem
-#     or not', the database at the moment doesn't allow entry of actual measured values,
-#     authors only select dropdown list options of yes, no or unknown.
-#   overwrite: false
-#   required: false
-#   rowwise: false
-#   schema: sisal
-#   table: Entity
-#   type: null
-#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
 # - column: copernicus_lcc
 #   neotoma: ndb.speleothem.copernicus_lcc
 #   notes: externally sourced dataset filled at database level from shape files
@@ -2075,56 +2379,6 @@ metadata:
 #   table: Entity
 #   type: null
 #   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-#   - column: fluid_inclusions
-#   neotoma: ndb.speleothem.fluidinclusions #not right place
-#   notes: asks the question, ' whether these measurements are available for the speleothem
-#     or not', the database at the moment doesn't allow entry of actual measured values,
-#     authors only select dropdown list options of yes, no or unknown.
-#   overwrite: false
-#   required: false
-#   rowwise: false
-#   schema: sisal
-#   table: Entity
-#   type: null
-#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-# - column: mineralogy_petrology_fabrics
-#   neotoma: ndb.speleothem.mineralogy_petrology_fabrics
-#   notes: asks the question, ' whether these measurements are available for the speleothem
-#     or not', the database at the moment doesn't allow entry of actual measured values,
-#     authors only select dropdown list options of yes, no or unknown.
-#   overwrite: false
-#   required: false
-#   rowwise: false
-#   schema: sisal
-#   table: Entity
-#   type: null
-#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-# - column: noble_gas_temperatures
-#   neotoma: ndb.speleothem.nobel_gas_temperatures
-#   notes: asks the question, ' whether these measurements are available for the speleothem
-#     or not', the database at the moment doesn't allow entry of actual measured values,
-#     authors only select dropdown list options of yes, no or unknown.
-#   overwrite: false
-#   required: false
-#   rowwise: false
-#   schema: sisal
-#   table: Entity
-#   type: null
-#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-# - column: organics
-#   neotoma: ndb.speleothem.organics
-#   notes: asks the question, ' whether these measurements are available for the speleothem
-#     or not', the database at the moment doesn't allow entry of actual measured values,
-#     authors only select dropdown list options of yes, no or unknown.
-#   overwrite: false
-#   required: false
-#   rowwise: false
-#   schema: sisal
-#   table: Entity
-#   type: null
-#   vocab: ['yes', 'no', unknown, other (add note to notes sheet)]
-
-
 #   ####### Composites?
 #   - column: single_entity_id
 #   neotoma: ndb.speleothem.speleothemid
