@@ -34,7 +34,7 @@ overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
 filenames = [f for f in filenames if os.path.basename(f) != "references_entities.csv"]
-
+#filenames = ['data/sisal_entity_12.csv']
 total_files = len(filenames)
 upload_logs = 'data/upload_logs'
 if not os.path.exists(upload_logs):
@@ -77,19 +77,26 @@ for j, filename in enumerate(filenames, 1):
         uploader['sites'] = nu.insert_site(**inputs)
         logfile = logging_response(uploader['sites'], logfile)
 
-        logfile.append('\n === Inserting Collection Units ===')
-        uploader['collunitid'] = nu.insert_collunit(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_file = csv_file,
-                                                uploader = uploader)
-        logfile = logging_response(uploader['collunitid'], logfile)
-
         logfile.append('\n === Inserting Speleothem Entities')
         uploader['speleothem'] = nu.insert_speleothem(cur,
                                                         yml_dict = yml_dict,
                                                         csv_file = csv_file,
                                                         uploader = uploader)
         logfile = logging_response(uploader['speleothem'], logfile)
+
+        logfile.append('\n === Inserting Collection Units ===')
+        uploader['collunitid'] = nu.insert_collunit(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+        logfile = logging_response(uploader['collunitid'], logfile)
+        
+        logfile.append('\n === Inserting CollunitIDs & SpeleoIDs ===')
+        uploader['collunitid-speleoid'] = nu.insert_speleo_cu(cur = cur,
+                                                              yml_dict = yml_dict,
+                                                              csv_file = csv_file,
+                                                              uploader = uploader)
+        logfile = logging_response(uploader['collunitid-speleoid'], logfile)
 
         logfile.append('\n === Inserting External Speleothem Entities')
         uploader['externalspeleothem'] = nu.insert_external_speleothem(cur,
@@ -202,7 +209,7 @@ for j, filename in enumerate(filenames, 1):
                                             csv_file = csv_file,
                                             uploader = uploader)
         logfile = logging_response(uploader['sampleAge'], logfile)
-        
+
         logfile.append('\n === Inserting Data ===')
         uploader['data'] = nu.insert_data(cur, 
                                         yml_dict = yml_dict,
