@@ -261,7 +261,7 @@ for j, filename in enumerate(filenames, 1):
             not_uploaded_files = "data/failed_uploads"
             os.makedirs(not_uploaded_files, exist_ok=True)
             not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-            os.replace(filename, not_uploaded_path)
+            #os.replace(filename, not_uploaded_path)
             print(f"filename {filename} could not be uploaded.")
             os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
             modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
@@ -272,9 +272,10 @@ for j, filename in enumerate(filenames, 1):
             conn.rollback()
     except Exception as e:
         not_uploaded_files = "data/failed_uploads"
+        logfile.append(f"✗ File upload failed: {e}")
         os.makedirs(not_uploaded_files, exist_ok=True)
         not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-        os.replace(filename, not_uploaded_path)
+        #os.replace(filename, not_uploaded_path)
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()

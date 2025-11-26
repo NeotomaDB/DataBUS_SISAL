@@ -279,12 +279,12 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: date_type
+- column: agetype
   neotoma: ndb.sampleages.agetype
   overwrite: false
   required: false
   rowwise: false
-  type: string
+  type: str
 - column: agetype
   neotoma: ndb.geochronology.agetype
   overwrite: false

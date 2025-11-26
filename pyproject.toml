@@ -46,4 +46,4 @@ build = ["build", "twine"]
 dev = ["black", "bumpver", "isort", "mypy", "pytest"]
 
 [tool.uv.sources]
-databus = { git = "https://github.com/NeotomaDB/DataBUS" }
+databus = { git = "https://github.com/NeotomaDB/DataBUS", rev = "dev" }
