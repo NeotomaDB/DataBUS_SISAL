@@ -191,6 +191,7 @@ for filename in filenames:
                     writer.write('\n') 
         except Exception as e:
             print(e)
+            logfile.append(f"✗ File validation failed: {e}")
             not_validated_files = "data/not_validated_files"
             print(e)
             os.makedirs(not_validated_files, exist_ok=True)

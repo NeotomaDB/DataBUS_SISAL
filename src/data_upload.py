@@ -275,7 +275,7 @@ for j, filename in enumerate(filenames, 1):
         logfile.append(f"✗ File upload failed: {e}")
         os.makedirs(not_uploaded_files, exist_ok=True)
         not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
-        #os.replace(filename, not_uploaded_path)
+        os.replace(filename, not_uploaded_path)
         print(f"Error: {e}")
         print(f"filename {filename} could not be uploaded.")
         conn.rollback()

@@ -273,6 +273,18 @@ metadata:
   vocab: [linear, linear between dates, polynomial fit, polynomial fit omitting outliers,
     Bayesian, Bayesian Bacon, Bayesian Bchron, StalAge, StalAge and other, Clam, COPRA,
     OxCal, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
+- column: age_model_type
+  neotoma: ndb.sampleages.agemodel
+  notes: dropdown list option
+  overwrite: false
+  required: false
+  rowwise: false
+  schema: sisal
+  table: Original chronology
+  type: str
+  vocab: [linear, linear between dates, polynomial fit, polynomial fit omitting outliers,
+    Bayesian, Bayesian Bacon, Bayesian Bchron, StalAge, StalAge and other, Clam, COPRA,
+    OxCal, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
 - column: agetype
   neotoma: ndb.chronologies.agetype
   overwrite: false
