@@ -27,15 +27,15 @@ metadata:
   required: false
   rowwise: false
   type: float
-- column: site_id
-  neotoma: ndb.sites.sitedescription
-  notes: SISAL's database level. The idea here is cross-referencing the SISAL database siteid link.
+- column: notes
+  neotoma: ndb.sites.notes
+  notes: All notes in SISAL are at site level only.
   overwrite: false
   required: false
   rowwise: false
-  type: string
-- column: notes
-  neotoma: ndb.sites.notes
+  type: null
+- column: collunit_notes
+  neotoma: ndb.collectionunits.notes
   notes: All notes in SISAL are at site level only.
   overwrite: false
   required: false
@@ -80,17 +80,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: site_id
-  neotoma: ndb.speleothems.siteid
-  notes: database level
-  notes ii: This would be the Neotoma SiteID to link (as opposed to the SISAL siteid)
-  overwrite: false
-  required: false
-  rowwise: false # if false then it accepts composites
-  schema: sisal
-  table: Entity
-  type: int
-- column: entity_id
+- column: sisal_entity_id
   neotoma: ndb.speleothems.entityid
   notes: database level
   notes ii: Referencing the speleothem entity (not the core itself)
@@ -195,17 +185,7 @@ metadata:
   table: Entity
   type: null
   vocab: [limestone, dolomite, marble, dolomitic limestone, marly limestone, calcarenite,
-    gypsum, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
-# Analysis Units
-- column: sample_id
-  neotoma: ndb.analysisunits.analysisunitname
-  notes: database level
-  overwrite: false
-  required: false
-  rowwise: true
-  schema: sisal
-  table: Sample
-  type: null
+    gypsum, mixed (add note to notes sheet), other (add note to notes sheet), unknown]  
 - column: depth
   neotoma: ndb.analysisunits.depth
   notes: number
@@ -859,16 +839,6 @@ metadata:
   schema: sisal
   table: SISAL chronology
   type: float
-- column: sample_id
-  neotoma: ndb.chronologies.sampleid # Cannot be that sampleID because SISAL's and Neotoma's ID may not be the same
-  notes: database level
-  overwrite: false
-  required: false
-  rowwise: true
-  schema: sisal
-  table: SISAL chronology
-  type: null
-## Are these sample ages or chronologies?
 - column: 14C_correction
   neotoma: ndb.radiocarbon.resevoir
   notes: percentage
@@ -1653,15 +1623,6 @@ metadata:
   schema: sisal
   table: Original chronology
   type: null
-- column: site_id
-  neotoma: ndb.siteid
-  notes: database level
-  overwrite: false
-  required: false
-  rowwise: false
-  schema: sisal
-  table: Notes
-  type: null
 - column: uncorr_age
   neotoma: ndb.geochronology.age
   notes: number
@@ -2131,6 +2092,12 @@ metadata:
     uncertaintycolumn: 238U_uncertainty
     unitcolumn: 238U_uncertainty_units
   unitcolumn: 238U_content_units
+- column: 238U_content_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: 238U_uncertainty
   uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -2142,6 +2109,12 @@ metadata:
   table: Dating
   type: float
   taxonname: 238U
+- column: 238U_uncertainty_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: 232Th_content
   neotoma: ndb.data.value
   notes: number
@@ -2157,6 +2130,12 @@ metadata:
     uncertaintycolumn: 232Th_uncertainty
     unitcolumn: 232Th_uncertainty_units
   unitcolumn: 232Th_content_units
+- column: 232Th_content_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: 232Th_uncertainty
   uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
@@ -2168,6 +2147,12 @@ metadata:
   table: Dating
   type: float
   taxonname: 232Th
+- column: 232Th_uncertainty_units
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: 234U_238U_activity_uncertainty
   uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.activityuncertainty234u238u
