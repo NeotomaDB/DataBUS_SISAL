@@ -227,7 +227,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Sample
   type: null
@@ -1154,7 +1154,7 @@ metadata:
   required: false
   rowwise: true
   taxonid: null
-  taxonname: Sr_isotopes
+  taxonname: Total Sr
   uncertaintybasis: null
   unitcolumn: Sr_isotopes_precision_units
   type: float

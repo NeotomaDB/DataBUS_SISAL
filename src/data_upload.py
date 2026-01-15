@@ -141,7 +141,7 @@ for j, filename in enumerate(filenames, 1):
                                                         uploader = uploader)
         logfile = logging_response(uploader['chroncontrols'], logfile)
 
-        logfile.append('\n === Checking Hiatuses ===')
+        logfile.append('\n === Inserting Hiatuses ===')
         uploader['hiatus'] = nu.insert_hiatus(cur = cur,
                                                yml_dict = yml_dict,
                                                csv_file = csv_file,
@@ -218,7 +218,7 @@ for j, filename in enumerate(filenames, 1):
                                         wide = True)
         logfile = logging_response(uploader['data'], logfile)
 
-        logfile.append('\n === Checking UTh Series ===')
+        logfile.append('\n === Inserting UTh Series ===')
         uploader['uthseries'] = nu.insert_uth_series(cur = cur,
                                                     yml_dict = yml_dict,
                                                     csv_file = csv_file,
