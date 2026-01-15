@@ -190,13 +190,9 @@ Untitled.numbers
 missing_publications.csv
 references_entities.csv
 src/templates/walkthrough.csv
-
-unique_invalid_blocks.txt
-
 SISAL_authors_contactids.csv
 cleaned_PI_citations.csv
 insert_to_querytables
 src/download_analysis.ipynb
-unique_invalid_upload_blocks.txt
-unique_invalid_valid_blocks.txt
+*.txt
 data/sisal_entity_5.csv
