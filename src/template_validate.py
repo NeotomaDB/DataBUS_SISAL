@@ -9,7 +9,6 @@ import os
 from pathlib import Path
 import json
 import psycopg2
-import pandas as pd
 from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
@@ -18,17 +17,15 @@ from DataBUS.neotomaHelpers.logging_dict import logging_response
 To run:
 python src/template_validate.py --template src/templates/template.yml
 """
-
 args = nh.parse_arguments()
 load_dotenv()
 data = json.loads(os.getenv('PGDB_LOCAL'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
-
-#filenames = glob.glob(args['data'] + "*.csv")
 directory = Path(args['data'])
 filenames = directory.glob("*.csv")
+filenames = [f for f in filenames if os.path.basename(f) != "references_entities.csv"]
 valid_logs = Path('data/validation_logs')
 valid_logs_wrong = Path('data/validation_logs/not_validated/')
 valid_logs.mkdir(exist_ok=True)
@@ -37,7 +34,6 @@ valid_logs_wrong.mkdir(exist_ok=True)
 for filename in filenames:
     print(filename)
     logfile = []
-
     hashcheck = nh.hash_file(filename)
     filecheck = nv.check_file(filename)
     logfile = logfile + hashcheck['message'] + filecheck['message']
@@ -45,7 +41,6 @@ for filename in filenames:
     if hashcheck['pass'] and filecheck['pass']:
         print("  - File is correct and hasn't changed since last validation.")
     else:
-        # Load the yml template as a dictionary
         yml_dict = nh.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
         validator = dict()
@@ -152,8 +147,7 @@ for filename in filenames:
                                                 csv_file = csv_file,
                                                 wide = True)
             logfile = logging_response(validator['taxa'], logfile)
-            
-            # Function to validate UTh series
+
             logfile.append('\n === Validating Data Uncertainties ===')
             validator['uncertainty'] = nv.valid_datauncertainty(cur = cur,
                                                     yml_dict = yml_dict,
@@ -166,14 +160,10 @@ for filename in filenames:
                                                     yml_dict = yml_dict,
                                                     csv_file = csv_file)
             logfile = logging_response(validator['publication'], logfile)
-
-            # # Nothing needs to be committed to the database
             conn.rollback()
-
 
             all_true = all([validator[key].validAll for key in validator.keys()])
             not_validated_files = "data/not_validated_files"
-
             if all_true is False:
                 print(f"{filename} cannot be validated.\nMoved {filename} to the 'not_validated_files' folder.")
                 os.makedirs(not_validated_files, exist_ok=True)
@@ -190,10 +180,8 @@ for filename in filenames:
                     writer.write(i)
                     writer.write('\n') 
         except Exception as e:
-            print(e)
             logfile.append(f"✗ File validation failed: {e}")
             not_validated_files = "data/not_validated_files"
-            print(e)
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)

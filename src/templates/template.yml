@@ -246,7 +246,7 @@ metadata:
   notes: dropdown list option
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Original chronology
   type: str
@@ -2259,7 +2259,7 @@ metadata:
   notes: dropdown list options
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   schema: sisal
   table: Dating
   type: string
