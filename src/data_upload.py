@@ -25,38 +25,30 @@ template file that has an .xlsx or .yml extension
 args = nh.parse_arguments()
 load_dotenv()
 data = json.loads(os.getenv('PGDB_LOCAL'))
-
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
-
 args = nh.parse_arguments()
 overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
 filenames = [f for f in filenames if os.path.basename(f) != "references_entities.csv"]
-#filenames = ['data/sisal_entity_12.csv']
 total_files = len(filenames)
 upload_logs = 'data/upload_logs'
 if not os.path.exists(upload_logs):
             os.makedirs(upload_logs)
 
 uploaded_files = "data/uploaded_files"
-failed_files = "data/failed_files/failed_uploads"
-
+not_uploaded_files = "data/failed_uploads"
 start_time = datetime.now()
 print(f"Start uploading {total_files} files at {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
 next_percent = 5
-
 for j, filename in enumerate(filenames, 1):
-    test_dict = {}
     print(filename)
     logfile = []
     hashcheck = nh.hash_file(filename)
     filecheck = check_file(filename)
-
     logfile = logfile + hashcheck['message'] + filecheck['message']
     logfile.append(f"\nNew Upload started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-
     uploader = {}
     if hashcheck['pass'] is False and filecheck['pass'] is False:
         csv_file = nh.read_csv(filename)
@@ -64,8 +56,7 @@ for j, filename in enumerate(filenames, 1):
         hashcheck = False
     else:
         csv_file = nh.read_csv(filename)
-        hashcheck = True
-        
+        hashcheck = True  
     yml_dict = nh.template_to_dict(temp_file=args['template'])
     yml_data = yml_dict['metadata']
     inputs = {'cur': cur,
@@ -247,8 +238,8 @@ for j, filename in enumerate(filenames, 1):
         all_true = all_true and hashcheck
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            conn.commit()
-            #conn.rollback()
+            #conn.commit()
+            conn.rollback()
             os.makedirs(uploaded_files, exist_ok=True)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
@@ -271,14 +262,12 @@ for j, filename in enumerate(filenames, 1):
                     writer.write('\n')
             conn.rollback()
     except Exception as e:
-        not_uploaded_files = "data/failed_uploads"
+        conn.rollback()
+        print(f"filename {filename} could not be uploaded: {e}.")
         logfile.append(f"✗ File upload failed: {e}")
         os.makedirs(not_uploaded_files, exist_ok=True)
         not_uploaded_path = os.path.join(not_uploaded_files, os.path.basename(filename))
         os.replace(filename, not_uploaded_path)
-        print(f"Error: {e}")
-        print(f"filename {filename} could not be uploaded.")
-        conn.rollback()
         os.makedirs('data/upload_logs/failed_uploads/', exist_ok=True)
         modified_filename = filename.replace('data/', 'data/upload_logs/failed_uploads/')
         with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
@@ -286,16 +275,10 @@ for j, filename in enumerate(filenames, 1):
                 writer.write(i)
                 writer.write('\n')
     finally:
-         ### Temporary to check how many files are pending
         percent_complete = (j / total_files) * 100
         if percent_complete >= next_percent:
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             print(f"Uploaded {next_percent}% at {now}")
             next_percent += 5
-
-# Insert speleothem_references table if speleothem data are present
-# from DataBUS.neotomaHelpers.speleothem_reference_inserts import speleothem_reference_inserts as sri
-# print("Inserting applicable speleothem references...")
-# sri(cur, conn, file_path="data/references_entities.csv")    
 end_time = datetime.now()
 print(f"Finished uploading at {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
