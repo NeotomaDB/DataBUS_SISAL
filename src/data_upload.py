@@ -8,7 +8,6 @@ import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
-from datetime import datetime
 """
 Use this command after having validated the files to 
 upload to Neotoma.
@@ -27,7 +26,6 @@ load_dotenv()
 data = json.loads(os.getenv('PGDB_LOCAL'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
-args = nh.parse_arguments()
 overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
