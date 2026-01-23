@@ -4,6 +4,7 @@
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-active-green.svg)](https://www.tidyverse.org/lifecycle/#active) [![NSF-1948926](https://img.shields.io/badge/NSF-1948926-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948926) [![NSF-2410961](https://img.shields.io/badge/NSF-2410961-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2410961)
 
+[![DOI](https://zenodo.org/badge/916818071.svg)](https://doi.org/10.5281/zenodo.18353609)
 
 
 <!-- badges: end -->
