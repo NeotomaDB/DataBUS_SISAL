@@ -253,13 +253,17 @@ def drop_duplicate_rows(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def aggregate_citations(citations: pd.DataFrame, key: str) -> pd.DataFrame:
-    """One row per ``key``, with its references concatenated."""
+    """One row per ``key``, with its references concatenated.
+
+    DOIs and citations are joined with `` | ``, the separator DataBUS splits
+    publications on.  ``ref_id`` is only numbers, so it keeps ``, ``.
+    """
     citations = citations[[key, "ref_id", "publication_DOI", "citation"]].drop_duplicates()
     try:
         return citations.groupby(key).agg(
             {
                 "ref_id": lambda x: ", ".join(x.astype(str)),
-                "publication_DOI": ", ".join,
+                "publication_DOI": " | ".join,
                 "citation": " | ".join,
             }
         ).reset_index()
@@ -268,7 +272,7 @@ def aggregate_citations(citations: pd.DataFrame, key: str) -> pd.DataFrame:
         return citations.groupby(key).agg(
             {
                 "ref_id": lambda x: ", ".join(map(str, x.dropna())),
-                "publication_DOI": lambda x: ", ".join(map(str, x.dropna())),
+                "publication_DOI": lambda x: " | ".join(map(str, x.dropna())),
                 "citation": lambda x: " | ".join(map(str, x.dropna())),
             }
         ).reset_index()
