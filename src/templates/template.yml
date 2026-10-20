@@ -4,40 +4,34 @@ kind: Development
 metadata:
 # Constants
 - column: datasettypeid
-  neotoma: ndb.datasettypes.datasettype
-  overwrite: false
+  neotoma: ndb.datasettypes.datasettypeid
   required: true
   value: speleothem
 - column: databaseid
   neotoma: 'ndb.datasetdatabases.databasename'
-  overwrite: false
   required: true
   value: SISAL
 ### Sites
 - column: site_name
   neotoma: ndb.sites.sitename
   notes: name by author
-  overwrite: false
   required: false
   rowwise: false
   type: string
 - column: elevation
   neotoma: ndb.sites.altitude
-  overwrite: false
   required: false
   rowwise: false
   type: float
 - column: notes
   neotoma: ndb.sites.notes
   notes: All notes in SISAL are at site level only.
-  overwrite: false
   required: false
   rowwise: false
   type: null
 - column: collunit_notes
   neotoma: ndb.collectionunits.notes
   notes: All notes in SISAL are at site level only.
-  overwrite: false
   required: false
   rowwise: false
   type: null
@@ -45,7 +39,6 @@ metadata:
   neotoma: ndb.sites.geog.latitude
   notes: number
   notes ii: Link as a spatial object.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -54,12 +47,11 @@ metadata:
 - column: longitude
   neotoma: ndb.sites.geog.longitude
   notes: Link as a spatial object.
-  overwrite: false
   required: false
   rowwise: false
   type: float
 ## Collection Units
-- column: entity_name
+- column: entity_name 
   neotoma: ndb.collectionunits.handle
   notes: name by author
   overwrite: true
@@ -84,7 +76,6 @@ metadata:
   neotoma: ndb.speleothems.entityid
   notes: database level
   notes ii: Referencing the speleothem entity (not the core itself)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -93,7 +84,6 @@ metadata:
 - column: entity_name
   neotoma: ndb.speleothems.entityname
   notes: name by author
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -102,7 +92,6 @@ metadata:
 - column: monitoring
   neotoma: ndb.speleothems.monitoring
   notes: yes or no question
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -113,7 +102,6 @@ metadata:
   neotoma: ndb.speleothems.rockageid
   notes: the actual rock age (geological age) from a dropdown list
   notes ii: This table exists within  ndb.relativeages
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -127,7 +115,6 @@ metadata:
   neotoma: ndb.speleothems.entrancedistance
   notes: actual distance of speleothem from the cave entrance as a 'number'
   notes ii: Are these in standard units? # no units to report in data
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -138,7 +125,6 @@ metadata:
   notes: actual speleothem type (stalagmite, stalactite, composite, flowstone) from
     dropdown list options
   notes ii: Find values in speleothemtypes table
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -153,7 +139,6 @@ metadata:
     dataset e.g. with higher resolution and more accurate chronology that SHOULD be
     used instead
   notes ii: The statusids would be in a separate table to enforce consistency
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -165,7 +150,6 @@ metadata:
   neotoma: ndb.speleothems.speleothemdriptypeid
   notes: actual drip type (e.g. seasonal etc) from dropdown list options
   notes ii: We need a drip type table.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -178,7 +162,6 @@ metadata:
   notes: the actual geology (rock-type) from a dropdown list
   notes ii: Speleothems may have different geologies within a single site depending
     on their position
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -189,7 +172,6 @@ metadata:
 - column: depth
   neotoma: ndb.analysisunits.depth
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -198,7 +180,6 @@ metadata:
 - column: depth_sample
   neotoma: ndb.chroncontrols.depth
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -207,7 +188,6 @@ metadata:
 - column: sample_thickness
   neotoma: ndb.analysisunits.thickness
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -216,7 +196,6 @@ metadata:
 - column: sample_thickness
   neotoma: ndb.chroncontrols.thickness
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -225,7 +204,6 @@ metadata:
 - column: mineralogy
   neotoma: ndb.analysisunits.faciesid
   notes: dropdown list options
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -236,7 +214,6 @@ metadata:
 ### Samples
 - column: lab_num
   neotoma: ndb.samples.labnumber
-  overwrite: false
   required: false
   rowwise: true
   type: string
@@ -244,7 +221,6 @@ metadata:
 - column: age_model_type
   neotoma: ndb.chronologies.agemodel
   notes: dropdown list option
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -256,7 +232,6 @@ metadata:
 - column: age_model_type
   neotoma: ndb.sampleages.agemodel
   notes: dropdown list option
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -266,34 +241,29 @@ metadata:
     Bayesian, Bayesian Bacon, Bayesian Bchron, StalAge, StalAge and other, Clam, COPRA,
     OxCal, mixed (add note to notes sheet), other (add note to notes sheet), unknown]
 - column: agetype
-  neotoma: ndb.chronologies.agetype
-  overwrite: false
+  neotoma: ndb.chronologies.agetypeid
   required: false
   rowwise: false
   type: string
 - column: agetype
-  neotoma: ndb.sampleages.agetype
-  overwrite: false
+  neotoma: ndb.sampleages.agetypeid
   required: false
   rowwise: false
   type: str
 - column: agetype
-  neotoma: ndb.geochronology.agetype
-  overwrite: false
+  neotoma: ndb.geochronology.agetypeid
   required: false
   rowwise: false
   type: str
 - column: agetype
-  neotoma: ndb.chroncontrols.agetype
-  overwrite: false
+  neotoma: ndb.chroncontrols.agetypeid
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: interp_age
   neotoma: ndb.sampleages.age
   chronologyname: interp_author
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -303,7 +273,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: interp_author
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -313,7 +282,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: interp_author
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -323,13 +291,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: lin_interp_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: lin_interp_age_uncert_neg
@@ -337,7 +305,6 @@ metadata:
 - column: lin_interp_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -347,18 +314,17 @@ metadata:
 - column: lin_interp_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: lin_interp_SISAL
+  isdefault: False
 - column: lin_interp_age
   neotoma: ndb.sampleages.age
   chronologyname: lin_interp_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -368,7 +334,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: lin_interp_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -378,7 +343,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: lin_interp_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -388,13 +352,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: lam_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: lam_age_uncert_neg
@@ -402,7 +366,6 @@ metadata:
 - column: lam_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -412,18 +375,17 @@ metadata:
 - column: lam_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: lam_SISAL
+  isdefault: False
 - column: lam_age
   neotoma: ndb.sampleages.age
   chronologyname: lam_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -433,7 +395,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: lam_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -443,7 +404,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: lam_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -453,13 +413,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: Bacon_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: Bacon_age_uncert_neg
@@ -467,7 +427,6 @@ metadata:
 - column: Bacon_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -477,18 +436,17 @@ metadata:
 - column: Bacon_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: Bacon_SISAL
+  isdefault: False
 - column: Bacon_age
   neotoma: ndb.sampleages.age
   chronologyname: Bacon_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -498,7 +456,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: Bacon_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -508,7 +465,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: Bacon_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -518,13 +474,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: Bchron_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: Bchron_age_uncert_neg
@@ -532,7 +488,6 @@ metadata:
 - column: Bchron_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -542,18 +497,17 @@ metadata:
 - column: Bchron_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: Bchron_SISAL
+  isdefault: False
 - column: Bchron_age
   neotoma: ndb.sampleages.age
   chronologyname: Bchron_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -563,7 +517,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: Bchron_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -573,7 +526,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: Bchron_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -583,13 +535,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: OxCal_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: OxCal_age_uncert_neg
@@ -597,7 +549,6 @@ metadata:
 - column: OxCal_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -607,18 +558,17 @@ metadata:
 - column: OxCal_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: OxCal_SISAL
+  isdefault: False
 - column: OxCal_age
   neotoma: ndb.sampleages.age
   chronologyname: OxCal_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -628,7 +578,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: OxCal_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -638,7 +587,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: OxCal_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -648,13 +596,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: StalAge_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: StalAge_age_uncert_neg
@@ -662,7 +610,6 @@ metadata:
 - column: StalAge_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -672,18 +619,17 @@ metadata:
 - column: StalAge_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: StalAge_SISAL
+  isdefault: False
 - column: StalAge_age
   neotoma: ndb.sampleages.age
   chronologyname: StalAge_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -693,7 +639,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: StalAge_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -703,7 +648,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: StalAge_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -713,13 +657,13 @@ metadata:
   neotoma: ndb.chronologies.age
   default: False
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: copRa_SISAL
+  isdefault: False
   agemodelcolumn:
   agetype:
   ageboundyounger: copRa_age_uncert_neg
@@ -727,7 +671,6 @@ metadata:
 - column: copRa_age_uncert_neg
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -737,18 +680,17 @@ metadata:
 - column: copRa_age_uncert_pos
   neotoma: ndb.chronologies.ageboundolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: SISAL chronology
   type: float
   chronologyname: copRa_SISAL
+  isdefault: False
 - column: copRa_age
   neotoma: ndb.sampleages.age
   chronologyname: copRa_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -758,7 +700,6 @@ metadata:
   neotoma: ndb.sampleages.ageyounger
   chronologyname: copRa_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -768,7 +709,6 @@ metadata:
   neotoma: ndb.sampleages.ageolder
   chronologyname: copRa_SISAL
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -779,13 +719,13 @@ metadata:
   default: True
   notes: number
   notes ii: Need to define 'agetype'
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: Original chronology
   type: float
   chronologyname: interp_author
+  isdefault: True
   agemodelcolumn:
   agetype:
   ageboundyounger: interp_age_uncert_neg
@@ -794,7 +734,6 @@ metadata:
   neotoma: ndb.chronologies.ageboundyounger
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -805,17 +744,16 @@ metadata:
   neotoma: ndb.chronologies.ageboundolder
   notes: number
   notes ii: Assumes that age uncertainty is in calibrated radiocarbon years.
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: Original chronology
   type: float
   chronologyname: interp_author
+  isdefault: False
 - column: lin_reg_age
   neotoma: ndb.notinuse.age
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -824,7 +762,6 @@ metadata:
 - column: lin_reg_age_uncert_neg
   neotoma: ndb.notinuse.ageyounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -833,7 +770,6 @@ metadata:
 - column: lin_reg_age_uncert_pos
   neotoma: ndb.notinuse.ageolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -843,17 +779,14 @@ metadata:
   neotoma: ndb.radiocarbon.resevoir
   notes: percentage
   notes ii: Is this for calcium/resevoir correction?
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
   table: Dating
   type: null
 - column: Ba_Ca_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -861,37 +794,33 @@ metadata:
   taxonname: Barium:Calcium
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: Ba_Ca_precision
     unitcolumn: Ba_Ca_precision_units
   unitcolumn: Ba_Ca_measurement_units
 - column: Ba_Ca_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: Barium:Calcium
   required: false
   rowwise: false
   type: str
 - column: Ba_Ca_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Barium:Calcium
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Barium:Calcium
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Ba_Ca_precision_units
   type: float
-  vocab: null
 - column: Ba_Ca_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Barium:Calcium
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: Ba_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -903,7 +832,6 @@ metadata:
 - column: Ba_Ca_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -916,10 +844,8 @@ metadata:
     \ standards of known concentrations','metal standards','other (add note\
     \ to notes sheet)','unknown']
 - column: Mg_Ca_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -927,37 +853,33 @@ metadata:
   taxonname: Magnesium:Calcium
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: Mg_Ca_precision
     unitcolumn: Mg_Ca_precision_units
   unitcolumn: Mg_Ca_measurement_units
 - column: Mg_Ca_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: Magnesium:Calcium
   required: false
   rowwise: false
   type: str
 - column: Mg_Ca_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Magnesium:Calcium
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Magnesium:Calcium
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Mg_Ca_precision_units
   type: float
-  vocab: null
 - column: Mg_Ca_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Magnesium:Calcium
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: Mg_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -969,7 +891,6 @@ metadata:
 - column: Mg_Ca_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -982,10 +903,8 @@ metadata:
     \ standards of known concentrations','metal standards','other (add note\
     \ to notes sheet)','unknown']
 - column: P_Ca_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -993,37 +912,33 @@ metadata:
   taxonname: Phosphorus:Calcium
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: P_Ca_precision
     unitcolumn: P_Ca_precision_units
   unitcolumn: P_Ca_measurement_units
 - column: P_Ca_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: Phosphorus:Calcium
   required: false
   rowwise: false
   type: str
 - column: P_Ca_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Phosphorus:Calcium
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Phosphorus:Calcium
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: P_Ca_precision_units
   type: float
-  vocab: null
 - column: P_Ca_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Phosphorus:Calcium
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: P_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1035,7 +950,6 @@ metadata:
 - column: P_Ca_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1048,10 +962,8 @@ metadata:
     \ standards of known concentrations','metal standards','other (add note\
     \ to notes sheet)','unknown']
 - column: Sr_Ca_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1059,38 +971,34 @@ metadata:
   taxonname: Strontium:Calcium
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: Sr_Ca_precision
     unitcolumn: Sr_Ca_precision_units
   unitcolumn: Sr_Ca_measurement_units
 - column: Sr_Ca_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: Strontium:Calcium
   required: false
   rowwise: false
   type: str
 - column: Sr_Ca_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Strontium:Calcium
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Strontium:Calcium
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: Sr_Ca_precision_units
   type: float
-  vocab: null
 - column: Sr_Ca_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Strontium:Calcium
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: Sr_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
   notes ii: Already part of the Neotoma model.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1103,7 +1011,6 @@ metadata:
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
   notes ii: Already part of the Neotoma model.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1118,7 +1025,6 @@ metadata:
 - column: Sr_isotopes_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1128,9 +1034,7 @@ metadata:
       XRF, micro XRF (ITRAX), LA-ICP-MS, LA-ICP-AES, SIMS, Electron Microprobe (EPMA),
     TIMS, other (add note to notes sheet), unknown]
 - column: Sr_isotopes_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1138,37 +1042,32 @@ metadata:
   taxonname: Total Sr
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: Sr_isotopes_precision
     unitcolumn: Sr_isotopes_precision_units
   unitcolumn: Sr_isotopes_measurement_units
 - column: Sr_isotopes_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
   required: false
   rowwise: false
   type: str
 - column: Sr_isotopes_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Total Sr
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Total Sr
-  uncertaintybasis: null
   unitcolumn: Sr_isotopes_precision_units
   type: float
-  vocab: null
 - column: Sr_isotopes_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Total Sr
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: Sr_isotopes_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1180,10 +1079,8 @@ metadata:
       with single element standards of known concentrations, metal standards, other
       (add note to notes sheet), unknown]
 - column: U_Ca_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1191,37 +1088,33 @@ metadata:
   taxonname: Uranium:Calcium
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: U_Ca_precision
     unitcolumn: U_Ca_precision_units
   unitcolumn: U_Ca_measurement_units
 - column: U_Ca_measurement_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: Uranium:Calcium
   required: false
   rowwise: false
   type: str
 - column: U_Ca_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: Uranium:Calcium
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: Uranium:Calcium
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: U_Ca_precision_units
   type: float
-  vocab: null
 - column: U_Ca_precision_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: Uranium:Calcium
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: U_Ca_method
   neotoma: ndb.isoinstrumentation.isointrumentationtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1233,7 +1126,6 @@ metadata:
 - column: U_Ca_std
   neotoma: ndb.isostandards.isostandardtypeid
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1248,7 +1140,6 @@ metadata:
 - column: calib_used
   neotoma: ndb.chroncontrolscal14.calibrationcurveid
   notes: dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1261,7 +1152,6 @@ metadata:
   notes: asks the question 'if this has been made available with the database version
     in the repository', yes or no, checked at database level
   notes ii: External links?
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1271,24 +1161,21 @@ metadata:
 - column: citation
   neotoma: ndb.publications.citation
   notes: alphanumeric
-  overwrite: false
   required: false
-  rowwise: true #This should be false. Ask Simon and team
+  rowwise: true
   schema: sisal
   table: Reference
   type: string
 - column: contact
   neotoma: ndb.datasetpis.contactname
-  overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   schema: sisal
   table: Entity
   type: null
 - column: corr_age
   neotoma: ndb.chroncontrols.age
   notes: number
-  overwrite: false
   required: true
   rowwise: true
   schema: sisal
@@ -1297,7 +1184,6 @@ metadata:
 - column: corr_age_uncert_neg
   neotoma: ndb.chroncontrols.agelimityounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1306,7 +1192,6 @@ metadata:
 - column: corr_age_uncert_pos
   neotoma: ndb.chroncontrols.agelimitolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1317,7 +1202,6 @@ metadata:
   notes: actual cover type filled from dropddown list options by authors or from
     publications
   notes ii: FROM AUTHOR
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1328,7 +1212,6 @@ metadata:
 - column: cover_thickness
   neotoma: ndb.speleothems.coverthickness
   notes: actual cover thickness as a 'number'
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1337,7 +1220,6 @@ metadata:
 - column: cover_thickness_units
   neotoma: ndb.speleothems.entitycoverunitsid
   notes: actual cover thickness as a 'number'
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1348,7 +1230,6 @@ metadata:
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1356,10 +1237,8 @@ metadata:
   type: null
   vocab: ['yes', 'no']
 - column: d13C_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1367,39 +1246,35 @@ metadata:
   taxonname: δ13C
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: d13C_precision
     unitcolumn: d13C_precision_units
   unitcolumn: d13C_measurement_units
 - column: d13C_measurement_units
-  formatorrange: '> 0'
-  neotoma: ndb.variables.variableunits
+  neotoma: ndb.variables.variableunitsid
+  taxonname: δ13C
   required: false
   rowwise: false
   type: str
 - column: d13C_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: δ13C
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: δ13C
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: d13C_precision_units
   type: float
-  vocab: null
 - column: d13C_precision_units
-  formatorrange: '> 0'
-  neotoma: ndb.variables.variableunits
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: δ13C
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: d18O
   neotoma: ndb.externalspeleothemdata
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level
   notes ii: This is for external data if it's measured but not reported in SISAL
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1407,10 +1282,8 @@ metadata:
   type: null
   vocab: ['yes', 'no']
 - column: d18O_measurement
-  formatorrange: '> 0'
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1418,37 +1291,32 @@ metadata:
   taxonname: δ18O
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: d18O_precision
     unitcolumn: d18O_precision_units
   unitcolumn: d18O_measurement_units
 - column: d18O_measurement_units
-  formatorrange: '> 0'
-  neotoma: ndb.variables.variableunits
+  neotoma: ndb.variables.variableunitsid
+  taxonname: δ18O
   required: false
   rowwise: false
   type: str
 - column: d18O_precision
-  formatorrange: '> 0'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: δ18O
   required: false
   rowwise: true
-  taxonid: null
-  taxonname: δ18O
-  uncertaintybasis: '2 Standard Deviations'
   unitcolumn: d18O_precision_units
   type: float
-  vocab: null
 - column: d18O_precision_units
-  formatorrange: '> 0'
-  neotoma: ndb.variables.variableunits
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: δ18O
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: date_type
   neotoma: ndb.chroncontrols.chroncontroltypeid
-  notes: dropdown list options
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1458,10 +1326,9 @@ metadata:
     Cross-dating, Multiple methods, Event; hiatus, Event; actively forming, Event;
       start of laminations, Event; end of laminations, other (add note to notes sheet),
     unknown]
-- column: date_type
+- column: geochron_type
   neotoma: ndb.geochronology.geochrontypeid
   notes: dropdown list options
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1474,7 +1341,6 @@ metadata:
 - column: dating_id
   neotoma: ndb.chroncontrols.chroncontrolid
   notes: database level
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1483,7 +1349,6 @@ metadata:
 - column: dating_thickness
   neotoma: ndb.chroncontrols.thickness
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1494,7 +1359,6 @@ metadata:
   notes: depth measured from the top or the bottom of the core; dropdown list option
   notes ii: The speleothem is sectioned in cross section and sampled in the axis of
     drip
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1504,7 +1368,6 @@ metadata:
 - column: drip_height
   neotoma: ndb.speleothems.dripheight
   notes: height of drip from stalagmite / flowstone as a number
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1513,7 +1376,6 @@ metadata:
 - column: drip_height_units
   neotoma: ndb.speleothems.dripheightunitsid
   notes: units of height of drip from stalagmite / flowstone as a number
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1522,7 +1384,6 @@ metadata:
 - column: distance_entrance_units
   neotoma: ndb.speleothems.entrancedistanceunitsid
   notes: units of distance entrance
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1532,7 +1393,6 @@ metadata:
   neotoma: ndb.externalspeleothem
   notes: 'yes or no question '
   notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1542,7 +1402,6 @@ metadata:
   neotoma: ndb.externalspeleothem
   notes: 'yes or no question '
   notes ii: This would point ot the DOI and we'd add a notes indicating what's there.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1553,7 +1412,6 @@ metadata:
   neotoma: ndb.isostandards.isostandardtypeid
   notes: isotope measurement standard as 'PDB' or 'VPDB' filled by authors
   notes ii: Links to ndb.isostandards (currently empty, but we can populate it)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1563,7 +1421,6 @@ metadata:
 - column: lab_num
   neotoma: ndb.geochronology.labnumber
   notes: alphanumeric
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1574,7 +1431,6 @@ metadata:
   notes: 'actual land use type filled from dropddown list options by authors or from
     publications '
   notes ii: As above, a long cave may cross multiple vegetation types.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1587,7 +1443,6 @@ metadata:
   notes: dropdown list options
   notes ii: This is a free-form field. Maybe we should actually create a table for
     it?
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1599,16 +1454,15 @@ metadata:
   formatorrange: Valid DOI regex
   neotoma: ndb.publications.doi
   notes: alphanumeric
-  overwrite: false
   required: false
-  rowwise: true # This is probably false, ask Simon
+  rowwise: true
+  delimeter: \|
   schema: sisal
   table: Reference
   type: string
 - column: ref_id
   neotoma: ndb.speleothems.ref_id
   notes: database level; links multiple references to single entity
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1617,7 +1471,6 @@ metadata:
 - column: sample_id
   neotoma: ndb.samples.samplename
   notes: database level
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1626,7 +1479,6 @@ metadata:
 - column: uncorr_age
   neotoma: ndb.geochronology.age
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1635,7 +1487,6 @@ metadata:
 - column: uncorr_age_uncert_neg
   neotoma: ndb.geochronology.erroryounger
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1644,7 +1495,6 @@ metadata:
 - column: uncorr_age_uncert_pos
   neotoma: ndb.geochronology.errorolder
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -1655,7 +1505,6 @@ metadata:
   notes: 'actual vegetation type filled from dropddown list options by authors or
     from publications'
   notes ii: As above, a long cave may cross multiple vegetation types.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1669,7 +1518,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1681,7 +1529,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1693,7 +1540,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1705,7 +1551,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1717,7 +1562,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1730,7 +1574,6 @@ metadata:
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
   notes ii: Is this not then linked to the geochronology table?
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1742,7 +1585,6 @@ metadata:
   notes: asks the question, ' whether these measurements are available for the speleothem
     or not', the database at the moment doesn't allow entry of actual measured values,
     authors only select dropdown list options of yes, no or unknown.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1756,7 +1598,6 @@ metadata:
   neotoma: '-'
   notes: entity_name in the database that SHOULD be used instead
   notes ii: IGNORE -- Based on Notes
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1768,7 +1609,6 @@ metadata:
     yes or no, checked at database level
   notes ii: I think this winds up coming from ndb.variables, because an absence there
     indicates it is not measured. (Using _measurement)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1778,7 +1618,6 @@ metadata:
 - column: Mg_Ca_downsampled
   neotoma: ???
   notes: yes or no question
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1791,7 +1630,6 @@ metadata:
 - column: Mg_Ca_downsampling_method
   neotoma: ???
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1807,7 +1645,6 @@ metadata:
     yes or no, checked at database level
   notes ii: I think this winds up coming from ndb.variables, because an absence there
     indicates it is not measured. (Using _measurement)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1818,7 +1655,6 @@ metadata:
   neotoma: ???
   notes ii: sjg - I'm not sure. I don't understand where this fits in the current
     Neotoma model of isotope measurements.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1833,7 +1669,6 @@ metadata:
   notes: selection by authors from dropdown list options
   notes ii: sjg - I'm not sure. I don't understand where this fits in the current
     Neotoma model of isotope measurements.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1847,7 +1682,6 @@ metadata:
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level. Using _measurement
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1857,7 +1691,6 @@ metadata:
 - column: 'Ba_Ca_downsampled'
   neotoma: ???
   notes: yes or no question
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1870,7 +1703,6 @@ metadata:
 - column: 'Ba_Ca_downsampling_method'
   neotoma: ???
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1884,7 +1716,6 @@ metadata:
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level. Using _measurement
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1894,7 +1725,6 @@ metadata:
 - column: 'U_Ca_downsampled'
   neotoma: ---
   notes: yes or no question
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1907,7 +1737,6 @@ metadata:
 - column: 'U_Ca_downsampling_method'
   neotoma: ???
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1921,7 +1750,6 @@ metadata:
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level. Using _measurement
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1931,7 +1759,6 @@ metadata:
 - column: 'P_Ca_downsampled'
   neotoma: ---
   notes: yes or no question
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1944,7 +1771,6 @@ metadata:
 - column: 'P_Ca_downsampling_method'
   neotoma: ???
   notes: selection by authors from dropdown list options
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1958,7 +1784,6 @@ metadata:
   neotoma: --
   notes: asks the question 'if this dataset has been made available in the database',
     yes or no, checked at database level. Using _measurement
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1969,7 +1794,6 @@ metadata:
   neotoma: ???
   notes: number
   notes ii: Not currently supported, but makes sense to include it.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1979,7 +1803,6 @@ metadata:
   neotoma: ???
   notes: number
   notes ii: Not currently supported, but makes sense to include it.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -1991,7 +1814,6 @@ metadata:
   notes ii: This gets sorted in the chronology. A collectionunit can have multiple
     geochron elements associated with it, but they aren't neccessarily used in the
     specific chronology.
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2002,7 +1824,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2013,7 +1834,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2024,7 +1844,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2035,7 +1854,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2046,7 +1864,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2057,7 +1874,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2068,7 +1884,6 @@ metadata:
   neotoma: '---'
   notes: database level, yes or no question, asks if the date was used to create SISAL
     standard chronology
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2080,7 +1895,6 @@ metadata:
   notes: number
   notes ii: We may have to rethink the 210Pb stuff, depending on how we want to handle
     this all.
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2088,37 +1902,34 @@ metadata:
   type: float
   taxonname: 238U
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: 238U_uncertainty
     unitcolumn: 238U_uncertainty_units
   unitcolumn: 238U_content_units
 - column: 238U_content_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: 238U
   required: false
   rowwise: false
   type: str
 - column: 238U_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
-  notes: number
-  overwrite: false
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: 238U
   required: false
   rowwise: true
   schema: sisal
   table: Dating
   type: float
-  taxonname: 238U
 - column: 238U_uncertainty_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: 238U
   required: false
-  rowwise: false
+  rowwise: true
   type: str
 - column: 232Th_content
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2126,38 +1937,34 @@ metadata:
   taxonname: 232Th #??
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: 232Th_uncertainty
     unitcolumn: 232Th_uncertainty_units
   unitcolumn: 232Th_content_units
 - column: 232Th_content_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.variables.variableunitsid
+  taxonname: 232Th
   required: false
   rowwise: false
   type: str
 - column: 232Th_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
-  notes: number
-  overwrite: false
-  required: false
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: 232Th
   rowwise: true
   schema: sisal
   table: Dating
   type: float
-  taxonname: 232Th
 - column: 232Th_uncertainty_units
-  neotoma: ndb.variables.variableunits
-  overwrite: false
+  neotoma: ndb.datauncertainties.uncertaintyunitid
+  taxonname: 232Th
   required: false
   rowwise: false
   type: str
 - column: 234U_238U_activity_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
+  uncertaintybasisid: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.activityuncertainty234u238u
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2166,7 +1973,6 @@ metadata:
 - column: 234U_238U_activity
   neotoma: ndb.uraniumseries.activity234u238u
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2175,7 +1981,6 @@ metadata:
 - column: 230Th_232Th_ratio
   neotoma: ndb.uraniumseries.ratio230th232th
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2184,7 +1989,6 @@ metadata:
 - column: '230Th_238U_activity_uncertainty'
   neotoma: ndb.uraniumseries.activityuncertainty230th238u
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2193,7 +1997,6 @@ metadata:
 - column: 230Th_238U_activity
   neotoma: ndb.uraniumseries.activity230th238u
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2202,7 +2005,6 @@ metadata:
 - column: 230Th_content
   neotoma: ndb.data.value
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2210,36 +2012,45 @@ metadata:
   taxonname: 230Th #??
   type: float
   uncertainty:
-    uncertaintybasis: '2 Standard Deviations'
+    uncertaintybasisid: '2 Standard Deviations'
     uncertaintycolumn: 230Th_uncertainty
-    unitcolumn: 2230Th_uncertainty_units
-  unitcolumn: 232Th_content_units
+    unitcolumn: 230Th_uncertainty_units
+  unitcolumn: 230Th_content_units
+- column: 230Th_content_units
+  neotoma: ndb.variables.variableunitsid
+  taxonname: 230Th
+  required: false
+  rowwise: false
+  type: str
 - column: 230Th_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
   neotoma: ndb.datauncertainties.uncertaintyvalue
+  uncertaintybasisid: '2 Standard Deviations'
+  taxonname: 230Th
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: Dating
   type: float
+- column: 230Th_uncertainty_units
+  neotoma: ndb.datauncertainties.uncertaintyunitid
   taxonname: 230Th
+  required: false
+  rowwise: true
+  type: str
 - column: 230Th_232Th_ratio_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
+  uncertaintybasisid: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.ratiouncertainty230th232th
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
   table: Dating
   type: float
 - column: ini_230Th_232Th_ratio_uncertainty
-  uncertaintybasis: '2 Standard Deviations'
+  uncertaintybasisid: '2 Standard Deviations'
   neotoma: ndb.uraniumseries.iniratiouncertainty230th232th
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2248,7 +2059,6 @@ metadata:
 - column: ini_230Th_232Th_ratio
   neotoma: ndb.uraniumseries.iniratio230th232th
   notes: number
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2257,7 +2067,6 @@ metadata:
 - column: decay_constant
   neotoma: ndb.uraniumseries.decayconstantid
   notes: dropdown list options
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2271,7 +2080,6 @@ metadata:
     composed of calcite even if the samples are composed of aragonite. A correction
     (~0.6 per mille) may or maynot be made for this.
   notes ii: Not sure where to do this. Aragonite correction?
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2280,7 +2088,6 @@ metadata:
   vocab: ['yes','no','not applicable','unknown']
 - column: hiatus
   neotoma: ndb.hiatuses.hiatus
-  overwrite: false
   required: false
   rowwise: true
   schema: sisal
@@ -2291,7 +2098,6 @@ metadata:
   notes: externally sourced dataset from the world karst aquifer mapping project (WOKAM)
     filled at database level from WOKAM shapefiles
   notes ii: External data layer
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2299,14 +2105,12 @@ metadata:
   type: null
 - column: trace_elements_datafile
   neotoma: ndb.externalspeleothemdata
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
   type: string
 - column: trace_elements_metadatafile
   neotoma: ndb.externalspeleothemdata
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2314,7 +2118,6 @@ metadata:
 - column: data_DOI_URL
   neotoma: ndb.externalspeleothemdata.externalid
   notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2323,7 +2126,6 @@ metadata:
 - column: external_description
   neotoma: ndb.externalspeleothemdata.externaldescription
   notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
-  overwrite: false
   required: false
   rowwise: false
   schema: sisal
@@ -2331,8 +2133,7 @@ metadata:
   type: string
 - column: doi_database
   neotoma: ndb.externalspeleothemdata.extdatabaseid
-  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI)
-  overwrite: false
+  notes: e.g. NOAA, Pangaea (doesn't accept manuscript DOI) 
   required: false
   rowwise: false
   schema: sisal
