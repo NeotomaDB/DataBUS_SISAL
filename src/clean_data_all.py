@@ -409,6 +409,10 @@ def add_age_bounds(data: pd.DataFrame) -> pd.DataFrame:
     is 10 - 4 = 6 and the older bound is 10 + 2 = 12.  The raw uncertainties
     are kept in ``*_copy`` columns, which also mark a column as already done,
     so running this twice does not apply it twice.
+
+    A missing uncertainty counts as 0, so a bound that was not given falls back
+    to the age itself (both bounds equal the age).  A row without an age stays
+    empty.
     """
     copies = {}
     for age in AGE_COLUMNS:
@@ -418,8 +422,8 @@ def add_age_bounds(data: pd.DataFrame) -> pd.DataFrame:
         copies[f"{pos}_copy"] = data[pos].copy()
         copies[f"{neg}_copy"] = data[neg].copy()
         age_values = pd.to_numeric(data[age], errors="coerce")
-        data[pos] = age_values + pd.to_numeric(data[pos], errors="coerce")
-        data[neg] = age_values - pd.to_numeric(data[neg], errors="coerce")
+        data[pos] = age_values + pd.to_numeric(data[pos], errors="coerce").fillna(0)
+        data[neg] = age_values - pd.to_numeric(data[neg], errors="coerce").fillna(0)
     return pd.concat([data, pd.DataFrame(copies)], axis=1)
 
 
