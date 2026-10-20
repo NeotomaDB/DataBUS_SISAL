@@ -94,11 +94,14 @@ A file with any failed section is moved to `data/not_validated_files/`. Read its
 
 ## Step 3: Upload
 
-Once a file validates cleanly, run the same command with the upload flag:
+Once a file validates cleanly, delete its log, then run the same command with the upload flag:
 
 ```bash
+rm data/validation_logs/sisal_entity_5.csv.valid.log
 uv run python src/template_validate.py --template src/templates/template.yml --upload True
 ```
+
+The log has to go first because of the hash check described above: a file whose hash matches a log with no errors is treated as already validated and is skipped, even with `--upload True`. Deleting the log makes the script validate the file again.
 
 The records are saved only if every section passed. Otherwise the transaction is rolled back and the log says the data must be fully validated first. The log records the IDs created.
 
