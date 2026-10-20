@@ -196,3 +196,7 @@ insert_to_querytables
 src/download_analysis.ipynb
 *.txt
 data/sisal_entity_5.csv
+
+*.md
+*.zip
+*.svg
