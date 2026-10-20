@@ -13,12 +13,13 @@ differences, all of them requested:
 
 Usage
 -----
-    python src/clean_data_all.py data/not_validated_files/sisalv4_v3_to_v4_changes.csv
-    python src/clean_data_all.py 'data/original/*.csv' -o data/cleaned
+    python src/clean_data_all.py 'data/*.csv'
+
+By default each input CSV is moved to ``data/original/`` and its cleaned version
+is written to ``data/``, ready for ``template_validate.py``.  A file that
+already has a copy in ``data/original/`` is skipped, so re-running over
+``data/*.csv`` never cleans a file twice.
 """
-
-from __future__ import annotations
-
 import argparse
 import glob
 import re
@@ -28,6 +29,8 @@ import numpy as np
 import pandas as pd
 
 UNIT_LIST = Path("src/unitList_SISALv3.xlsx")
+DATA_DIR = Path("data")
+ORIGINAL_DIR = DATA_DIR / "original"
 
 # Column names carrying no information downstream.
 DROP_COLUMNS = ["composite_entity_id", "single_entity_id"]
@@ -61,7 +64,6 @@ EXTERNAL_DESCRIPTION_FLAGS = [
 
 # Contact strings that survive the automatic "First Last" -> "Last, First"
 # rewrite in a broken state.  Merges the two `names` dicts of the frozen
-# clean_data4.py and clean_data5.py; edit here only.
 CONTACT_FIXES = {
     "Hatvani, Istvan Gabor Gabor": "Hatvani, Istvan Gabor",
     "Nikita Kaushal": "Kaushal, Nikita",
@@ -82,13 +84,11 @@ CONTACT_FIXES = {
     "Wolf, Vanessa Skiba/Annabel": "Skiba, Vanessa | Wolf, Annabel",
 }
 
-# pandas appends .1, .2, ... to repeated header names on read.
 MANGLED_SUFFIX = re.compile(r"^(?P<base>.+)\.(?P<n>\d+)$")
 
 AGE_TYPE = "Calibrated radiocarbon years BP"
 
 # Age columns whose _uncert_pos / _uncert_neg are turned into age bounds.
-# (Frozen counterpart: the inline `columns` list in clean_data6.py.)
 AGE_COLUMNS = [
     "corr_age",
     "lam_age",
@@ -102,8 +102,9 @@ AGE_COLUMNS = [
     "StalAge_age",
 ]
 
-# SISAL date_type -> ndb.geochrontypes.geochrontype.  Anything not listed
-# (cross-dating, events, "other", "unknown") is "Other".
+# SISAL date_type -> ndb.geochrontypes.geochrontype.  
+# Anything not listed (cross-dating, events, "other", "unknown")
+# is "Other".
 GEOCHRON_TYPES = {
     "C14": "Carbon-14",
     "MC-ICP-MS U/Th": "Uranium series",
@@ -482,10 +483,23 @@ def clean(data: pd.DataFrame, units: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def clean_file(path: Path, output_dir: Path, units: pd.DataFrame) -> Path:
+def clean_file(
+    path: Path, output_dir: Path | None, units: pd.DataFrame, original_dir: Path = ORIGINAL_DIR
+) -> Path | None:
+    """Clean one file.  With no ``output_dir`` the input moves to ``original_dir``
+    and the cleaned file takes its place in ``DATA_DIR``."""
     print(path)
+    move_original = output_dir is None
+    if move_original:
+        output_dir = DATA_DIR
+        if (original_dir / path.name).exists():
+            print(f"  skipped: {original_dir / path.name} already exists")
+            return None
     data = pd.read_csv(path, low_memory=False)
     cleaned = clean(data, units)
+    if move_original:
+        original_dir.mkdir(parents=True, exist_ok=True)
+        path.replace(original_dir / path.name)
     output_dir.mkdir(parents=True, exist_ok=True)
     destination = output_dir / path.name
     cleaned.to_csv(destination, index=False)
@@ -499,7 +513,14 @@ def clean_file(path: Path, output_dir: Path, units: pd.DataFrame) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Clean a SISAL entity export.")
     parser.add_argument("inputs", nargs="+", help="CSV files or glob patterns")
-    parser.add_argument("-o", "--output-dir", default="data/cleaned", type=Path)
+    parser.add_argument(
+        "-o",
+        "--output-dir",
+        default=None,
+        type=Path,
+        help="write cleaned files here and leave the inputs alone "
+        "(default: move inputs to data/original and write to data/)",
+    )
     parser.add_argument("--unit-list", default=UNIT_LIST, type=Path)
     args = parser.parse_args()
 
