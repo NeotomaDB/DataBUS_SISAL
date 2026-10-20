@@ -1,12 +1,7 @@
 """_Validate SISAL csv Files_
-   Assumes there is a `data` folder from which the python script is run.
-   The script obtains all `csv` files in ./data and then reads through
-   each of them, validating each field to ensure they are acceptable for
-   valid upload.
-
-   Since DataBUS 2.0.0 each `valid_*` function also performs its own insert
-   when it is handed the accumulated `databus` dict, so a validation-only run
-   ends in `conn.rollback()`. Pass `--upload True` to keep the records.
+   Place your data files in the `data` folder.
+   The script obtains all `csv` files in and reads through them,
+   validating each field to ensure they can be uploaded.
 """
 from datetime import datetime
 import os
@@ -16,12 +11,11 @@ import psycopg2
 from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
-from DataBUS.neotomaHelpers.logging_dict import logging_response
 """
-To run:
+To validate:
 uv run python src/template_validate.py --template src/templates/template.yml
 
-To validate and then commit the records:
+To commit the records:
 uv run python src/template_validate.py --template src/templates/template.yml --upload True
 """
 args = nh.parse_arguments()
@@ -39,21 +33,6 @@ valid_logs_wrong = Path('data/validation_logs/not_validated/')
 valid_logs.mkdir(parents = True, exist_ok = True)
 valid_logs_wrong.mkdir(parents = True, exist_ok = True)
 
-
-def run_step(name, key, fn, logfile, databus):
-    """Run one validation step in its own savepoint and log the Response.
-
-    `fn` must be a zero-argument callable. `nh.safe_step` rolls back to the
-    savepoint on error so a single failing step no longer aborts the whole
-    transaction and poisons every step after it.
-    """
-    logfile.append(f'\n === {name} ===')
-    result = nh.safe_step(key, fn, logfile, conn)
-    if result is not None:
-        databus[key] = result
-        logging_response(result, logfile)
-
-
 for filename in filenames:
     print(filename)
     conn.rollback()
@@ -70,148 +49,148 @@ for filename in filenames:
     yml_dict = nh.template_to_dict(temp_file=args['template'])
     csv_file = nh.read_csv(filename)
     try:
-        run_step('Validating Sites', 'sites',
+        nh.run_step('Validating Sites', 'sites',
                  lambda: nv.valid_site(cur = cur,
                                        yml_dict = yml_dict,
                                        csv_file = csv_file),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Geopolitical Units', 'gpuid',
+        nh.run_step('Validating Geopolitical Units', 'gpuid',
                  lambda: nv.valid_geopolitical_units(cur = cur,
                                                      yml_dict = yml_dict,
                                                      csv_file = csv_file,
                                                      databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Against Collection Units', 'collunits',
+        nh.run_step('Validating Against Collection Units', 'collunits',
                  lambda: nv.valid_collunit(cur = cur,
                                            yml_dict = yml_dict,
                                            csv_file = csv_file,
                                            databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Against Speleothem Entities', 'speleothems',
+        nh.run_step('Validating Against Speleothem Entities', 'speleothems',
                  lambda: nv.valid_speleothem(cur = cur,
                                              yml_dict = yml_dict,
                                              csv_file = csv_file,
                                              databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking External Speleothems', 'external_speleo',
+        nh.run_step('Validating External Speleothems', 'external_speleo',
                  lambda: nv.valid_external_speleothem(cur = cur,
                                                       yml_dict = yml_dict,
                                                       csv_file = csv_file,
                                                       databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Against Analysis Units', 'analysisunits',
+        nh.run_step('Validating Against Analysis Units', 'analysisunits',
                  lambda: nv.valid_analysisunit(cur = cur,
                                                yml_dict = yml_dict,
                                                csv_file = csv_file,
                                                databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Dataset', 'datasets',
+        nh.run_step('Validating Dataset', 'datasets',
                  lambda: nv.valid_dataset(cur = cur,
                                           yml_dict = yml_dict,
                                           csv_file = csv_file,
                                           databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking GeoChronDataset', 'geodataset',
+        nh.run_step('Validating GeoChronDataset', 'geodataset',
                  lambda: nv.valid_geochron_dataset(cur = cur,
                                                    yml_dict = yml_dict,
                                                    csv_file = csv_file,
                                                    databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Chronologies', 'chronologies',
+        nh.run_step('Validating Chronologies', 'chronologies',
                  lambda: nv.valid_chronologies(cur = cur,
                                                yml_dict = yml_dict,
                                                csv_file = csv_file,
                                                databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking ChronControls', 'chron_controls',
+        nh.run_step('Validating ChronControls', 'chron_controls',
                  lambda: nv.valid_chroncontrols(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file,
                                                 databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Hiatuses', 'hiatus',
+        nh.run_step('Validating Hiatuses', 'hiatus',
                  lambda: nv.valid_hiatus(cur = cur,
                                          yml_dict = yml_dict,
                                          csv_file = csv_file,
                                          databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Samples', 'samples',
+        nh.run_step('Validating Samples', 'samples',
                  lambda: nv.valid_sample(cur = cur,
                                          yml_dict = yml_dict,
                                          csv_file = csv_file,
                                          databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Sample Ages', 'sample_age',
+        nh.run_step('Validating Sample Ages', 'sample_age',
                  lambda: nv.valid_sample_age(cur = cur,
                                              yml_dict = yml_dict,
                                              csv_file = csv_file,
                                              databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Geochrons', 'geochron',
+        nh.run_step('Validating Geochrons', 'geochron',
                  lambda: nv.valid_geochron(cur = cur,
                                            yml_dict = yml_dict,
                                            csv_file = csv_file,
                                            databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Geochron Control', 'geochroncontrol',
+        nh.run_step('Validating Geochron Control', 'geochroncontrol',
                  lambda: nv.valid_geochroncontrol(cur = cur,
                                                   databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking UTh Series', 'uthseries',
+        nh.run_step('Validating UTh Series', 'uthseries',
                  lambda: nv.valid_uth_series(cur = cur,
                                              yml_dict = yml_dict,
                                              csv_file = csv_file,
                                              databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Checking Against Contact Names', 'contacts',
+        nh.run_step('Validating Against Contact Names', 'contacts',
                  lambda: nv.valid_contact(cur = cur,
                                           yml_dict = yml_dict,
                                           csv_file = csv_file,
                                           databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Dataset Database', 'database',
+        nh.run_step('Validating Dataset Database', 'database',
                  lambda: nv.valid_dataset_database(cur = cur,
                                                    yml_dict = yml_dict,
                                                    databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Data', 'data',
+        nh.run_step('Validating Data', 'data',
                  lambda: nv.valid_data(cur = cur,
                                        yml_dict = yml_dict,
                                        csv_file = csv_file,
                                        databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Data Uncertainties', 'uncertainty',
+        nh.run_step('Validating Data Uncertainties', 'uncertainty',
                  lambda: nv.valid_datauncertainty(cur = cur,
                                                   yml_dict = yml_dict,
                                                   csv_file = csv_file,
                                                   databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
-        run_step('Validating Publication', 'publications',
+        nh.run_step('Validating Publication', 'publications',
                  lambda: nv.valid_publication(cur = cur,
                                               yml_dict = yml_dict,
                                               csv_file = csv_file,
                                               databus = databus),
-                 logfile, databus)
+                 logfile, databus, conn)
 
         all_true = all([databus[key].validAll for key in databus.keys()])
 
