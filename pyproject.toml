@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "databus-sisal"
-version = "0.1.0"
+version = "1.0.0"
 description = "Add your description here"
 authors = [{name = "Socorro E Dominguez Vidana", email = "dominguezvid@uwisc.edu"}]
 license = "MIT"
@@ -46,4 +46,4 @@ build = ["build", "twine"]
 dev = ["black", "bumpver", "isort", "mypy", "pytest"]
 
 [tool.uv.sources]
-databus = { git = "https://github.com/NeotomaDB/DataBUS", rev = "dev" }
+databus = { git = "https://github.com/NeotomaDB/DataBUS", rev = "main" }
